@@ -2,13 +2,13 @@ from abc import ABC, abstractmethod
 
 
 class Updatable(ABC):
-    """Abstract class for updateable objects."""
+    """Abstract class for updatable objects."""
 
-    _registry = []
+    _updatable_registry = []
 
-    def __new__(cls):
-        instance = super(Updatable, cls).__new__(cls)
-        cls._registry.append(instance)
+    def __new__(cls, *args, **kwargs):
+        instance = super().__new__(cls)
+        cls._updatable_registry.append(instance)
         return instance
 
     @abstractmethod
@@ -17,5 +17,5 @@ class Updatable(ABC):
 
     @classmethod
     def update_all(cls):
-        for instance in cls._registry:
+        for instance in cls._updatable_registry:
             instance.update()
