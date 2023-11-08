@@ -4,6 +4,8 @@ import pygame
 from settings import Settings
 from drawable import Drawable
 from updatable import Updatable
+from player import Player
+from map import Map
 
 
 class Game:
@@ -15,14 +17,18 @@ class Game:
 
     def __new__(cls):
         if cls._instance is None:
-            cls._instance = super(Game, cls).__new__(cls)
+            cls._instance = super().__new__(cls)
 
             # INITIALIZATION
             cls.settings = Settings()
             pygame.init()
+            pygame.mouse.set_visible(False)
             cls.screen = pygame.display.set_mode(cls.settings.RESOLUTION)
             pygame.display.set_caption(cls.settings.CAPTION)
+            cls.delta_time = 1
             cls.clock = pygame.time.Clock()
+            cls.map = Map(cls._instance)
+            cls.player = Player(cls._instance)
 
         return cls._instance
 
@@ -46,4 +52,5 @@ class Game:
         self.delta_time = self.clock.tick(self.settings.FPS)
 
     def draw(self):
+        self.screen.fill("black")
         Drawable.draw_all()

@@ -7,6 +7,8 @@ class Settings:
     RESOLUTION = SCREEN_WIDTH, SCREEN_HEIGHT
     CAPTION = "DOOM - demo"
 
+    CELL_SIZE = 64
+
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super(Settings, cls).__new__(cls)
