@@ -6,6 +6,7 @@ from drawable import Drawable
 from updatable import Updatable
 from player import Player
 from map import Map
+from raycaster import Raycaster
 
 
 class Game:
@@ -29,6 +30,7 @@ class Game:
             cls.clock = pygame.time.Clock()
             cls.map = Map(cls._instance)
             cls.player = Player(cls._instance)
+            cls.raycaster = Raycaster(cls._instance)
 
         return cls._instance
 
@@ -50,6 +52,7 @@ class Game:
         Updatable.update_all()
         pygame.display.flip()
         self.delta_time = self.clock.tick(self.settings.FPS)
+        pygame.display.set_caption(f"{self.clock.get_fps() :.1f}")
 
     def draw(self):
         self.screen.fill("black")

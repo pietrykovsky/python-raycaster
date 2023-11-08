@@ -48,23 +48,20 @@ class Player(Updatable, Drawable):
             dx += -speed_sin
             dy += speed_cos
 
-        # diag move correction
+        # diagonal move correction
         if num_key_pressed:
             dx *= 1 / math.sqrt(2)
             dy *= 1 / math.sqrt(2)
 
         self.check_wall_collision(dx, dy)
 
-    def check_wall(self, x: int, y: int) -> bool:
-        return (x, y) not in self.game.map.walls
-
     def check_wall_collision(self, dx: int, dy: int):
-        if self.check_wall(
+        if self.game.map.is_wall(
             int((self.x + dx) / self.game.map.cell_width),
             int(self.y / self.game.map.cell_height),
         ):
             self.x += dx
-        if self.check_wall(
+        if self.game.map.is_wall(
             int(self.x / self.game.map.cell_width),
             int((self.y + dy) / self.game.map.cell_height),
         ):
@@ -85,14 +82,4 @@ class Player(Updatable, Drawable):
         self.handle_camera()
 
     def draw(self):
-        pygame.draw.line(
-            self.game.screen,
-            "yellow",
-            (self.x, self.y),
-            (
-                self.x + self.game.settings.SCREEN_WIDTH * math.cos(self.angle),
-                self.y + self.game.settings.SCREEN_WIDTH * math.sin(self.angle),
-            ),
-            2,
-        )
         pygame.draw.circle(self.game.screen, "green", (self.x, self.y), 15)
