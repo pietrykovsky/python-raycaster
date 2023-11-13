@@ -12,8 +12,8 @@ if TYPE_CHECKING:
 
 class Player(Updatable, Drawable):
     def __init__(self, game: "Game"):
-        self.x = int(3.5) * game.map.cell_width
-        self.y = int(3.5) * game.map.cell_height
+        self.x = int(3.5 * game.map.cell_width)
+        self.y = int(3.5 * game.map.cell_height)
         self.angle = 0
         self.fov = 60
         self.sensitivity = 0.001
@@ -56,12 +56,12 @@ class Player(Updatable, Drawable):
         self.check_wall_collision(dx, dy)
 
     def check_wall_collision(self, dx: int, dy: int):
-        if self.game.map.is_wall(
+        if not self.game.map.is_wall(
             int((self.x + dx) / self.game.map.cell_width),
             int(self.y / self.game.map.cell_height),
         ):
             self.x += dx
-        if self.game.map.is_wall(
+        if not self.game.map.is_wall(
             int(self.x / self.game.map.cell_width),
             int((self.y + dy) / self.game.map.cell_height),
         ):
@@ -73,9 +73,11 @@ class Player(Updatable, Drawable):
         if keys[pygame.K_LEFT]:
             num_key_pressed += 1
             self.angle -= self.sensitivity * self.game.delta_time
+            self.angle = self.angle % (2 * math.pi)
         if keys[pygame.K_RIGHT]:
             num_key_pressed += 1
             self.angle += self.sensitivity * self.game.delta_time
+            self.angle = self.angle % (2 * math.pi)
 
     def update(self):
         self.handle_movement()

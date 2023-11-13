@@ -52,4 +52,4 @@ class Map(Drawable):
             )
 
     def is_wall(self, x: int, y: int) -> bool:
-        return (x, y) not in self.walls
+        return (x, y) in self.walls
