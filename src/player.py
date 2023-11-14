@@ -3,19 +3,17 @@ from typing import TYPE_CHECKING
 import pygame
 
 from updatable import Updatable
-from drawable import Drawable
 
 
 if TYPE_CHECKING:
     from game import Game
 
 
-class Player(Updatable, Drawable):
+class Player(Updatable):
     def __init__(self, game: "Game"):
-        self.x = int(3.5 * game.map.cell_width)
-        self.y = int(3.5 * game.map.cell_height)
+        self.x = int(3.5 * game.settings.CELL_SIZE)
+        self.y = int(3.5 * game.settings.CELL_SIZE)
         self.angle = 0
-        self.fov = 60
         self.sensitivity = 0.001
         self.speed = 0.1
         self.game = game
@@ -57,13 +55,13 @@ class Player(Updatable, Drawable):
 
     def check_wall_collision(self, dx: int, dy: int):
         if not self.game.map.is_wall(
-            int((self.x + dx) / self.game.map.cell_width),
-            int(self.y / self.game.map.cell_height),
+            int((self.x + dx) / self.game.settings.CELL_SIZE),
+            int(self.y / self.game.settings.CELL_SIZE),
         ):
             self.x += dx
         if not self.game.map.is_wall(
-            int(self.x / self.game.map.cell_width),
-            int((self.y + dy) / self.game.map.cell_height),
+            int(self.x / self.game.settings.CELL_SIZE),
+            int((self.y + dy) / self.game.settings.CELL_SIZE),
         ):
             self.y += dy
 

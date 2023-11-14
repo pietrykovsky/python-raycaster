@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from game import Game
 
 
-class Map(Drawable):
+class Map:
     def __init__(self, game: "Game"):
         self.level = [
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
