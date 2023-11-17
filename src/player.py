@@ -11,12 +11,12 @@ if TYPE_CHECKING:
 
 class Player(Updatable):
     def __init__(self, game: "Game"):
+        self.game = game
+        self.speed = game.settings.PLAYER_SPEED
+        self.sensitivity = game.settings.PLAYER_SENSITIVITY
         self.x = int(3.5 * game.settings.CELL_SIZE)
         self.y = int(3.5 * game.settings.CELL_SIZE)
         self.angle = 0
-        self.sensitivity = 0.001
-        self.speed = 0.1
-        self.game = game
         self.time_prev = pygame.time.get_ticks()
 
     def handle_movement(self):

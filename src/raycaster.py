@@ -33,8 +33,8 @@ class Raycaster(Drawable):
             )
             angle = math.radians(angle) % (2 * math.pi)
             ray_length, is_horizontal = self._cast_ray(angle)
-            height = screen_dist / (ray_length + 0.0001)
-            color = (0, 0, 200) if is_horizontal else (0, 0, 150)
+            height = screen_dist * self.game.settings.CELL_SIZE / ray_length
+            color = self._calculate_shade((0, 0, 255), ray_length)
             if ray_length != float("inf"):
                 col_scale = self.game.settings.SCREEN_WIDTH / ray_count
                 pygame.draw.rect(
@@ -48,22 +48,37 @@ class Raycaster(Drawable):
                     ),
                 )
 
+    def _calculate_shade(
+        self, color: tuple[int, int, int], distance: float
+    ) -> tuple[int, int, int]:
+        max_distance = self.game.settings.MAX_DISTANCE
+        if distance != float("inf"):
+            shade_factor = (max_distance - distance) / max_distance
+            return (
+                int(color[0] * shade_factor),
+                int(color[1] * shade_factor),
+                int(color[2] * shade_factor),
+            )
+        return color
+
     def _cast_ray(self, angle: float) -> tuple[float, bool]:
         """
-        TO BE REFACTORED.
-
         TODO:
-            - fix fisheye effect
-            - handle edgecases like infinite distance
-            - add max depth
+            - refactor
         """
         cell_size = self.game.settings.CELL_SIZE
         player_x, player_y = self.game.player.x, self.game.player.y
+        player_angle = self.game.player.angle
 
         tan_a = math.tan(angle)
+        epsilon = 0.0001
 
         up = math.sin(angle) > 0
         right = math.cos(angle) < 0
+
+        # Handle near-horizontal angles
+        if abs(tan_a) < epsilon:
+            tan_a = epsilon if tan_a >= 0 else -epsilon
 
         # Check horizontal intersection
         horizontal_distance = float("inf")
@@ -88,6 +103,12 @@ class Raycaster(Drawable):
                     or map_x >= self.game.map.cols
                     or map_y < 0
                     or map_y >= self.game.map.rows
+                ):
+                    break
+
+                if (
+                    math.sqrt((x - player_x) ** 2 + (y - player_y) ** 2)
+                    >= self.game.settings.MAX_DISTANCE
                 ):
                     break
 
@@ -127,6 +148,12 @@ class Raycaster(Drawable):
                 ):
                     break
 
+                if (
+                    math.sqrt((x - player_x) ** 2 + (y - player_y) ** 2)
+                    >= self.game.settings.MAX_DISTANCE
+                ):
+                    break
+
                 if self.game.map.is_wall(map_x, map_y):
                     vertical_distance = math.sqrt(
                         (x - player_x) ** 2 + (y - player_y) ** 2
@@ -137,6 +164,11 @@ class Raycaster(Drawable):
                 x += x_step
                 y += y_step
 
+        angle_diff = angle - player_angle
+        # Normalize angle_diff to be within -pi to pi
+        angle_diff = (angle_diff + math.pi) % (2 * math.pi) - math.pi
+        horizontal_distance *= math.cos(angle_diff)
+        vertical_distance *= math.cos(angle_diff)
         if horizontal_distance < vertical_distance:
             return horizontal_distance, True
             # return horizontal_intersection
