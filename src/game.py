@@ -7,6 +7,7 @@ from updatable import Updatable
 from player import Player
 from map import Map
 from raycaster import Raycaster
+from renderer import Renderer
 
 
 class Game:
@@ -30,7 +31,8 @@ class Game:
             cls.clock = pygame.time.Clock()
             cls.map = Map(cls._instance)
             cls.player = Player(cls._instance)
-            cls.raycaster = Raycaster(cls._instance)
+            cls.raycaster = Raycaster(cls.map, cls.player)
+            cls.renderer = Renderer(cls.screen, cls.raycaster)
 
         return cls._instance
 

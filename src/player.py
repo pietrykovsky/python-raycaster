@@ -14,8 +14,8 @@ class Player(Updatable):
         self.game = game
         self.speed = game.settings.PLAYER_SPEED
         self.sensitivity = game.settings.PLAYER_SENSITIVITY
-        self.x = int(3.5 * game.settings.CELL_SIZE)
-        self.y = int(3.5 * game.settings.CELL_SIZE)
+        self.x = 3.5 * game.settings.CELL_SIZE
+        self.y = 3.5 * game.settings.CELL_SIZE
         self.angle = 0
         self.time_prev = pygame.time.get_ticks()
 

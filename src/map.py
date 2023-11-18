@@ -53,3 +53,6 @@ class Map:
 
     def is_wall(self, x: int, y: int) -> bool:
         return (x, y) in self.walls
+
+    def is_out_of_bounds(self, x: int, y: int) -> bool:
+        return x < 0 or x > self.cols - 1 or y < 0 or y > self.rows - 1
