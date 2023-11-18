@@ -9,6 +9,5 @@ class Ray:
     y_start: float
     x_end: float | None = None
     y_end: float | None = None
-    is_horizontal: bool = False
     length: float = Settings().MAX_DISTANCE
     hit_wall: bool = False

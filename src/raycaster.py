@@ -97,7 +97,6 @@ class Raycaster(Updatable):
 
                 if self.map.is_wall(map_x, map_y):
                     ray.hit_wall = True
-                    ray.is_horizontal = horizontal
                     ray.length = distance * math.cos(angle_diff)
                     break
 
