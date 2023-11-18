@@ -26,13 +26,13 @@ class Map:
         self.cell_height = settings.SCREEN_HEIGHT / self.rows
 
     @property
-    def walls(self) -> tuple[tuple[int, int]]:
+    def walls(self) -> list[tuple[int, int]]:
         """
-        Gets the coordinates of all walls in the map.
+        Gets the coordinates of all walls in the level.
 
         :return: Walls coordinates
         """
-        walls = ()
+        walls = []
         for y, row in enumerate(self.level):
             for x, cell in enumerate(row):
                 if cell != 0:
