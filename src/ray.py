@@ -7,7 +7,7 @@ from settings import Settings
 class Ray:
     x_start: float
     y_start: float
-    x_end: float
-    y_end: float
+    x_end: float | None = None
+    y_end: float | None = None
     length: float = Settings().MAX_DISTANCE
     hit_wall: bool = False

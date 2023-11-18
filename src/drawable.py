@@ -13,9 +13,15 @@ class Drawable(ABC):
 
     @abstractmethod
     def draw(self):
+        """
+        Draw the object.
+        """
         pass
 
     @classmethod
     def draw_all(cls):
+        """
+        Draw all drawable objects.
+        """
         for instance in cls._drawable_registry:
             instance.draw()

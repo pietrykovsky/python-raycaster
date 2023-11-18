@@ -29,7 +29,7 @@ class Game:
             pygame.display.set_caption(cls.settings.CAPTION)
             cls.delta_time = 1
             cls.clock = pygame.time.Clock()
-            cls.map = Map(cls._instance)
+            cls.map = Map()
             cls.player = Player(cls._instance)
             cls.raycaster = Raycaster(cls.map, cls.player)
             cls.renderer = Renderer(cls.screen, cls.raycaster)
@@ -37,12 +37,18 @@ class Game:
         return cls._instance
 
     def run(self):
+        """
+        The main loop of the game.
+        """
         while True:
             self.handle_events()
             self.update()
             self.draw()
 
     def handle_events(self):
+        """
+        Handles all events.
+        """
         for event in pygame.event.get():
             if event.type == pygame.QUIT or (
                 event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE
@@ -51,11 +57,17 @@ class Game:
                 sys.exit()
 
     def update(self):
+        """
+        Updates the game state.
+        """
         Updatable.update_all()
         pygame.display.flip()
         self.delta_time = self.clock.tick(self.settings.FPS)
         pygame.display.set_caption(f"{self.clock.get_fps() :.1f}")
 
     def draw(self):
+        """
+        Renders the game.
+        """
         self.screen.fill("black")
         Drawable.draw_all()

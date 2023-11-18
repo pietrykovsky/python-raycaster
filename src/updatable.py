@@ -13,9 +13,15 @@ class Updatable(ABC):
 
     @abstractmethod
     def update(self):
+        """
+        Update the object's state.
+        """
         pass
 
     @classmethod
     def update_all(cls):
+        """
+        Update the state of all updatable objects.
+        """
         for instance in cls._updatable_registry:
             instance.update()

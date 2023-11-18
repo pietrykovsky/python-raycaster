@@ -20,6 +20,11 @@ class Raycaster(Updatable):
 
     @property
     def rays(self) -> list[Ray]:
+        """
+        Gets the list of rays casted by the raycaster.
+
+        :return: List of rays
+        """
         return self._rays
 
     def update(self):
@@ -38,6 +43,12 @@ class Raycaster(Updatable):
             self._rays.append(self._cast_ray(angle))
 
     def _cast_ray(self, angle: float) -> Ray:
+        """
+        Casts a ray from the player's position at the given angle.
+
+        :param angle: angle in radians from 0 to 2pi
+        :return: Returns information about the casted ray
+        """
         cell_size = self.settings.CELL_SIZE
         max_distance = self.settings.MAX_DISTANCE
         player_x, player_y = self.player.x, self.player.y
@@ -59,13 +70,43 @@ class Raycaster(Updatable):
         if abs(tan_a) < epsilon:
             tan_a = epsilon if tan_a >= 0 else -epsilon
 
+        # Helper functions
+        calc_dist = lambda x, y: math.sqrt((x - player_x) ** 2 + (y - player_y) ** 2)
+
+        def _map_coords(x: float, y: float, horizontal: bool = True) -> tuple[int, int]:
+            """
+            Map x, y values to the map grid.
+            """
+            if horizontal:
+                return int(x // cell_size), int(y // cell_size) - 1 if not up else int(
+                    y // cell_size
+                )
+            return int(x // cell_size) - 1 if right else int(x // cell_size), int(
+                y // cell_size
+            )
+
+        def _check_intersections(ray: Ray, x: float, y: float, horizontal: bool):
+            """Check for intersections with walls."""
+            distance = calc_dist(x, y)
+            map_x, map_y = _map_coords(x, y, horizontal)
+            while distance <= max_distance or not self.map.is_out_of_bounds(
+                map_x, map_y
+            ):
+                ray.x_end = x
+                ray.y_end = y
+
+                if self.map.is_wall(map_x, map_y):
+                    ray.hit_wall = True
+                    ray.length = distance * math.cos(angle_diff)
+                    break
+
+                x += x_step
+                y += y_step
+                distance = calc_dist(x, y)
+                map_x, map_y = _map_coords(x, y, horizontal)
+
         # Check horizontal intersection
-        horizontal_ray = Ray(
-            player_x,
-            player_y,
-            player_x + max_distance * cos_a,
-            player_y + max_distance * sin_a,
-        )
+        horizontal_ray = Ray(player_x, player_y)
         if tan_a != 0:
             y_n = -(player_y - (player_y // cell_size) * cell_size)
             y_n = cell_size + y_n if up else y_n
@@ -77,34 +118,10 @@ class Raycaster(Updatable):
             x = player_x + x_n
             y = player_y + y_n
 
-            while True:
-                distance = math.sqrt((x - player_x) ** 2 + (y - player_y) ** 2)
-                map_x = int(x // cell_size)
-                map_y = int(y // cell_size) - 1 if not up else int(y // cell_size)
-
-                if (
-                    self.map.is_out_of_bounds(map_x, map_y)
-                    or distance >= horizontal_ray.length
-                ):
-                    break
-
-                if self.map.is_wall(map_x, map_y):
-                    horizontal_ray.hit_wall = True
-                    horizontal_ray.length = distance * math.cos(angle_diff)
-                    horizontal_ray.x_end = x
-                    horizontal_ray.y_end = y
-                    break
-
-                x += x_step
-                y += y_step
+            _check_intersections(horizontal_ray, x, y, horizontal=True)
 
         # Check vertical intersection
-        vertical_ray = Ray(
-            player_x,
-            player_y,
-            player_x + max_distance * cos_a,
-            player_y + max_distance * sin_a,
-        )
+        vertical_ray = Ray(player_x, player_y)
         if tan_a != 1:
             x_n = -(player_x - (player_x // cell_size) * cell_size)
             x_n = cell_size + x_n if not right else x_n
@@ -116,26 +133,7 @@ class Raycaster(Updatable):
             x = player_x + x_n
             y = player_y + y_n
 
-            while True:
-                distance = math.sqrt((x - player_x) ** 2 + (y - player_y) ** 2)
-                map_x = int(x // cell_size) - 1 if right else int(x // cell_size)
-                map_y = int(y // cell_size)
-
-                if (
-                    self.map.is_out_of_bounds(map_x, map_y)
-                    or distance >= vertical_ray.length
-                ):
-                    break
-
-                if self.map.is_wall(map_x, map_y):
-                    vertical_ray.hit_wall = True
-                    vertical_ray.length = distance * math.cos(angle_diff)
-                    vertical_ray.x_end = x
-                    vertical_ray.y_end = y
-                    break
-
-                x += x_step
-                y += y_step
+            _check_intersections(vertical_ray, x, y, horizontal=False)
 
         if horizontal_ray.length < vertical_ray.length:
             return horizontal_ray

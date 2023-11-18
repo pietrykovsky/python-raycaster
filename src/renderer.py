@@ -18,7 +18,14 @@ class Renderer(Drawable):
     def _calculate_shade(
         self, color: tuple[int, int, int], distance: float
     ) -> tuple[int, int, int]:
-        if distance != float("inf"):
+        """
+        Calculates the shade of the given color based on the distance.
+
+        :param color: color to shade
+        :param distance: length of the ray
+        :return: shaded color
+        """
+        if distance <= self.settings.MAX_DISTANCE:
             max_distance = self.settings.MAX_DISTANCE
             shade_factor = (max_distance - distance) / max_distance
             return (
@@ -26,7 +33,7 @@ class Renderer(Drawable):
                 int(color[1] * shade_factor),
                 int(color[2] * shade_factor),
             )
-        return color
+        return 0, 0, 0
 
     def draw(self):
         screen_dist = self.settings.SCREEN_DISTANCE
