@@ -14,6 +14,16 @@ class Map:
                 [1, 0, 3, 0, 3, 0, 2, 0, 0, 1],
                 [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                 [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 2, 2, 0, 0, 0, 0, 2, 2, 1],
+                [1, 2, 2, 0, 0, 0, 0, 2, 2, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 3, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 2, 2, 0, 1],
+                [1, 0, 3, 0, 3, 0, 2, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             ]
             if level is None
@@ -21,7 +31,16 @@ class Map:
         )
         self.rows = len(self.level)
         self.cols = len(self.level[0])
+        self._walls = self._locate_walls()
         self.settings = Settings()
+
+    def _locate_walls(self) -> list[tuple[int, int]]:
+        walls = []
+        for y, row in enumerate(self.level):
+            for x, cell in enumerate(row):
+                if cell != 0:
+                    walls.append((x, y))
+        return walls
 
     @property
     def walls(self) -> list[tuple[int, int]]:
@@ -30,12 +49,7 @@ class Map:
 
         :return: Walls coordinates
         """
-        walls = []
-        for y, row in enumerate(self.level):
-            for x, cell in enumerate(row):
-                if cell != 0:
-                    walls.append((x, y))
-        return walls
+        return self._walls
 
     # def draw(self):
     #     for x, y in self.walls:

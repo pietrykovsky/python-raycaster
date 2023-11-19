@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from map import Map
 
 
-class Renderer(Drawable):
+class WorldRenderer(Drawable):
     def __init__(self, screen: pygame.Surface, raycaster: "Raycaster", map: "Map"):
         self.screen = screen
         self.raycaster = raycaster
@@ -40,6 +40,9 @@ class Renderer(Drawable):
         return 0, 0, 0
 
     def _draw_background(self):
+        """
+        Draws the background with gradient shading in the centre.
+        """
         for row in range(self.settings.SCREEN_HEIGHT // 2):
             shade_factor = (
                 (self.settings.SCREEN_HEIGHT // 2 - row)
