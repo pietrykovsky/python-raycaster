@@ -9,9 +9,9 @@ class Map:
                 [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                 [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                 [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                [1, 0, 1, 0, 0, 0, 0, 0, 0, 1],
-                [1, 0, 0, 0, 0, 0, 1, 1, 0, 1],
-                [1, 0, 1, 0, 1, 0, 1, 0, 0, 1],
+                [1, 0, 3, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 2, 2, 0, 1],
+                [1, 0, 3, 0, 3, 0, 2, 0, 0, 1],
                 [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                 [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -21,9 +21,7 @@ class Map:
         )
         self.rows = len(self.level)
         self.cols = len(self.level[0])
-        settings = Settings()
-        self.cell_width = settings.SCREEN_WIDTH / self.cols
-        self.cell_height = settings.SCREEN_HEIGHT / self.rows
+        self.settings = Settings()
 
     @property
     def walls(self) -> list[tuple[int, int]]:
@@ -72,3 +70,9 @@ class Map:
         :return: True if the given coordinates are out of bounds of the level, False otherwise
         """
         return x < 0 or x > self.cols - 1 or y < 0 or y > self.rows - 1
+
+    def to_grid(self, x: float, y: float) -> tuple[int, int]:
+        """
+        Map x, y values to the map grid.
+        """
+        return int(x // self.settings.CELL_SIZE), int(y // self.settings.CELL_SIZE)

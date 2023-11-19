@@ -32,7 +32,7 @@ class Game:
             cls.map = Map()
             cls.player = Player(cls._instance)
             cls.raycaster = Raycaster(cls.map, cls.player)
-            cls.renderer = Renderer(cls.screen, cls.raycaster)
+            cls.renderer = Renderer(cls.screen, cls.raycaster, cls.map)
 
         return cls._instance
 
@@ -69,5 +69,5 @@ class Game:
         """
         Renders the game.
         """
-        self.screen.fill("black")
+        # self.screen.fill("black")
         Drawable.draw_all()
