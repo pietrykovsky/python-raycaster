@@ -1,3 +1,4 @@
+import math
 from typing import TYPE_CHECKING
 import pygame
 
@@ -93,12 +94,12 @@ class Renderer(Drawable):
 
                 column = wall_texture.subsurface(offset, 0, 1, texture_height)
                 column = pygame.transform.scale(
-                    column, (round(column_width), round(height))
+                    column, (math.ceil(column_width), math.ceil(height))
                 )
                 self.screen.blit(
                     column,
                     (
-                        round(col * column_width),
+                        math.ceil(col * column_width),
                         self.settings.SCREEN_HEIGHT // 2 - height // 2,
                     ),
                 )
@@ -108,7 +109,7 @@ class Renderer(Drawable):
                 self.screen.blit(
                     shading_surface,
                     (
-                        round(col * column_width),
+                        math.ceil(col * column_width),
                         self.settings.SCREEN_HEIGHT // 2 - height // 2,
                     ),
                     special_flags=pygame.BLEND_RGBA_MULT,
