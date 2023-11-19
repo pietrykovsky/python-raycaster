@@ -98,6 +98,8 @@ class Raycaster(Updatable):
                 if self.map.is_wall(map_x, map_y):
                     ray.hit_wall = True
                     ray.length = distance * math.cos(angle_diff)
+                    ray.texture_id = self.map.level[map_y][map_x]
+                    ray.is_horizontal = horizontal
                     break
 
                 x += x_step

@@ -7,7 +7,7 @@ from updatable import Updatable
 from player import Player
 from map import Map
 from raycaster import Raycaster
-from renderer import Renderer
+from world_renderer import WorldRenderer
 
 
 class Game:
@@ -32,7 +32,7 @@ class Game:
             cls.map = Map()
             cls.player = Player(cls._instance)
             cls.raycaster = Raycaster(cls.map, cls.player)
-            cls.renderer = Renderer(cls.screen, cls.raycaster)
+            cls.renderer = WorldRenderer(cls.screen, cls.raycaster, cls.map)
 
         return cls._instance
 
@@ -69,5 +69,4 @@ class Game:
         """
         Renders the game.
         """
-        self.screen.fill("black")
         Drawable.draw_all()
