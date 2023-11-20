@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+import math
 import pygame
 
 from updatable import Updatable
@@ -17,6 +18,8 @@ class SpriteObject(Updatable):
         self.player = player
         self.texture = texture
         self.distance = calculate_distance(x, y, player.x, player.y)
+        self.angle = math.atan2(y - player.y, x - player.x)
 
     def update(self):
         self.distance = calculate_distance(self.x, self.y, self.player.x, self.player.y)
+        self.angle = math.atan2(self.y - self.player.y, self.x - self.player.x)
