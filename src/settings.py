@@ -25,6 +25,14 @@ class Settings:
     CELL_SIZE = 256
     MAX_DISTANCE = 8 * CELL_SIZE
 
+    # MINIMAP RELATED
+    MINIMAP_VISIBLE = True
+    MINIMAP_RATIO = 0.15
+    MINIMAP_WIDTH = SCREEN_WIDTH * MINIMAP_RATIO
+    MINIMAP_HEIGHT = MINIMAP_WIDTH * 2
+    MINIMAP_SCALE = MINIMAP_WIDTH / 10  # whole map has 10 cells in width
+    MINIMAP_CELL = CELL_SIZE / MINIMAP_SCALE
+
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super(Settings, cls).__new__(cls)

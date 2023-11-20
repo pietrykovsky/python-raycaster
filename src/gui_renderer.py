@@ -9,7 +9,6 @@ if TYPE_CHECKING:
     from player import Player
     from map import Map
 
-
 class GuiRenderer(Drawable):
     def __init__(
         self,
@@ -24,25 +23,12 @@ class GuiRenderer(Drawable):
         self.player = player
         self.map = map
 
-    def draw(self):
-        mini_map_width = self.settings.SCREEN_WIDTH / 7
-        mini_map_height = mini_map_width * 2
-        mini_map_position_x = (
-            0  # (self.settings.SCREEN_WIDTH - mini_map_width) --> right corner
-        )
-        mini_map_position_y = (
-            0  # (self.settings.SCREEN_HEIGHT - mini_map_height) --> down corner
-        )
-
-        scale_mini_map = self.settings.SCREEN_WIDTH / 70
-        scale_player_position = self.settings.CELL_SIZE / scale_mini_map
-
-        additional_surface = pygame.Surface((mini_map_width, mini_map_height))
-        additional_surface.fill((0, 0, 0))
+    def _draw_walls(self, surface):
+        scale_mini_map = self.settings.MINIMAP_SCALE
 
         for x, y in self.map.walls:
             pygame.draw.rect(
-                additional_surface,
+                surface,
                 (255, 255, 255),
                 (
                     (x * scale_mini_map),
@@ -53,8 +39,10 @@ class GuiRenderer(Drawable):
                 2,
             )
 
+    def _draw_player(self, surface):
+        scale_player_position = self.settings.MINIMAP_CELL
         pygame.draw.circle(
-            additional_surface,
+            surface,
             "green",
             (
                 self.player.x / scale_player_position,
@@ -63,11 +51,13 @@ class GuiRenderer(Drawable):
             5,
         )
 
+    def _draw_rays(self, surface):
+        scale_player_position = self.settings.MINIMAP_CELL
         rays = self.raycaster.rays
 
         for ray in rays:
             pygame.draw.line(
-                additional_surface,
+                surface,
                 "yellow",
                 (
                     ray.x_start / scale_player_position,
@@ -77,5 +67,24 @@ class GuiRenderer(Drawable):
                 1,
             )
 
-        additional_surface.set_alpha(50)
-        self.screen.blit(additional_surface, (mini_map_position_x, mini_map_position_y))
+    def draw(self):
+        if self.settings.MINIMAP_VISIBLE:
+            
+            mini_map_width = self.settings.MINIMAP_WIDTH
+            mini_map_height = self.settings.MINIMAP_HEIGHT
+            mini_map_position_x = (
+                0  # (self.settings.SCREEN_WIDTH - mini_map_width) --> right corner
+            )
+            mini_map_position_y = (
+                0  # (self.settings.SCREEN_HEIGHT - mini_map_height) --> down corner
+            )
+
+            additional_surface = pygame.Surface((mini_map_width, mini_map_height))
+            additional_surface.fill((0, 0, 0))
+
+            self._draw_walls(additional_surface)
+            self._draw_player(additional_surface)
+            self._draw_rays(additional_surface)
+
+            additional_surface.set_alpha(50)
+            self.screen.blit(additional_surface, (mini_map_position_x, mini_map_position_y))

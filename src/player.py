@@ -80,6 +80,3 @@ class Player(Updatable):
     def update(self):
         self.handle_movement()
         self.handle_camera()
-
-    # def draw(self):
-    #     pygame.draw.circle(self.game.screen, "green", (self.x, self.y), 15)
