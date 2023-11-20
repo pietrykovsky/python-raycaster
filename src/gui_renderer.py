@@ -1,9 +1,8 @@
 import math
 from typing import TYPE_CHECKING
 import pygame
-
-from drawable import Drawable
 from settings import Settings
+from drawable import Drawable
 
 if TYPE_CHECKING:
     from player import Player
@@ -24,7 +23,7 @@ class GuiRenderer(Drawable):
         self.player = player
         self.map = map
 
-    def _draw_walls(self, surface):
+    def _draw_walls(self, surface: pygame.Surface):
         scale_mini_map = self.settings.MINIMAP_SCALE
 
         for x, y in self.map.walls:
@@ -40,7 +39,7 @@ class GuiRenderer(Drawable):
                 2,
             )
 
-    def _draw_player(self, surface):
+    def _draw_player(self, surface: pygame.Surface):
         scale_player_position = self.settings.MINIMAP_CELL
         pygame.draw.circle(
             surface,
@@ -52,7 +51,7 @@ class GuiRenderer(Drawable):
             5,
         )
 
-    def _draw_rays(self, surface):
+    def _draw_rays(self, surface: pygame.Surface):
         scale_player_position = self.settings.MINIMAP_CELL
         rays = self.raycaster.rays
 
@@ -70,7 +69,6 @@ class GuiRenderer(Drawable):
 
     def draw(self):
         if self.settings.MINIMAP_VISIBLE:
-
             mini_map_width = self.settings.MINIMAP_WIDTH
             mini_map_height = self.settings.MINIMAP_HEIGHT
             mini_map_position_x = (
