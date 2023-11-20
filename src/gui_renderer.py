@@ -9,6 +9,7 @@ if TYPE_CHECKING:
     from player import Player
     from map import Map
 
+
 class GuiRenderer(Drawable):
     def __init__(
         self,
@@ -69,7 +70,7 @@ class GuiRenderer(Drawable):
 
     def draw(self):
         if self.settings.MINIMAP_VISIBLE:
-            
+
             mini_map_width = self.settings.MINIMAP_WIDTH
             mini_map_height = self.settings.MINIMAP_HEIGHT
             mini_map_position_x = (
@@ -87,4 +88,6 @@ class GuiRenderer(Drawable):
             self._draw_rays(additional_surface)
 
             additional_surface.set_alpha(50)
-            self.screen.blit(additional_surface, (mini_map_position_x, mini_map_position_y))
+            self.screen.blit(
+                additional_surface, (mini_map_position_x, mini_map_position_y)
+            )
