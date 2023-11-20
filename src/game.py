@@ -8,6 +8,7 @@ from player import Player
 from map import Map
 from raycaster import Raycaster
 from world_renderer import WorldRenderer
+from object_renderer import ObjectRenderer
 from gui_renderer import GuiRenderer
 
 
@@ -33,7 +34,8 @@ class Game:
             cls.map = Map()
             cls.player = Player(cls._instance)
             cls.raycaster = Raycaster(cls.map, cls.player)
-            cls.renderer = WorldRenderer(cls.screen, cls.raycaster, cls.map)
+            cls.world_renderer = WorldRenderer(cls.screen, cls.raycaster, cls.map)
+            cls.object_renderer = ObjectRenderer(cls.player)
             cls.gui_renderer = GuiRenderer(
                 cls.screen, cls.map, cls.player, cls.raycaster
             )
