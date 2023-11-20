@@ -8,6 +8,7 @@ from player import Player
 from map import Map
 from raycaster import Raycaster
 from world_renderer import WorldRenderer
+from gui_renderer import GuiRenderer
 
 
 class Game:
@@ -33,6 +34,9 @@ class Game:
             cls.player = Player(cls._instance)
             cls.raycaster = Raycaster(cls.map, cls.player)
             cls.renderer = WorldRenderer(cls.screen, cls.raycaster, cls.map)
+            cls.gui_renderer = GuiRenderer(
+                cls.screen, cls.map, cls.player, cls.raycaster
+            )
 
         return cls._instance
 
@@ -50,6 +54,9 @@ class Game:
         Handles all events.
         """
         for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_F4:
+                self.settings.MINIMAP_VISIBLE = not self.settings.MINIMAP_VISIBLE
+
             if event.type == pygame.QUIT or (
                 event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE
             ):

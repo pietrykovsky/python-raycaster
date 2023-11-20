@@ -51,20 +51,6 @@ class Map:
         """
         return self._walls
 
-    # def draw(self):
-    #     for x, y in self.walls:
-    #         pygame.draw.rect(
-    #             self.game.screen,
-    #             "gray",
-    #             (
-    #                 x * self.cell_width,
-    #                 y * self.cell_height,
-    #                 self.cell_width,
-    #                 self.cell_height,
-    #             ),
-    #             2,
-    #         )
-
     def is_wall(self, x: int, y: int) -> bool:
         """
         Checks if the given coordinates are a wall.
