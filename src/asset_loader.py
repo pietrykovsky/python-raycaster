@@ -30,7 +30,7 @@ class AssetLoader:
     @property
     def wall_textures(self) -> dict[int, pygame.Surface]:
         return self._walls.copy()
-    
+
     @property
     def static_objects(self) -> dict[int, pygame.Surface]:
         return self._static_objects.copy()
@@ -48,7 +48,7 @@ class AssetLoader:
             surface = pygame.image.load(file_path).convert()
             walls[key] = pygame.transform.scale(surface, (cell_size, cell_size))
         return walls
-    
+
     @classmethod
     def _load_static_sprites(cls):
         """
@@ -60,5 +60,7 @@ class AssetLoader:
             file_path = os.path.join(cls.STATIC_SPRITES_PATH, file)
             key = str(os.path.splitext(file)[0])
             surface = pygame.image.load(file_path).convert()
-            static_objects[key] = pygame.transform.scale(surface, (cell_size, cell_size))
+            static_objects[key] = pygame.transform.scale(
+                surface, (cell_size, cell_size)
+            )
         return static_objects

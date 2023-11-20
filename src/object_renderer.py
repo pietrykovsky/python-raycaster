@@ -12,13 +12,14 @@ if TYPE_CHECKING:
 
 class ObjectRenderer(Drawable):
     _instance = None
+
     def __new__(cls, player: "Player"):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
             cls.player = player
             cls.object_manager = ObjectManager(player)
         return cls._instance
-    
+
     def draw_object(self, obj: "SpriteObject"):
         max_distance = Settings().MAX_DISTANCE
         if obj.distance > max_distance:

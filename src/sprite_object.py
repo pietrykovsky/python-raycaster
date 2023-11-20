@@ -8,6 +8,7 @@ from utils import calculate_distance
 if TYPE_CHECKING:
     from player import Player
 
+
 class SpriteObject(Updatable):
     def __init__(self, x: float, y: float, texture: pygame.Surface, player: "Player"):
         self.x = x
