@@ -63,6 +63,9 @@ class Raycaster(Updatable):
         sin_a = math.sin(angle)
         epsilon = 0.0001
 
+        x_max = player_x + max_distance * cos_a
+        y_max = player_y + max_distance * sin_a
+
         up = sin_a > 0
         right = cos_a < 0
 
@@ -89,17 +92,16 @@ class Raycaster(Updatable):
             """Check for intersections with walls."""
             distance = calc_dist(x, y)
             map_x, map_y = _map_coords(x, y, horizontal)
-            while distance <= max_distance or not self.map.is_out_of_bounds(
+            while distance <= max_distance and not self.map.is_out_of_bounds(
                 map_x, map_y
             ):
-                ray.x_end = x
-                ray.y_end = y
-
                 if self.map.is_wall(map_x, map_y):
                     ray.hit_wall = True
                     ray.length = distance * math.cos(angle_diff)
                     ray.texture_id = self.map.level[map_y][map_x]
                     ray.is_horizontal = horizontal
+                    ray.x_end = x
+                    ray.y_end = y
                     break
 
                 x += x_step
@@ -108,7 +110,7 @@ class Raycaster(Updatable):
                 map_x, map_y = _map_coords(x, y, horizontal)
 
         # Check horizontal intersection
-        horizontal_ray = Ray(player_x, player_y)
+        horizontal_ray = Ray(player_x, player_y, x_max, y_max)
         if tan_a != 0:
             y_n = -(player_y - (player_y // cell_size) * cell_size)
             y_n = cell_size + y_n if up else y_n
@@ -123,7 +125,7 @@ class Raycaster(Updatable):
             _check_intersections(horizontal_ray, x, y, horizontal=True)
 
         # Check vertical intersection
-        vertical_ray = Ray(player_x, player_y)
+        vertical_ray = Ray(player_x, player_y, x_max, y_max)
         if tan_a != 1:
             x_n = -(player_x - (player_x // cell_size) * cell_size)
             x_n = cell_size + x_n if not right else x_n
