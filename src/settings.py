@@ -14,7 +14,7 @@ class Settings:
 
     # PLAYER RELATED
     FOV = 60
-    RAY_COUNT = 300
+    RAY_COUNT = 150
     DELTA_ANGLE = math.radians(FOV / RAY_COUNT)
     PLAYER_SPEED = 0.5
     PLAYER_SENSITIVITY = 0.001

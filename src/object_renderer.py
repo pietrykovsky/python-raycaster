@@ -29,6 +29,7 @@ class ObjectRenderer(Drawable):
         TODO:
             - refactor
             - take walls into account (don't draw objects behind walls)
+            - calculate height_shift for every scenario (works only in 1st case)
         """
         max_distance = Settings().MAX_DISTANCE
         ray = self.raycaster.cast_ray(obj.angle)
@@ -49,11 +50,27 @@ class ObjectRenderer(Drawable):
             + Settings().SCREEN_WIDTH // 2
             - width // 2
         )
-        screen_y = Settings().SCREEN_HEIGHT // 2 - height // 2
+        if height < Settings().SCREEN_HEIGHT:
+            height_shift = height * 0.27
+            screen_y = (Settings().SCREEN_HEIGHT // 2 - height // 2) + height_shift
+            obj_texture_scaled = pygame.transform.scale(
+                obj.texture, (int(width), int(height))
+            )
+        else:
+            scaled_texture_height = s_height * Settings().SCREEN_HEIGHT / height
+            #height_shift = scaled_texture_height * 0.27
+            obj_texture_scaled = obj.texture.subsurface(
+                0,
+                s_height / 2 - scaled_texture_height / 2,
+                s_width,
+                scaled_texture_height,
+            )
+            obj_texture_scaled = pygame.transform.scale(
+                obj_texture_scaled, (int(width), Settings().SCREEN_HEIGHT)
+            )
+            #screen_y = height_shift
+            screen_y = 0
 
-        obj_texture_scaled = pygame.transform.scale(
-            obj.texture, (int(width), int(height))
-        )
         self.screen.blit(obj_texture_scaled, (int(screen_x), int(screen_y)))
 
     def draw(self):

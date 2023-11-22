@@ -20,7 +20,7 @@ class WorldRenderer(Drawable):
         self.map = map
 
     def _calculate_shade(
-        self, color: tuple[int, int, int], distance: float
+        self, color: tuple[int, int, int], distance
     ) -> tuple[int, int, int]:
         """
         Calculates the shade of the given color based on the distance.
@@ -76,44 +76,84 @@ class WorldRenderer(Drawable):
                 1,
             )
 
+    def _draw_column(
+        self,
+        column: pygame.Surface,
+        col: int,
+        y_pos: int,
+        ray_length: float,
+        column_width: int,
+    ):
+        """
+        Draws a column on the screen.
+        """
+        col_x = col * column_width
+        self.screen.blit(column, (col_x, y_pos))
+
+        shade_color = self._calculate_shade((255, 255, 255), ray_length)
+        shading_surface = pygame.Surface(column.get_size()).convert_alpha()
+        shading_surface.fill(shade_color + (128,))
+        self.screen.blit(
+            shading_surface, (col_x, y_pos), special_flags=pygame.BLEND_RGBA_MULT
+        )
+
+    def _prepare_column(
+        self,
+        wall_texture: dict[int, pygame.Surface],
+        offset: float,
+        height: float,
+        column_width: int,
+    ):
+        """
+        Prepares a wall texture column for drawing.
+        """
+        texture_height = wall_texture.get_height()
+
+        if height < self.settings.SCREEN_HEIGHT:
+            column = wall_texture.subsurface(offset, 0, 1, texture_height)
+            column = pygame.transform.scale(column, (column_width, height))
+            y_pos = self.settings.SCREEN_HEIGHT // 2 - height // 2
+        else:
+            scaled_texture_height = (
+                texture_height * self.settings.SCREEN_HEIGHT / height
+            )
+            column = wall_texture.subsurface(
+                offset,
+                texture_height / 2 - scaled_texture_height / 2,
+                1,
+                scaled_texture_height,
+            )
+            column = pygame.transform.scale(
+                column, (column_width, self.settings.SCREEN_HEIGHT)
+            )
+            y_pos = 0
+
+        return column, y_pos
+
     def draw(self):
+        """
+        TODO: Find out why sometimes(very often) screen turns black when player run into wall and fix this.
+        """
+
         self._draw_background()
         screen_dist = self.settings.SCREEN_DISTANCE
         ray_count = self.settings.RAY_COUNT
-        rays = self.raycaster.rays
-        for col, ray in enumerate(rays):
+        column_width = math.ceil(self.settings.SCREEN_WIDTH / ray_count)
+
+        for col, ray in enumerate(self.raycaster.rays):
             if ray.hit_wall:
                 if ray.texture_id not in self.wall_textures:
                     raise ValueError(f"Wall texture with id {ray.texture_id} not found")
+
                 wall_texture = self.wall_textures[ray.texture_id]
                 height = screen_dist * self.settings.CELL_SIZE / ray.length
-                column_width = self.settings.SCREEN_WIDTH / ray_count
-                texture_height = wall_texture.get_height()
                 offset = (
-                    ray.x_end % self.settings.CELL_SIZE
+                    (ray.x_end % self.settings.CELL_SIZE)
                     if ray.is_horizontal
-                    else ray.y_end % self.settings.CELL_SIZE
+                    else (ray.y_end % self.settings.CELL_SIZE)
+                )
+                column, y_pos = self._prepare_column(
+                    wall_texture, offset, height, column_width
                 )
 
-                column = wall_texture.subsurface(offset, 0, 1, texture_height)
-                column = pygame.transform.scale(
-                    column, (math.ceil(column_width), math.ceil(height))
-                )
-                self.screen.blit(
-                    column,
-                    (
-                        math.ceil(col * column_width),
-                        self.settings.SCREEN_HEIGHT // 2 - height // 2,
-                    ),
-                )
-                shade_color = self._calculate_shade((255, 255, 255), ray.length)
-                shading_surface = pygame.Surface(column.get_size()).convert_alpha()
-                shading_surface.fill(shade_color + (128,))
-                self.screen.blit(
-                    shading_surface,
-                    (
-                        math.ceil(col * column_width),
-                        self.settings.SCREEN_HEIGHT // 2 - height // 2,
-                    ),
-                    special_flags=pygame.BLEND_RGBA_MULT,
-                )
+                self._draw_column(column, col, y_pos, ray.length, column_width)
