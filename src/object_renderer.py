@@ -58,7 +58,7 @@ class ObjectRenderer(Drawable):
             )
         else:
             scaled_texture_height = s_height * Settings().SCREEN_HEIGHT / height
-            #height_shift = scaled_texture_height * 0.27
+            # height_shift = scaled_texture_height * 0.27
             obj_texture_scaled = obj.texture.subsurface(
                 0,
                 s_height / 2 - scaled_texture_height / 2,
@@ -68,7 +68,7 @@ class ObjectRenderer(Drawable):
             obj_texture_scaled = pygame.transform.scale(
                 obj_texture_scaled, (int(width), Settings().SCREEN_HEIGHT)
             )
-            #screen_y = height_shift
+            # screen_y = height_shift
             screen_y = 0
 
         self.screen.blit(obj_texture_scaled, (int(screen_x), int(screen_y)))
