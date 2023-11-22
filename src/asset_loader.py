@@ -62,8 +62,6 @@ class AssetLoader:
             surface = pygame.image.load(file_path).convert()
             s_width, s_height = surface.get_size()
             s_ratio = s_width / s_height
-            s_width, s_height = int(cell_size * s_ratio), cell_size # TODO: fix this
-            static_objects[key] = pygame.transform.scale(
-                surface, (s_width, s_height)
-            )
+            s_width, s_height = int(cell_size * s_ratio), cell_size  # TODO: fix this
+            static_objects[key] = pygame.transform.scale(surface, (s_width, s_height))
         return static_objects

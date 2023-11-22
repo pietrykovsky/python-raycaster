@@ -35,7 +35,7 @@ class Game:
             cls.player = Player(cls._instance)
             cls.raycaster = Raycaster(cls.map, cls.player)
             cls.world_renderer = WorldRenderer(cls.screen, cls.raycaster, cls.map)
-            cls.object_renderer = ObjectRenderer(cls.screen, cls.player)
+            cls.object_renderer = ObjectRenderer(cls.screen, cls.player, cls.raycaster)
             cls.gui_renderer = GuiRenderer(
                 cls.screen, cls.map, cls.player, cls.raycaster
             )

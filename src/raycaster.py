@@ -41,9 +41,9 @@ class Raycaster(Updatable):
                 + (ray * math.degrees(angle_offset))
             )
             angle = math.radians(angle) % (2 * math.pi)
-            self._rays.append(self._cast_ray(angle))
+            self._rays.append(self.cast_ray(angle))
 
-    def _cast_ray(self, angle: float) -> Ray:
+    def cast_ray(self, angle: float) -> Ray:
         """
         Casts a ray from the player's position at the given angle.
 

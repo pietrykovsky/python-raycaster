@@ -39,12 +39,12 @@ class ObjectManager(Updatable):
             ),
             SpriteObject(
                 7.5 * cell_size, 2.5 * cell_size, candlebra_texture, cls.player
-            )
+            ),
         ]
 
     @property
     def objects(self) -> list[SpriteObject]:
         return self._objects
-    
+
     def update(self):
         self._objects.sort(key=lambda obj: obj.distance, reverse=True)
