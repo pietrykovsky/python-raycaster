@@ -23,6 +23,7 @@ class ObjectManager(Updatable):
     @classmethod
     def _initialize_objects(cls):
         candlebra_texture = AssetLoader().static_objects.get("candlebra")
+        npc_texture = AssetLoader().static_objects.get("npc")
         cell_size = Settings().CELL_SIZE
         cls._objects = [
             SpriteObject(
@@ -32,13 +33,13 @@ class ObjectManager(Updatable):
                 (4.5 * cell_size, 4.5 * cell_size), candlebra_texture, cls.player, False
             ),
             SpriteObject(
-                (4.5 * cell_size, 5.5 * cell_size), candlebra_texture, cls.player, False
+                (4.5 * cell_size, 5.5 * cell_size), npc_texture, cls.player
             ),
             SpriteObject(
                 (5.5 * cell_size, 5.5 * cell_size), candlebra_texture, cls.player, False
             ),
             SpriteObject(
-                (7.5 * cell_size, 2.5 * cell_size), candlebra_texture, cls.player, False
+                (7.5 * cell_size, 2.5 * cell_size), npc_texture, cls.player
             ),
         ]
 
