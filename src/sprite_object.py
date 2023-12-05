@@ -19,6 +19,7 @@ class SpriteObject(Updatable):
         self.texture = texture
         self.distance = calculate_distance(x, y, player.x, player.y)
         self.angle = math.atan2(y - player.y, x - player.x)
+        self.shaded = True
 
     def update(self):
         self.distance = calculate_distance(self.x, self.y, self.player.x, self.player.y)

@@ -5,17 +5,28 @@ import pygame
 from drawable import Drawable
 from settings import Settings
 from asset_loader import AssetLoader
+from object_renderer import ObjectRenderer
+from object_manager import ObjectManager
+from sprite_object import SpriteObject
+from ray import Ray
 
 if TYPE_CHECKING:
     from raycaster import Raycaster
     from map import Map
-    from ray import Ray
+    from player import Player
 
 
 class WorldRenderer(Drawable):
-    def __init__(self, screen: pygame.Surface, raycaster: "Raycaster", map: "Map"):
+    def __init__(
+        self,
+        screen: pygame.Surface,
+        raycaster: "Raycaster",
+        map: "Map",
+        player: "Player",
+    ):
         self.screen = screen
         self.raycaster = raycaster
+        self.player = player
         self.settings = Settings()
         self.wall_textures = AssetLoader().wall_textures
         self.map = map
@@ -96,13 +107,18 @@ class WorldRenderer(Drawable):
             shading_surface, position, special_flags=pygame.BLEND_RGBA_MULT
         )
 
-    def _draw_wall(self, ray: "Ray", ray_number: int):
+    def _draw_wall(self, ray: "Ray"):
         """
         Draws a wall on the screen.
 
         :param ray: Ray dataclass instance
         :param ray_number: number of the ray
         """
+        if not ray.hit_wall:
+            return
+        if ray.texture_id not in self.wall_textures:
+            raise ValueError(f"Wall texture with id {ray.texture_id} not found")
+
         screen_dist = self.settings.SCREEN_DISTANCE
         ray_count = self.settings.RAY_COUNT
         column_width = math.ceil(self.settings.SCREEN_WIDTH / ray_count)
@@ -120,30 +136,41 @@ class WorldRenderer(Drawable):
             column = pygame.transform.scale(column, (column_width, height))
             y_pos = self.settings.SCREEN_HEIGHT / 2 - height / 2
         else:
-            y_offset = height - Settings().SCREEN_HEIGHT
-            y_offset = y_offset / height * Settings().CELL_SIZE
+            y_offset = height - self.settings.SCREEN_HEIGHT
+            y_offset = y_offset / height * self.settings.CELL_SIZE
             column = wall_texture.subsurface(
-                x_offset, y_offset / 2, 1, Settings().CELL_SIZE - y_offset
+                x_offset, y_offset / 2, 1, self.settings.CELL_SIZE - y_offset
             )
             column = pygame.transform.scale(
                 column, (column_width, self.settings.SCREEN_HEIGHT)
             )
             y_pos = 0
 
-        x_pos = ray_number * column_width
+        x_pos = ray.index * column_width
         self.screen.blit(column, (x_pos, y_pos))
 
         shade_color = self._calculate_shade((255, 255, 255), ray.length)
         self._shade_wall(column, (x_pos, y_pos), shade_color)
 
-    def _draw_walls(self):
-        for col, ray in enumerate(self.raycaster.rays):
-            if not ray.hit_wall:
-                continue
-            if ray.texture_id not in self.wall_textures:
-                raise ValueError(f"Wall texture with id {ray.texture_id} not found")
+    def _draw_world(self):
+        object_renderer = ObjectRenderer(screen=self.screen, player=self.player)
+        object_manager = ObjectManager(player=self.player)
+        objects = [
+            *[ray for ray in self.raycaster.rays if ray.hit_wall],
+            *object_manager.objects,
+        ]
+        objects.sort(
+            key=lambda obj: obj.distance
+            if isinstance(obj, SpriteObject)
+            else obj.length,
+            reverse=True,
+        )
 
-            self._draw_wall(ray, col)
+        for obj in objects:
+            if isinstance(obj, Ray):
+                self._draw_wall(obj)
+            else:
+                object_renderer.draw(obj)
 
     def draw(self):
         """
@@ -151,4 +178,4 @@ class WorldRenderer(Drawable):
         (objection: isn't it because of the player's falling into the wall? perhaps we should check wall hitbox)
         """
         self._draw_background()
-        self._draw_walls()
+        self._draw_world()

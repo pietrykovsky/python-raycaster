@@ -34,14 +34,16 @@ class Raycaster(Updatable):
         ray_count = self.settings.RAY_COUNT
         angle_offset = self.settings.DELTA_ANGLE
         self.rays.clear()
-        for ray in range(ray_count + 1):
+        for ray_number in range(ray_count + 1):
             angle = (
                 math.degrees(player_angle)
                 - (fov // 2)
-                + (ray * math.degrees(angle_offset))
+                + (ray_number * math.degrees(angle_offset))
             )
             angle = math.radians(angle) % (2 * math.pi)
-            self._rays.append(self.cast_ray(angle))
+            ray = self.cast_ray(angle)
+            ray.index = ray_number
+            self._rays.append(ray)
 
     def cast_ray(self, angle: float) -> Ray:
         """

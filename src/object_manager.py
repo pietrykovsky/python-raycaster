@@ -47,4 +47,4 @@ class ObjectManager(Updatable):
         return self._objects
 
     def update(self):
-        self._objects.sort(key=lambda obj: obj.distance, reverse=True)
+        pass
