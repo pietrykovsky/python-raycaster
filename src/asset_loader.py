@@ -59,7 +59,7 @@ class AssetLoader:
         for file in os.listdir(cls.STATIC_SPRITES_PATH):
             file_path = os.path.join(cls.STATIC_SPRITES_PATH, file)
             key = str(os.path.splitext(file)[0])
-            surface = pygame.image.load(file_path).convert()
+            surface = pygame.image.load(file_path).convert_alpha()
             s_width, s_height = surface.get_size()
             s_ratio = s_width / s_height
             s_width, s_height = int(cell_size * s_ratio), cell_size  # TODO: fix this

@@ -11,7 +11,14 @@ if TYPE_CHECKING:
 
 
 class SpriteObject(Updatable):
-    def __init__(self, x: float, y: float, texture: pygame.Surface, player: "Player"):
+    def __init__(
+        self,
+        position: tuple[int, int],
+        texture: pygame.Surface,
+        player: "Player",
+        shaded: bool = True,
+    ):
+        x, y = position
         self.x = x
         self.y = y
         self.settings = Settings()
@@ -19,7 +26,7 @@ class SpriteObject(Updatable):
         self.texture = texture
         self.distance = calculate_distance(x, y, player.x, player.y)
         self.angle = math.atan2(y - player.y, x - player.x)
-        self.shaded = True
+        self.shaded = shaded
 
     def update(self):
         self.distance = calculate_distance(self.x, self.y, self.player.x, self.player.y)

@@ -9,6 +9,8 @@ from object_renderer import ObjectRenderer
 from object_manager import ObjectManager
 from sprite_object import SpriteObject
 from ray import Ray
+from utils import calculate_shade, shade_surface
+
 
 if TYPE_CHECKING:
     from raycaster import Raycaster
@@ -30,26 +32,6 @@ class WorldRenderer(Drawable):
         self.settings = Settings()
         self.wall_textures = AssetLoader().wall_textures
         self.map = map
-
-    def _calculate_shade(
-        self, color: tuple[int, int, int], distance: float
-    ) -> tuple[int, int, int, int]:
-        """
-        Calculates the shade of the given color based on the distance.
-
-        :param color: color to shade
-        :param distance: length of the ray
-        :return: shaded color with alpha channel
-        """
-        if distance <= self.settings.MAX_DISTANCE:
-            max_distance = self.settings.MAX_DISTANCE
-            shade_factor = (max_distance - distance) / max_distance
-            return (
-                int(color[0] * shade_factor),
-                int(color[1] * shade_factor),
-                int(color[2] * shade_factor),
-            )
-        return 0, 0, 0, 128
 
     def _draw_background(self):
         """
@@ -87,25 +69,6 @@ class WorldRenderer(Drawable):
                 (self.settings.SCREEN_WIDTH, row),
                 1,
             )
-
-    def _shade_wall(
-        self,
-        column: pygame.Surface,
-        position: tuple[int, int],
-        shade_color: tuple[int, int, int, int],
-    ):
-        """
-        Shades the column surface.
-
-        :param column: Wall column surface
-        :param position: Position of the column on the screen
-        :param shade_color: Color to shade the column with in RGBA format
-        """
-        shading_surface = pygame.Surface(column.get_size()).convert_alpha()
-        shading_surface.fill(shade_color)
-        self.screen.blit(
-            shading_surface, position, special_flags=pygame.BLEND_RGBA_MULT
-        )
 
     def _draw_wall(self, ray: "Ray"):
         """
@@ -149,8 +112,8 @@ class WorldRenderer(Drawable):
         x_pos = ray.index * column_width
         self.screen.blit(column, (x_pos, y_pos))
 
-        shade_color = self._calculate_shade((255, 255, 255), ray.length)
-        self._shade_wall(column, (x_pos, y_pos), shade_color)
+        shade_color = calculate_shade((255, 255, 255), ray.length)
+        shade_surface(self.screen, column, (x_pos, y_pos), shade_color)
 
     def _draw_world(self):
         object_renderer = ObjectRenderer(screen=self.screen, player=self.player)

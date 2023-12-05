@@ -4,6 +4,7 @@ import math
 
 from settings import Settings
 from object_manager import ObjectManager
+from utils import calculate_shade, shade_surface
 
 if TYPE_CHECKING:
     from player import Player
@@ -87,3 +88,9 @@ class ObjectRenderer:
             screen_x = math.tan(rel_angle) * screen_dist
 
         self.screen.blit(obj_texture_scaled, (int(screen_x), int(screen_y)))
+
+        if obj.shaded:
+            shade = calculate_shade((255, 255, 255), obj.distance)
+            shade_surface(
+                self.screen, obj_texture_scaled, (int(screen_x), int(screen_y)), shade
+            )

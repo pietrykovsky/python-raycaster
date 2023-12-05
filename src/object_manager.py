@@ -26,19 +26,19 @@ class ObjectManager(Updatable):
         cell_size = Settings().CELL_SIZE
         cls._objects = [
             SpriteObject(
-                2.5 * cell_size, 2.5 * cell_size, candlebra_texture, cls.player
+                (2.5 * cell_size, 2.5 * cell_size), candlebra_texture, cls.player, False
             ),
             SpriteObject(
-                4.5 * cell_size, 4.5 * cell_size, candlebra_texture, cls.player
+                (4.5 * cell_size, 4.5 * cell_size), candlebra_texture, cls.player, False
             ),
             SpriteObject(
-                4.5 * cell_size, 5.5 * cell_size, candlebra_texture, cls.player
+                (4.5 * cell_size, 5.5 * cell_size), candlebra_texture, cls.player, False
             ),
             SpriteObject(
-                5.5 * cell_size, 5.5 * cell_size, candlebra_texture, cls.player
+                (5.5 * cell_size, 5.5 * cell_size), candlebra_texture, cls.player, False
             ),
             SpriteObject(
-                7.5 * cell_size, 2.5 * cell_size, candlebra_texture, cls.player
+                (7.5 * cell_size, 2.5 * cell_size), candlebra_texture, cls.player, False
             ),
         ]
 
