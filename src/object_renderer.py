@@ -44,7 +44,7 @@ class ObjectRenderer(Drawable):
         height = screen_dist * s_height / obj.distance
         width = screen_dist * s_width / obj.distance
         rel_angle = obj.angle - self.player.angle - math.pi
-        screen_y = (Settings().SCREEN_HEIGHT // 2 - height // 2)
+        screen_y = Settings().SCREEN_HEIGHT // 2 - height // 2
         screen_x = (
             math.tan(rel_angle) * screen_dist
             + Settings().SCREEN_WIDTH // 2
@@ -54,40 +54,48 @@ class ObjectRenderer(Drawable):
             obj_texture_scaled = pygame.transform.scale(
                 obj.texture, (int(width), int(height))
             )
-        
+
         elif height > Settings().SCREEN_HEIGHT and width <= Settings().SCREEN_WIDTH:
             y_offset = height - Settings().SCREEN_HEIGHT
-            y_offset = y_offset/height * s_height
+            y_offset = y_offset / height * s_height
 
-            subsurface = obj.texture.subsurface(0, y_offset/2, s_width, s_height - y_offset)
-            obj_texture_scaled = pygame.transform.scale(subsurface, (int(width), Settings().SCREEN_HEIGHT))
+            subsurface = obj.texture.subsurface(
+                0, y_offset / 2, s_width, s_height - y_offset
+            )
+            obj_texture_scaled = pygame.transform.scale(
+                subsurface, (int(width), Settings().SCREEN_HEIGHT)
+            )
 
             screen_y = 0
-        
+
         elif width > Settings().SCREEN_WIDTH and height <= Settings().SCREEN_HEIGHT:
             x_offset = width - Settings().SCREEN_WIDTH
-            x_offset = x_offset/width * s_width
+            x_offset = x_offset / width * s_width
 
-            subsurface = obj.texture.subsurface(x_offset/2, 0, s_width - y_offset, height)
-            obj_texture_scaled = pygame.transform.scale(subsurface, (Settings().SCREEN_WIDTH, int(height)))
-
-            screen_x = (
-                math.tan(rel_angle) * screen_dist
+            subsurface = obj.texture.subsurface(
+                x_offset / 2, 0, s_width - y_offset, height
             )
+            obj_texture_scaled = pygame.transform.scale(
+                subsurface, (Settings().SCREEN_WIDTH, int(height))
+            )
+
+            screen_x = math.tan(rel_angle) * screen_dist
 
         else:
             x_offset = width - Settings().SCREEN_WIDTH
-            x_offset = x_offset/width * s_width
+            x_offset = x_offset / width * s_width
             y_offset = height - Settings().SCREEN_HEIGHT
-            y_offset = y_offset/height * s_height
+            y_offset = y_offset / height * s_height
 
-            subsurface = obj.texture.subsurface(x_offset/2, y_offset/2, s_width - x_offset, s_height - y_offset)
-            obj_texture_scaled = pygame.transform.scale(subsurface, (Settings().SCREEN_WIDTH, Settings().SCREEN_HEIGHT))
+            subsurface = obj.texture.subsurface(
+                x_offset / 2, y_offset / 2, s_width - x_offset, s_height - y_offset
+            )
+            obj_texture_scaled = pygame.transform.scale(
+                subsurface, (Settings().SCREEN_WIDTH, Settings().SCREEN_HEIGHT)
+            )
 
             screen_y = 0
-            screen_x = (
-                math.tan(rel_angle) * screen_dist
-            )
+            screen_x = math.tan(rel_angle) * screen_dist
 
         self.screen.blit(obj_texture_scaled, (int(screen_x), int(screen_y)))
 
