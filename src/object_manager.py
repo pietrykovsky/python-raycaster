@@ -32,15 +32,11 @@ class ObjectManager(Updatable):
             SpriteObject(
                 (4.5 * cell_size, 4.5 * cell_size), candlebra_texture, cls.player, False
             ),
-            SpriteObject(
-                (4.5 * cell_size, 5.5 * cell_size), npc_texture, cls.player
-            ),
+            SpriteObject((4.5 * cell_size, 5.5 * cell_size), npc_texture, cls.player),
             SpriteObject(
                 (5.5 * cell_size, 5.5 * cell_size), candlebra_texture, cls.player, False
             ),
-            SpriteObject(
-                (7.5 * cell_size, 2.5 * cell_size), npc_texture, cls.player
-            ),
+            SpriteObject((7.5 * cell_size, 2.5 * cell_size), npc_texture, cls.player),
         ]
 
     @property
