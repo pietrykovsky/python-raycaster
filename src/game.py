@@ -8,7 +8,6 @@ from player import Player
 from map import Map
 from raycaster import Raycaster
 from world_renderer import WorldRenderer
-from object_renderer import ObjectRenderer
 from gui_renderer import GuiRenderer
 
 
