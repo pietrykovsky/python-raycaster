@@ -1,4 +1,4 @@
-from settings import Settings
+from ..core import Settings
 
 
 class Map:
