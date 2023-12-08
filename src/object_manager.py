@@ -3,13 +3,12 @@ from typing import TYPE_CHECKING
 from settings import Settings
 from asset_loader import AssetLoader
 from sprite_object import SpriteObject
-from updatable import Updatable
 
 if TYPE_CHECKING:
     from player import Player
 
 
-class ObjectManager(Updatable):
+class ObjectManager:
     _instance = None
 
     def __new__(cls, player: "Player"):
@@ -42,6 +41,3 @@ class ObjectManager(Updatable):
     @property
     def objects(self) -> list[SpriteObject]:
         return self._objects
-
-    def update(self):
-        pass
