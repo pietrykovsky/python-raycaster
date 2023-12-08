@@ -1,10 +1,14 @@
 import sys
 import pygame
 
-from ..core import Settings, Drawable, Updatable
-from .player import Player
-from .map import Map
-from ..rendering import WorldRenderer, GuiRenderer, Raycaster
+from settings import Settings
+from drawable import Drawable
+from updatable import Updatable
+from player import Player
+from map import Map
+from raycaster import Raycaster
+from world_renderer import WorldRenderer
+from gui_renderer import GuiRenderer
 
 
 class Game:
@@ -29,7 +33,9 @@ class Game:
             cls.map = Map()
             cls.player = Player(cls._instance)
             cls.raycaster = Raycaster(cls.map, cls.player)
-            cls.renderer = WorldRenderer(cls.screen, cls.raycaster, cls.map, cls.player)
+            cls.world_renderer = WorldRenderer(
+                cls.screen, cls.raycaster, cls.map, cls.player
+            )
             cls.gui_renderer = GuiRenderer(
                 cls.screen, cls.map, cls.player, cls.raycaster
             )

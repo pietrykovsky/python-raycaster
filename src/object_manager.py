@@ -1,11 +1,11 @@
 from typing import TYPE_CHECKING
 
-from ..core import Settings
-from ..game import AssetLoader
-from .sprite_object import SpriteObject
+from settings import Settings
+from asset_loader import AssetLoader
+from sprite_object import SpriteObject
 
 if TYPE_CHECKING:
-    from ..game import Player
+    from player import Player
 
 
 class ObjectManager:

@@ -1,7 +1,7 @@
 import os
 import pygame
 
-from ..core import Settings
+from settings import Settings
 
 
 class AssetLoader:
@@ -17,8 +17,7 @@ class AssetLoader:
         if cls._instance is None:
             cls._instance = super().__new__(cls)
 
-            cls.GAME_PATH = os.path.dirname(os.path.abspath(__file__))
-            cls.ROOT_PATH = os.path.dirname(cls.GAME_PATH)
+            cls.ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
             cls.ASSETS_PATH = os.path.join(cls.ROOT_PATH, "assets")
             cls.WALL_TEXTURES_PATH = os.path.join(cls.ASSETS_PATH, "walls")
             cls.OBJECTS_SPRITES_PATH = os.path.join(cls.ASSETS_PATH, "objects")
