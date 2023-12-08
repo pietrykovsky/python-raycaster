@@ -9,7 +9,7 @@ from object_renderer import ObjectRenderer
 from object_manager import ObjectManager
 from sprite_object import SpriteObject
 from ray import Ray
-from utils import calculate_shade, shade_surface
+from utils import calculate_shade_factor, shade_surface
 
 
 if TYPE_CHECKING:
@@ -87,6 +87,7 @@ class WorldRenderer(Drawable):
         column_width = math.ceil(self.settings.SCREEN_WIDTH / ray_count)
 
         wall_texture = self.wall_textures[ray.texture_id]
+
         height = screen_dist * self.settings.CELL_SIZE / ray.length
         x_offset = (
             (ray.x_end % self.settings.CELL_SIZE)
@@ -94,6 +95,7 @@ class WorldRenderer(Drawable):
             else (ray.y_end % self.settings.CELL_SIZE)
         )
         texture_height = wall_texture.get_height()
+
         if height <= self.settings.SCREEN_HEIGHT:
             column = wall_texture.subsurface(x_offset, 0, 1, texture_height)
             column = pygame.transform.scale(column, (column_width, height))
@@ -109,11 +111,11 @@ class WorldRenderer(Drawable):
             )
             y_pos = 0
 
+        shade = calculate_shade_factor(ray.length)
+        shade_surface(column, shade)
         x_pos = ray.index * column_width
         self.screen.blit(column, (x_pos, y_pos))
 
-        shade_color = calculate_shade((255, 255, 255), ray.length)
-        shade_surface(self.screen, column, (x_pos, y_pos), shade_color)
 
     def _draw_world(self):
         object_renderer = ObjectRenderer(screen=self.screen, player=self.player)

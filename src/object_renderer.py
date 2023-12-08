@@ -4,7 +4,7 @@ import math
 
 from settings import Settings
 from object_manager import ObjectManager
-from utils import calculate_shade, shade_surface
+from utils import calculate_shade_factor, shade_surface
 
 if TYPE_CHECKING:
     from player import Player
@@ -40,16 +40,24 @@ class ObjectRenderer:
             + Settings().SCREEN_WIDTH // 2
             - width // 2
         )
+        sprite = obj.texture.copy()
+
+        if obj.shaded:
+            shade = calculate_shade_factor(obj.distance)
+            shade_surface(
+                sprite, shade
+            )
+
         if height <= Settings().SCREEN_HEIGHT and width <= Settings().SCREEN_WIDTH:
             obj_texture_scaled = pygame.transform.scale(
-                obj.texture, (int(width), int(height))
+                sprite, (int(width), int(height))
             )
 
         elif height > Settings().SCREEN_HEIGHT and width <= Settings().SCREEN_WIDTH:
             y_offset = height - Settings().SCREEN_HEIGHT
             y_offset = y_offset / height * s_height
 
-            subsurface = obj.texture.subsurface(
+            subsurface = sprite.subsurface(
                 0, y_offset / 2, s_width, s_height - y_offset
             )
             obj_texture_scaled = pygame.transform.scale(
@@ -62,7 +70,7 @@ class ObjectRenderer:
             x_offset = width - Settings().SCREEN_WIDTH
             x_offset = x_offset / width * s_width
 
-            subsurface = obj.texture.subsurface(
+            subsurface = sprite.subsurface(
                 x_offset / 2, 0, s_width - y_offset, height
             )
             obj_texture_scaled = pygame.transform.scale(
@@ -77,7 +85,7 @@ class ObjectRenderer:
             y_offset = height - Settings().SCREEN_HEIGHT
             y_offset = y_offset / height * s_height
 
-            subsurface = obj.texture.subsurface(
+            subsurface = sprite.subsurface(
                 x_offset / 2, y_offset / 2, s_width - x_offset, s_height - y_offset
             )
             obj_texture_scaled = pygame.transform.scale(
@@ -88,9 +96,3 @@ class ObjectRenderer:
             screen_x = math.tan(rel_angle) * screen_dist
 
         self.screen.blit(obj_texture_scaled, (int(screen_x), int(screen_y)))
-
-        if obj.shaded:
-            shade = calculate_shade((255, 255, 255), obj.distance)
-            shade_surface(
-                self.screen, obj_texture_scaled, (int(screen_x), int(screen_y)), shade
-            )
