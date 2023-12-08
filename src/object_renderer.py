@@ -44,9 +44,7 @@ class ObjectRenderer:
 
         if obj.shaded:
             shade = calculate_shade_factor(obj.distance)
-            shade_surface(
-                sprite, shade
-            )
+            shade_surface(sprite, shade)
 
         if height <= Settings().SCREEN_HEIGHT and width <= Settings().SCREEN_WIDTH:
             obj_texture_scaled = pygame.transform.scale(
@@ -70,9 +68,7 @@ class ObjectRenderer:
             x_offset = width - Settings().SCREEN_WIDTH
             x_offset = x_offset / width * s_width
 
-            subsurface = sprite.subsurface(
-                x_offset / 2, 0, s_width - y_offset, height
-            )
+            subsurface = sprite.subsurface(x_offset / 2, 0, s_width - y_offset, height)
             obj_texture_scaled = pygame.transform.scale(
                 subsurface, (Settings().SCREEN_WIDTH, int(height))
             )

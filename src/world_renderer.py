@@ -116,7 +116,6 @@ class WorldRenderer(Drawable):
         x_pos = ray.index * column_width
         self.screen.blit(column, (x_pos, y_pos))
 
-
     def _draw_world(self):
         object_renderer = ObjectRenderer(screen=self.screen, player=self.player)
         object_manager = ObjectManager(player=self.player)
