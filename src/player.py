@@ -53,6 +53,23 @@ class Player(Updatable):
 
         self.check_wall_collision(dx, dy)
 
+    def in_fov(self, angle: float) -> bool:
+        """
+        Checks if the given angle is in the player's field of view.
+
+        :param angle: angle in radians
+        :return: True if the angle is in the player's field of view, False otherwise
+        """
+        player_dir = math.degrees(self.angle) % 360
+        angle_deg = math.degrees(angle) % 360
+
+        fov_start = (player_dir - self.game.settings.FOV / 2) % 360
+        fov_end = (player_dir + self.game.settings.FOV / 2) % 360
+
+        if fov_start < fov_end:
+            return fov_start <= angle_deg <= fov_end
+        return angle_deg >= fov_start or angle_deg <= fov_end
+
     def check_wall_collision(self, dx: int, dy: int):
         if not self.game.map.is_wall(
             int((self.x + dx) / self.game.settings.CELL_SIZE),

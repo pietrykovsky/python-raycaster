@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 from updatable import Updatable
 from ray import Ray
 from settings import Settings
+from utils import calculate_distance
 
 
 if TYPE_CHECKING:
@@ -33,16 +34,18 @@ class Raycaster(Updatable):
         ray_count = self.settings.RAY_COUNT
         angle_offset = self.settings.DELTA_ANGLE
         self.rays.clear()
-        for ray in range(ray_count + 1):
+        for ray_number in range(ray_count + 1):
             angle = (
                 math.degrees(player_angle)
                 - (fov // 2)
-                + (ray * math.degrees(angle_offset))
+                + (ray_number * math.degrees(angle_offset))
             )
             angle = math.radians(angle) % (2 * math.pi)
-            self._rays.append(self._cast_ray(angle))
+            ray = self.cast_ray(angle)
+            ray.index = ray_number
+            self._rays.append(ray)
 
-    def _cast_ray(self, angle: float) -> Ray:
+    def cast_ray(self, angle: float) -> Ray:
         """
         Casts a ray from the player's position at the given angle.
 
@@ -74,8 +77,6 @@ class Raycaster(Updatable):
             tan_a = epsilon if tan_a >= 0 else -epsilon
 
         # Helper functions
-        calc_dist = lambda x, y: math.sqrt((x - player_x) ** 2 + (y - player_y) ** 2)
-
         def _map_coords(x: float, y: float, horizontal: bool = True) -> tuple[int, int]:
             """
             Map x, y values to the map grid.
@@ -90,7 +91,7 @@ class Raycaster(Updatable):
 
         def _check_intersections(ray: Ray, x: float, y: float, horizontal: bool):
             """Check for intersections with walls."""
-            distance = calc_dist(x, y)
+            distance = calculate_distance(x, y, player_x, player_y)
             map_x, map_y = _map_coords(x, y, horizontal)
             while distance <= max_distance and not self.map.is_out_of_bounds(
                 map_x, map_y
@@ -106,7 +107,7 @@ class Raycaster(Updatable):
 
                 x += x_step
                 y += y_step
-                distance = calc_dist(x, y)
+                distance = calculate_distance(x, y, player_x, player_y)
                 map_x, map_y = _map_coords(x, y, horizontal)
 
         # Check horizontal intersection

@@ -5,39 +5,33 @@ import pygame
 from drawable import Drawable
 from settings import Settings
 from asset_loader import AssetLoader
+from object_renderer import ObjectRenderer
+from object_manager import ObjectManager
+from sprite_object import SpriteObject
+from ray import Ray
+from utils import calculate_shade_factor, shade_surface
+
 
 if TYPE_CHECKING:
     from raycaster import Raycaster
     from map import Map
+    from player import Player
 
 
 class WorldRenderer(Drawable):
-    def __init__(self, screen: pygame.Surface, raycaster: "Raycaster", map: "Map"):
+    def __init__(
+        self,
+        screen: pygame.Surface,
+        raycaster: "Raycaster",
+        map: "Map",
+        player: "Player",
+    ):
         self.screen = screen
         self.raycaster = raycaster
+        self.player = player
         self.settings = Settings()
         self.wall_textures = AssetLoader().wall_textures
         self.map = map
-
-    def _calculate_shade(
-        self, color: tuple[int, int, int], distance: float
-    ) -> tuple[int, int, int]:
-        """
-        Calculates the shade of the given color based on the distance.
-
-        :param color: color to shade
-        :param distance: length of the ray
-        :return: shaded color
-        """
-        if distance <= self.settings.MAX_DISTANCE:
-            max_distance = self.settings.MAX_DISTANCE
-            shade_factor = (max_distance - distance) / max_distance
-            return (
-                int(color[0] * shade_factor),
-                int(color[1] * shade_factor),
-                int(color[2] * shade_factor),
-            )
-        return 0, 0, 0
 
     def _draw_background(self):
         """
@@ -76,44 +70,76 @@ class WorldRenderer(Drawable):
                 1,
             )
 
-    def draw(self):
-        self._draw_background()
+    def _draw_wall(self, ray: "Ray"):
+        """
+        Draws a wall on the screen.
+
+        :param ray: Ray dataclass instance
+        :param ray_number: number of the ray
+        """
+        if not ray.hit_wall:
+            return
+        if ray.texture_id not in self.wall_textures:
+            raise ValueError(f"Wall texture with id {ray.texture_id} not found")
+
         screen_dist = self.settings.SCREEN_DISTANCE
         ray_count = self.settings.RAY_COUNT
-        rays = self.raycaster.rays
-        for col, ray in enumerate(rays):
-            if ray.hit_wall:
-                if ray.texture_id not in self.wall_textures:
-                    raise ValueError(f"Wall texture with id {ray.texture_id} not found")
-                wall_texture = self.wall_textures[ray.texture_id]
-                height = screen_dist * self.settings.CELL_SIZE / ray.length
-                column_width = self.settings.SCREEN_WIDTH / ray_count
-                texture_height = wall_texture.get_height()
-                offset = (
-                    ray.x_end % self.settings.CELL_SIZE
-                    if ray.is_horizontal
-                    else ray.y_end % self.settings.CELL_SIZE
-                )
+        column_width = math.ceil(self.settings.SCREEN_WIDTH / ray_count)
 
-                column = wall_texture.subsurface(offset, 0, 1, texture_height)
-                column = pygame.transform.scale(
-                    column, (math.ceil(column_width), math.ceil(height))
-                )
-                self.screen.blit(
-                    column,
-                    (
-                        math.ceil(col * column_width),
-                        self.settings.SCREEN_HEIGHT // 2 - height // 2,
-                    ),
-                )
-                shade_color = self._calculate_shade((255, 255, 255), ray.length)
-                shading_surface = pygame.Surface(column.get_size()).convert_alpha()
-                shading_surface.fill(shade_color + (128,))
-                self.screen.blit(
-                    shading_surface,
-                    (
-                        math.ceil(col * column_width),
-                        self.settings.SCREEN_HEIGHT // 2 - height // 2,
-                    ),
-                    special_flags=pygame.BLEND_RGBA_MULT,
-                )
+        wall_texture = self.wall_textures[ray.texture_id]
+
+        height = screen_dist * self.settings.CELL_SIZE / ray.length
+        x_offset = (
+            (ray.x_end % self.settings.CELL_SIZE)
+            if ray.is_horizontal
+            else (ray.y_end % self.settings.CELL_SIZE)
+        )
+        texture_height = wall_texture.get_height()
+
+        if height <= self.settings.SCREEN_HEIGHT:
+            column = wall_texture.subsurface(x_offset, 0, 1, texture_height)
+            column = pygame.transform.scale(column, (column_width, height))
+            y_pos = self.settings.SCREEN_HEIGHT / 2 - height / 2
+        else:
+            y_offset = height - self.settings.SCREEN_HEIGHT
+            y_offset = y_offset / height * self.settings.CELL_SIZE
+            column = wall_texture.subsurface(
+                x_offset, y_offset / 2, 1, self.settings.CELL_SIZE - y_offset
+            )
+            column = pygame.transform.scale(
+                column, (column_width, self.settings.SCREEN_HEIGHT)
+            )
+            y_pos = 0
+
+        shade = calculate_shade_factor(ray.length)
+        shade_surface(column, shade)
+        x_pos = ray.index * column_width
+        self.screen.blit(column, (x_pos, y_pos))
+
+    def _draw_world(self):
+        object_renderer = ObjectRenderer(screen=self.screen, player=self.player)
+        object_manager = ObjectManager(player=self.player)
+        objects = [
+            *[ray for ray in self.raycaster.rays if ray.hit_wall],
+            *object_manager.objects,
+        ]
+        objects.sort(
+            key=lambda obj: obj.distance
+            if isinstance(obj, SpriteObject)
+            else obj.length,
+            reverse=True,
+        )
+
+        for obj in objects:
+            if isinstance(obj, Ray):
+                self._draw_wall(obj)
+            else:
+                object_renderer.draw(obj)
+
+    def draw(self):
+        """
+        TODO: Find out why sometimes(very often) screen turns black when player run into wall and fix this.
+        (objection: isn't it because of the player's falling into the wall? perhaps we should check wall hitbox)
+        """
+        self._draw_background()
+        self._draw_world()
