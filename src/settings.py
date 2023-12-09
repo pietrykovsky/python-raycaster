@@ -22,7 +22,7 @@ class Settings:
     PLAYER_SENSITIVITY = 0.001
 
     MAX_DISTANCE = 8 * CELL_SIZE
-    
+
     # MINIMAP RELATED
     MINIMAP_VISIBLE = True
     MINIMAP_RATIO = 0.15
