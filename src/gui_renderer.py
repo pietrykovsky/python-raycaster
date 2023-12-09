@@ -72,7 +72,7 @@ class GuiRenderer(Drawable):
     def draw(self):
         if const.MINIMAP_VISIBLE:
             mini_map_width = self.settings.SCREEN_WIDTH * const.MINIMAP_RATIO
-            mini_map_height = mini_map_width *2
+            mini_map_height = mini_map_width * 2
             mini_map_position_x = (
                 0  # (self.settings.SCREEN_WIDTH - mini_map_width) --> right corner
             )

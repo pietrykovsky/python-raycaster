@@ -5,7 +5,7 @@ class Settings:
     _instance = None
 
     CAPTION = "DOOM - demo"
-    
+
     # GAME RELATED
     SCREEN_WIDTH = 1280
     SCREEN_HEIGHT = 720
