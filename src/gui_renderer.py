@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 import pygame
+import const
 
 from settings import Settings
 from drawable import Drawable
@@ -25,7 +26,7 @@ class GuiRenderer(Drawable):
         self.map = map
 
     def _draw_walls(self, surface: pygame.Surface):
-        scale_mini_map = self.settings.MINIMAP_SCALE
+        scale_mini_map = const.MINIMAP_SCALE
 
         for x, y in self.map.walls:
             pygame.draw.rect(
@@ -41,7 +42,7 @@ class GuiRenderer(Drawable):
             )
 
     def _draw_player(self, surface: pygame.Surface):
-        scale_player_position = self.settings.MINIMAP_CELL
+        scale_player_position = const.MINIMAP_CELL
         pygame.draw.circle(
             surface,
             "green",
@@ -53,7 +54,7 @@ class GuiRenderer(Drawable):
         )
 
     def _draw_rays(self, surface: pygame.Surface):
-        scale_player_position = self.settings.MINIMAP_CELL
+        scale_player_position = const.MINIMAP_CELL
         rays = self.raycaster.rays
 
         for ray in rays:
@@ -69,9 +70,9 @@ class GuiRenderer(Drawable):
             )
 
     def draw(self):
-        if self.settings.MINIMAP_VISIBLE:
-            mini_map_width = self.settings.MINIMAP_WIDTH
-            mini_map_height = self.settings.MINIMAP_HEIGHT
+        if const.MINIMAP_VISIBLE:
+            mini_map_width = self.settings.SCREEN_WIDTH * const.MINIMAP_RATIO
+            mini_map_height = mini_map_width *2
             mini_map_position_x = (
                 0  # (self.settings.SCREEN_WIDTH - mini_map_width) --> right corner
             )

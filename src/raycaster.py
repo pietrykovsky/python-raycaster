@@ -1,4 +1,5 @@
 import math
+import const
 from typing import TYPE_CHECKING
 
 from updatable import Updatable
@@ -32,7 +33,7 @@ class Raycaster(Updatable):
         player_angle = self.player.angle
         fov = self.settings.FOV
         ray_count = self.settings.RAY_COUNT
-        angle_offset = self.settings.DELTA_ANGLE
+        angle_offset = const.DELTA_ANGLE
         self.rays.clear()
         for ray_number in range(ray_count + 1):
             angle = (

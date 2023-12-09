@@ -1,6 +1,8 @@
 import sys
 import pygame
 
+import const
+
 from settings import Settings
 from drawable import Drawable
 from updatable import Updatable
@@ -26,7 +28,7 @@ class Game:
             cls.settings = Settings()
             pygame.init()
             pygame.mouse.set_visible(False)
-            cls.screen = pygame.display.set_mode(cls.settings.RESOLUTION)
+            cls.screen = pygame.display.set_mode(const.RESOLUTION)
             pygame.display.set_caption(cls.settings.CAPTION)
             cls.delta_time = 1
             cls.clock = pygame.time.Clock()
@@ -57,7 +59,7 @@ class Game:
         """
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_F4:
-                self.settings.MINIMAP_VISIBLE = not self.settings.MINIMAP_VISIBLE
+                const.MINIMAP_VISIBLE = not const.MINIMAP_VISIBLE
 
             if event.type == pygame.QUIT or (
                 event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE

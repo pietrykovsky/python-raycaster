@@ -1,6 +1,7 @@
 import math
 from typing import TYPE_CHECKING
 import pygame
+import const
 
 from drawable import Drawable
 from settings import Settings
@@ -82,7 +83,7 @@ class WorldRenderer(Drawable):
         if ray.texture_id not in self.wall_textures:
             raise ValueError(f"Wall texture with id {ray.texture_id} not found")
 
-        screen_dist = self.settings.SCREEN_DISTANCE
+        screen_dist = const.SCREEN_DISTANCE
         ray_count = self.settings.RAY_COUNT
         column_width = math.ceil(self.settings.SCREEN_WIDTH / ray_count)
 
