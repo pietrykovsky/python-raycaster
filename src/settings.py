@@ -22,6 +22,16 @@ class Settings:
     PLAYER_SENSITIVITY = 0.001
 
     MAX_DISTANCE = 8 * CELL_SIZE
+    
+    # MINIMAP RELATED
+    MINIMAP_VISIBLE = True
+    MINIMAP_RATIO = 0.15
+    MINIMAP_SCALE = (
+        Settings().SCREEN_WIDTH * MINIMAP_RATIO / 10
+    )  # just for now, to fix in next issue
+    MINIMAP_CELL = (
+        Settings().CELL_SIZE / MINIMAP_SCALE
+    )  # just for now, to fix in next issue
 
     def __new__(cls):
         if cls._instance is None:
