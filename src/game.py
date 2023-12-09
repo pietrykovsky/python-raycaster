@@ -26,7 +26,9 @@ class Game:
             cls.settings = Settings()
             pygame.init()
             pygame.mouse.set_visible(False)
-            cls.screen = pygame.display.set_mode(cls.settings.RESOLUTION)
+            cls.screen = pygame.display.set_mode(
+                (cls.settings.SCREEN_WIDTH, cls.settings.SCREEN_HEIGHT)
+            )
             pygame.display.set_caption(cls.settings.CAPTION)
             cls.delta_time = 1
             cls.clock = pygame.time.Clock()

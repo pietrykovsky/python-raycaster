@@ -32,7 +32,7 @@ class Raycaster(Updatable):
         player_angle = self.player.angle
         fov = self.settings.FOV
         ray_count = self.settings.RAY_COUNT
-        angle_offset = self.settings.DELTA_ANGLE
+        angle_offset = math.radians(fov / ray_count)
         self.rays.clear()
         for ray_number in range(ray_count + 1):
             angle = (

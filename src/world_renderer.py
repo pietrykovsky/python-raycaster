@@ -82,7 +82,9 @@ class WorldRenderer(Drawable):
         if ray.texture_id not in self.wall_textures:
             raise ValueError(f"Wall texture with id {ray.texture_id} not found")
 
-        screen_dist = self.settings.SCREEN_DISTANCE
+        screen_dist = (Settings().SCREEN_WIDTH // 2) / math.tan(
+            math.radians(Settings().FOV // 2)
+        )
         ray_count = self.settings.RAY_COUNT
         column_width = math.ceil(self.settings.SCREEN_WIDTH / ray_count)
 
