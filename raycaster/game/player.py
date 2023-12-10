@@ -2,28 +2,31 @@ import math
 from typing import TYPE_CHECKING
 import pygame
 
-from raycaster.core import Updatable
+from raycaster.core import Updatable, Settings
 
 
 if TYPE_CHECKING:
-    from raycaster.game.game import Game
+    from raycaster.game.map import Map
 
 
 class Player(Updatable):
-    def __init__(self, game: "Game"):
-        self.game = game
-        self.speed = game.settings.PLAYER_SPEED
-        self.sensitivity = game.settings.PLAYER_SENSITIVITY
-        self.x = 3.5 * game.settings.CELL_SIZE
-        self.y = 3.5 * game.settings.CELL_SIZE
+    def __init__(self, clock: pygame.time.Clock, map: "Map"):
+        self.map = map
+        self.settings = Settings()
+        self.clock = clock
+        self.speed = self.settings.PLAYER_SPEED
+        self.sensitivity = self.settings.PLAYER_SENSITIVITY
+        self.x = 3.5 * self.settings.CELL_SIZE
+        self.y = 3.5 * self.settings.CELL_SIZE
         self.angle = 0
         self.time_prev = pygame.time.get_ticks()
+        self.delta_time = 1
 
     def handle_movement(self):
         sin_a = math.sin(self.angle)
         cos_a = math.cos(self.angle)
         dx, dy = 0, 0
-        speed = self.speed * self.game.delta_time
+        speed = self.speed * self.delta_time
         speed_sin = speed * sin_a
         speed_cos = speed * cos_a
 
@@ -63,22 +66,22 @@ class Player(Updatable):
         player_dir = math.degrees(self.angle) % 360
         angle_deg = math.degrees(angle) % 360
 
-        fov_start = (player_dir - self.game.settings.FOV / 2) % 360
-        fov_end = (player_dir + self.game.settings.FOV / 2) % 360
+        fov_start = (player_dir - self.settings.FOV / 2) % 360
+        fov_end = (player_dir + self.settings.FOV / 2) % 360
 
         if fov_start < fov_end:
             return fov_start <= angle_deg <= fov_end
         return angle_deg >= fov_start or angle_deg <= fov_end
 
     def check_wall_collision(self, dx: int, dy: int):
-        if not self.game.map.is_wall(
-            int((self.x + dx) / self.game.settings.CELL_SIZE),
-            int(self.y / self.game.settings.CELL_SIZE),
+        if not self.map.is_wall(
+            int((self.x + dx) / self.settings.CELL_SIZE),
+            int(self.y / self.settings.CELL_SIZE),
         ):
             self.x += dx
-        if not self.game.map.is_wall(
-            int(self.x / self.game.settings.CELL_SIZE),
-            int((self.y + dy) / self.game.settings.CELL_SIZE),
+        if not self.map.is_wall(
+            int(self.x / self.settings.CELL_SIZE),
+            int((self.y + dy) / self.settings.CELL_SIZE),
         ):
             self.y += dy
 
@@ -87,13 +90,14 @@ class Player(Updatable):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
             num_key_pressed += 1
-            self.angle -= self.sensitivity * self.game.delta_time
+            self.angle -= self.sensitivity * self.delta_time
             self.angle = self.angle % (2 * math.pi)
         if keys[pygame.K_RIGHT]:
             num_key_pressed += 1
-            self.angle += self.sensitivity * self.game.delta_time
+            self.angle += self.sensitivity * self.delta_time
             self.angle = self.angle % (2 * math.pi)
 
     def update(self):
+        self.delta_time = self.clock.get_time()
         self.handle_movement()
         self.handle_camera()
