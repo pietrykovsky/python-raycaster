@@ -35,6 +35,12 @@ class AssetLoader:
             cls._animated_objects = cls._load_animated_sprites()
             cls._enemies = cls._load_enemies()
             cls._weapons = cls._load_weapons()
+            cls.HUB_TEXTURES_PATH = os.path.join(cls.ASSETS_PATH, "hub")
+
+            cls._walls = cls._load_walls_textures()
+            cls._static_objects = cls._load_static_sprites()
+            cls._hub_face = cls._load_hub_textures()
+
         return cls._instance
 
     @property
@@ -84,6 +90,7 @@ class AssetLoader:
         return static_objects
 
     @classmethod
+<<<<<<< HEAD
     def _load_animated_sprites(cls) -> dict[str, list[pygame.Surface]]:
         """
         Loads all animated sprites from the assets/objects/animated directory.
@@ -188,3 +195,16 @@ class AssetLoader:
         dest_width = int(width * ratio)
         surface = pygame.transform.scale(surface, (dest_width, dest_height))
         return surface
+=======
+    def _load_hub_textures(cls):
+        """
+        Loads all hub textures from the assets/hub directory.
+        """
+        hub_faces = {}
+        for file in os.listdir(cls.HUB_TEXTURES_PATH):
+            file_path = os.path.join(cls.HUB_TEXTURES_PATH, file)
+            key = str(os.path.splitext(file)[0])
+            surface = pygame.image.load(file_path).convert_alpha()
+            hub_faces[key] = surface
+        return hub_faces
+>>>>>>> 0b60b83 (Create player's basic demo HUD)
