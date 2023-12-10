@@ -2,11 +2,11 @@ import math
 from typing import TYPE_CHECKING
 import pygame
 
-from ..core import Updatable
+from raycaster.core import Updatable
 
 
 if TYPE_CHECKING:
-    from .game import Game
+    from raycaster.game.game import Game
 
 
 class Player(Updatable):

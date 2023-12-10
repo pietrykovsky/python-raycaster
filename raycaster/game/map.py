@@ -1,4 +1,4 @@
-from ..core import Settings
+from raycaster.core import Settings
 
 
 class Map:

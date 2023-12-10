@@ -1,3 +1,3 @@
-from .drawable import Drawable
-from .settings import Settings
-from .updatable import Updatable
+from raycaster.core.drawable import Drawable
+from raycaster.core.settings import Settings
+from raycaster.core.updatable import Updatable

@@ -2,17 +2,17 @@ import math
 from typing import TYPE_CHECKING
 import pygame
 
-from ..core import Drawable, Settings
-from ..game import AssetLoader
-from ..objects import ObjectManager, SpriteObject
-from .object_renderer import ObjectRenderer
-from ..utils import calculate_shade_factor, shade_surface
-from .ray import Ray
+from raycaster.core import Drawable, Settings
+from raycaster.game import AssetLoader
+from raycaster.objects import ObjectManager, SpriteObject
+from raycaster.rendering.object_renderer import ObjectRenderer
+from raycaster.utils import calculate_shade_factor, shade_surface
+from raycaster.rendering.ray import Ray
 
 
 if TYPE_CHECKING:
-    from ..rendering import Raycaster
-    from ..game import Map, Player
+    from raycaster.rendering.raycaster import Raycaster
+    from raycaster.game import Map, Player
 
 
 class WorldRenderer(Drawable):

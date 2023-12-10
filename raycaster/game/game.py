@@ -1,10 +1,10 @@
 import sys
 import pygame
 
-from ..core import Settings, Drawable, Updatable
-from .player import Player
-from .map import Map
-from ..rendering import WorldRenderer, GuiRenderer, Raycaster
+from raycaster.core import Settings, Drawable, Updatable
+from raycaster.game.player import Player
+from raycaster.game.map import Map
+from raycaster.rendering import WorldRenderer, GuiRenderer, Raycaster
 
 
 class Game:

@@ -2,11 +2,11 @@ from typing import TYPE_CHECKING
 import math
 import pygame
 
-from ..core import Updatable, Settings
-from ..utils import calculate_distance
+from raycaster.core import Updatable, Settings
+from raycaster.utils import calculate_distance
 
 if TYPE_CHECKING:
-    from ..game import Player
+    from raycaster.game import Player
 
 
 class SpriteObject(Updatable):

@@ -1,7 +1,7 @@
 import os
 import pygame
 
-from ..core import Settings
+from raycaster.core import Settings
 
 
 class AssetLoader:
