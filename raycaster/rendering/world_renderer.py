@@ -8,6 +8,7 @@ from raycaster.objects import ObjectManager, SpriteObject
 from raycaster.rendering.object_renderer import ObjectRenderer
 from raycaster.utils import calculate_shade_factor, shade_surface
 from raycaster.rendering.ray import Ray
+from raycaster import const
 
 
 if TYPE_CHECKING:
@@ -79,7 +80,7 @@ class WorldRenderer(Drawable):
         if ray.texture_id not in self.wall_textures:
             raise ValueError(f"Wall texture with id {ray.texture_id} not found")
 
-        screen_dist = self.settings.SCREEN_DISTANCE
+        screen_dist = const.SCREEN_DISTANCE
         ray_count = self.settings.RAY_COUNT
         column_width = math.ceil(self.settings.SCREEN_WIDTH / ray_count)
 
