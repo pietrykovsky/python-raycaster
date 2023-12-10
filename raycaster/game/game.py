@@ -28,7 +28,7 @@ class Game:
             cls.delta_time = 1
             cls.clock = pygame.time.Clock()
             cls.map = Map()
-            cls.player = Player(cls._instance)
+            cls.player = Player(cls.clock, cls.map)
             cls.raycaster = Raycaster(cls.map, cls.player)
             cls.renderer = WorldRenderer(cls.screen, cls.raycaster, cls.map, cls.player)
             cls.gui_renderer = GuiRenderer(
