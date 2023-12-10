@@ -1,11 +1,11 @@
 from typing import TYPE_CHECKING
 
-from settings import Settings
-from asset_loader import AssetLoader
-from sprite_object import SpriteObject
+from raycaster.core import Settings
+from raycaster.game import AssetLoader
+from raycaster.objects.sprite_object import SpriteObject
 
 if TYPE_CHECKING:
-    from player import Player
+    from raycaster.game import Player
 
 
 class ObjectManager:

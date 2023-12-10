@@ -2,13 +2,13 @@ from typing import TYPE_CHECKING
 import pygame
 import math
 
-from settings import Settings
-from object_manager import ObjectManager
-from utils import calculate_shade_factor, shade_surface
+from raycaster.core import Settings
+from raycaster.objects import ObjectManager
+from raycaster.utils import calculate_shade_factor, shade_surface
 
 if TYPE_CHECKING:
-    from player import Player
-    from sprite_object import SpriteObject
+    from raycaster.game import Player
+    from raycaster.objects import SpriteObject
 
 
 class ObjectRenderer:

@@ -1,15 +1,13 @@
 import math
 from typing import TYPE_CHECKING
 
-from updatable import Updatable
-from ray import Ray
-from settings import Settings
-from utils import calculate_distance
+from raycaster.core import Updatable, Settings
+from raycaster.rendering.ray import Ray
+from raycaster.utils import calculate_distance
 
 
 if TYPE_CHECKING:
-    from player import Player
-    from map import Map
+    from raycaster.game import Player, Map
 
 
 class Raycaster(Updatable):

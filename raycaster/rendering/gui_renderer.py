@@ -1,13 +1,11 @@
 from typing import TYPE_CHECKING
 import pygame
 
-from settings import Settings
-from drawable import Drawable
+from raycaster.core import Settings, Drawable
 
 if TYPE_CHECKING:
-    from player import Player
-    from map import Map
-    from raycaster import Raycaster
+    from raycaster.game import Player, Map
+    from raycaster.rendering.raycaster import Raycaster
 
 
 class GuiRenderer(Drawable):

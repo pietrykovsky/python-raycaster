@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from settings import Settings
+from raycaster.core import Settings
 
 
 @dataclass
