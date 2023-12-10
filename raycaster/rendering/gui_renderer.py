@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 import pygame
 
 from raycaster.core import Settings, Drawable
+from raycaster.game import AssetLoader
 
 if TYPE_CHECKING:
     from raycaster.game import Player, Map
@@ -21,6 +22,7 @@ class GuiRenderer(Drawable):
         self.raycaster = raycaster
         self.player = player
         self.map = map
+        self.hub_textures = AssetLoader()._hub_face
 
     def _draw_walls_on_minimap(self, surface: pygame.Surface, minimap_scale: float):
         for x, y in self.map.walls:
@@ -93,6 +95,108 @@ class GuiRenderer(Drawable):
 
         self.screen.blit(additional_surface, (mini_map_position_x, mini_map_position_y))
 
+    def _draw_face_on_hub(
+        self, hub_height: float, segment_width: float
+    ) -> tuple[pygame.Surface, pygame.Rect]:
+        # Load the face sprite
+        face_sprite = self.hub_textures["face"]
+        # Calculate the aspect ratio of the sprite
+        face_aspect_ratio = face_sprite.get_width() / face_sprite.get_height()
+
+        # Set the maximum height of the sprite to fit within the HUD, leaving some space
+        face_sprite_max_height = (
+            hub_height * 0.8
+        )  # Let's say we want the sprite to take up to 80% of the HUD height
+        face_sprite_max_width = face_sprite_max_height * face_aspect_ratio
+
+        # If the width exceeds the width of one segment, scale it down further
+        if face_sprite_max_width > segment_width:
+            face_sprite_max_width = segment_width
+            face_sprite_max_height = face_sprite_max_width / face_aspect_ratio
+
+        # Scale the sprite to the calculated width and height
+        face_sprite = pygame.transform.scale(
+            face_sprite, (int(face_sprite_max_width), int(face_sprite_max_height))
+        )
+
+        # Get the new rect for the scaled sprite and set its position
+        face_sprite_rect = face_sprite.get_rect(
+            center=(segment_width * 3 + segment_width // 2, hub_height // 2)
+        )
+
+        return face_sprite, face_sprite_rect
+
+    def _render_text_on_hub(
+        self, font: pygame.font.Font, text: str, color: tuple[int, int, int]
+    ) -> pygame.Surface:
+        return font.render(text, True, color)
+
+    def _calculate_position_on_hub(
+        self,
+        segment_width: int,
+        text_width: int,
+        text_height: int,
+        hub_height: int,
+        segment_index: int,
+        is_label: bool,
+    ) -> tuple[int, int]:
+        x_position = segment_width * segment_index + (segment_width - text_width) / 2
+        if is_label:
+            y_position = hub_height - text_height - 10
+        else:
+            y_position = 10
+        return x_position, y_position
+
+    def _draw_hub(self):
+        hub_width = self.settings.SCREEN_WIDTH
+        hub_height = self.settings.SCREEN_HEIGHT * self.settings.HUB_RATIO_HEIGHT
+        hub_position_x, hub_position_y = 0, self.settings.SCREEN_HEIGHT - hub_height
+
+        hub_surface = pygame.Surface((hub_width, hub_height))
+        hub_surface.fill((128, 128, 128))
+
+        font_1 = pygame.font.SysFont("arial", 50)
+        font_2 = pygame.font.SysFont("arial", 20)
+
+        data = [("43", "AMMO", 0), ("100%", "HEALTH", 1), ("97%", "ARMOR", 4)]
+        # later it will be
+        # data = [(f"{self.player.ammo}", "AMMO", 0), (f"{self.player.health}%", "HEALTH", 1), (f"{self.player.armor}%", "ARMOR", 4)]
+
+        segment_width = hub_width // 7
+
+        for value, label, segment_index in data:
+            value_text = self._render_text_on_hub(font_1, value, (255, 0, 0))
+            label_text = self._render_text_on_hub(font_2, label, (255, 0, 0))
+
+            value_pos = self._calculate_position_on_hub(
+                segment_width,
+                value_text.get_width(),
+                value_text.get_height(),
+                hub_height,
+                segment_index,
+                False,
+            )
+            label_pos = self._calculate_position_on_hub(
+                segment_width,
+                label_text.get_width(),
+                label_text.get_height(),
+                hub_height,
+                segment_index,
+                True,
+            )
+
+            hub_surface.blit(value_text, value_pos)
+            hub_surface.blit(label_text, label_pos)
+
+        face_sprite, face_sprite_rect = self._draw_face_on_hub(
+            hub_height, segment_width
+        )
+        hub_surface.blit(face_sprite, face_sprite_rect)
+
+        self.screen.blit(hub_surface, (hub_position_x, hub_position_y))
+
     def draw(self):
         if self.settings.MINIMAP_VISIBLE:
             self._draw_minimap()
+        if self.settings.HUB_VISIBLE:
+            self._draw_hub()

@@ -23,9 +23,12 @@ class AssetLoader:
             cls.WALL_TEXTURES_PATH = os.path.join(cls.ASSETS_PATH, "walls")
             cls.OBJECTS_SPRITES_PATH = os.path.join(cls.ASSETS_PATH, "objects")
             cls.STATIC_SPRITES_PATH = os.path.join(cls.OBJECTS_SPRITES_PATH, "static")
+            cls.HUB_TEXTURES_PATH = os.path.join(cls.ASSETS_PATH, "hub")
 
             cls._walls = cls._load_walls_textures()
             cls._static_objects = cls._load_static_sprites()
+            cls._hub_face = cls._load_hub_textures()
+
         return cls._instance
 
     @property
@@ -66,3 +69,16 @@ class AssetLoader:
             s_width, s_height = int(cell_size * s_ratio), cell_size  # TODO: fix this
             static_objects[key] = pygame.transform.scale(surface, (s_width, s_height))
         return static_objects
+
+    @classmethod
+    def _load_hub_textures(cls):
+        """
+        Loads all hub textures from the assets/hub directory.
+        """
+        hub_faces = {}
+        for file in os.listdir(cls.HUB_TEXTURES_PATH):
+            file_path = os.path.join(cls.HUB_TEXTURES_PATH, file)
+            key = str(os.path.splitext(file)[0])
+            surface = pygame.image.load(file_path).convert_alpha()
+            hub_faces[key] = surface
+        return hub_faces

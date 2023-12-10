@@ -54,6 +54,9 @@ class Game:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_F4:
                 self.settings.MINIMAP_VISIBLE = not self.settings.MINIMAP_VISIBLE
 
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_F5:
+                self.settings.HUB_VISIBLE = not self.settings.HUB_VISIBLE
+
             if event.type == pygame.QUIT or (
                 event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE
             ):
