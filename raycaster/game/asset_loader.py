@@ -42,7 +42,7 @@ class AssetLoader:
 
     @property
     def animated_objects(self) -> dict[int, list[pygame.Surface]]:
-        return self._static_objects.copy()
+        return self._animated_objects.copy()
 
     @classmethod
     def _resize_to_cell_size(cls, surface: pygame.Surface) -> pygame.Surface:
