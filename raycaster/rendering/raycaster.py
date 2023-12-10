@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 from raycaster.core import Updatable, Settings
 from raycaster.rendering.ray import Ray
 from raycaster.utils import calculate_distance
-
+from raycaster import const
 
 if TYPE_CHECKING:
     from raycaster.game import Player, Map
@@ -30,7 +30,7 @@ class Raycaster(Updatable):
         player_angle = self.player.angle
         fov = self.settings.FOV
         ray_count = self.settings.RAY_COUNT
-        angle_offset = self.settings.DELTA_ANGLE
+        angle_offset = const.DELTA_ANGLE
         self.rays.clear()
         for ray_number in range(ray_count + 1):
             angle = (

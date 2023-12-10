@@ -5,6 +5,7 @@ import math
 from raycaster.core import Settings
 from raycaster.objects import ObjectManager
 from raycaster.utils import calculate_shade_factor, shade_surface
+from raycaster import const
 
 if TYPE_CHECKING:
     from raycaster.game import Player
@@ -29,7 +30,7 @@ class ObjectRenderer:
         :param obj: Object to calculate dimensions for
         :return: Object's spatial dimensions
         """
-        screen_dist = Settings().SCREEN_DISTANCE
+        screen_dist = const.SCREEN_DISTANCE
         texture_width, texture_height = obj.texture.get_size()
         height = screen_dist * texture_height / obj.distance
         width = screen_dist * texture_width / obj.distance
@@ -42,7 +43,7 @@ class ObjectRenderer:
         :param obj: Object to calculate position for
         :return: Object's position on the screen
         """
-        screen_dist = Settings().SCREEN_DISTANCE
+        screen_dist = const.SCREEN_DISTANCE
         rel_angle = obj.angle - self.player.angle - math.pi
         spatial_width, spatial_height = self._calculate_spatial_dimensions(obj)
         screen_y = (

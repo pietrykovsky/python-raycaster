@@ -5,6 +5,7 @@ from raycaster.core import Settings, Drawable, Updatable
 from raycaster.game.player import Player
 from raycaster.game.map import Map
 from raycaster.rendering import WorldRenderer, GuiRenderer, Raycaster
+from raycaster import const
 
 
 class Game:
@@ -22,7 +23,7 @@ class Game:
             cls.settings = Settings()
             pygame.init()
             pygame.mouse.set_visible(False)
-            cls.screen = pygame.display.set_mode(cls.settings.RESOLUTION)
+            cls.screen = pygame.display.set_mode(const.RESOLUTION)
             pygame.display.set_caption(cls.settings.CAPTION)
             cls.delta_time = 1
             cls.clock = pygame.time.Clock()
