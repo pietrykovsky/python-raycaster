@@ -1,11 +1,7 @@
 import math
 import pygame
 
-<<<<<<< HEAD
 from .core.settings import Settings
-=======
-from raycaster.core.settings import Settings
->>>>>>> 920076e0999e8a9f92b90fd4a96a6bb1c0f52519
 
 
 def calculate_distance(start_x, start_y, end_x, end_y) -> float:
