@@ -26,7 +26,7 @@ class GuiRenderer(Drawable):
         for x, y in self.map.walls:
             pygame.draw.rect(
                 surface,
-                (255, 255, 255, 75),
+                (255, 255, 255, 255 * self.settings.MINIMAP_OPACITY_RATIO),
                 (
                     (x * minimap_scale),
                     y * minimap_scale,
@@ -39,7 +39,7 @@ class GuiRenderer(Drawable):
     def _draw_player_on_minimap(self, surface: pygame.Surface, minimap_cell: float):
         pygame.draw.circle(
             surface,
-            (0, 255, 0, 75),
+            (0, 255, 0, 255 * self.settings.MINIMAP_OPACITY_RATIO),
             (
                 self.player.x / minimap_cell,
                 self.player.y / minimap_cell,
@@ -52,7 +52,7 @@ class GuiRenderer(Drawable):
         for ray in rays:
             pygame.draw.line(
                 surface,
-                (255, 255, 0, 75),
+                (255, 255, 0, 255 * self.settings.MINIMAP_OPACITY_RATIO),
                 (
                     ray.x_start / minimap_cell,
                     ray.y_start / minimap_cell,
@@ -62,19 +62,14 @@ class GuiRenderer(Drawable):
             )
 
     def _draw_minimap(self):
-        # Check if the map is wider or taller
         if self.map.cols > self.map.rows:
             # Map is wider than it is tall
-            mini_map_width = (
-                self.settings.SCREEN_WIDTH * self.settings.MINIMAP_RATIO_WIDTH
-            )
+            mini_map_width = self.settings.SCREEN_WIDTH * self.settings.MINIMAP_RATIO
             mini_map_scale = mini_map_width / self.map.cols
             mini_map_height = mini_map_scale * self.map.rows
         else:
             # Map is taller than it is wide
-            mini_map_height = (
-                self.settings.SCREEN_HEIGHT * self.settings.MINIMAP_RATIO_HEIGHT
-            )
+            mini_map_height = self.settings.SCREEN_HEIGHT * self.settings.MINIMAP_RATIO
             mini_map_scale = mini_map_height / self.map.rows
             mini_map_width = mini_map_scale * self.map.cols
 

@@ -26,8 +26,8 @@ class Settings:
 
     # MINIMAP RELATED
     MINIMAP_VISIBLE = True
-    MINIMAP_RATIO_WIDTH = 0.25
-    MINIMAP_RATIO_HEIGHT = 0.5
+    MINIMAP_RATIO = 0.25
+    MINIMAP_OPACITY_RATIO = 0.33
 
     def __new__(cls):
         if cls._instance is None:
