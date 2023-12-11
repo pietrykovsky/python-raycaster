@@ -36,10 +36,11 @@ class AssetLoader:
             cls._enemies = cls._load_enemies()
             cls._weapons = cls._load_weapons()
             cls.HUB_TEXTURES_PATH = os.path.join(cls.ASSETS_PATH, "hub")
+            cls.HUD_TEXTURES_PATH = os.path.join(cls.ASSETS_PATH, "hud")
 
             cls._walls = cls._load_walls_textures()
             cls._static_objects = cls._load_static_sprites()
-            cls._hub_face = cls._load_hub_textures()
+            cls._hud_face = cls._load_hud_textures()
 
         return cls._instance
 
@@ -90,6 +91,7 @@ class AssetLoader:
         return static_objects
 
     @classmethod
+<<<<<<< HEAD
 <<<<<<< HEAD
     def _load_animated_sprites(cls) -> dict[str, list[pygame.Surface]]:
         """
@@ -197,14 +199,22 @@ class AssetLoader:
         return surface
 =======
     def _load_hub_textures(cls):
+=======
+    def _load_hud_textures(cls):
+>>>>>>> 10c2261 (Minor changes in HUD misspell)
         """
-        Loads all hub textures from the assets/hub directory.
+        Loads all hud textures from the assets/hud directory.
         """
-        hub_faces = {}
-        for file in os.listdir(cls.HUB_TEXTURES_PATH):
-            file_path = os.path.join(cls.HUB_TEXTURES_PATH, file)
+        hud_faces = {}
+        for file in os.listdir(cls.HUD_TEXTURES_PATH):
+            file_path = os.path.join(cls.HUD_TEXTURES_PATH, file)
             key = str(os.path.splitext(file)[0])
             surface = pygame.image.load(file_path).convert_alpha()
+<<<<<<< HEAD
             hub_faces[key] = surface
         return hub_faces
 >>>>>>> 0b60b83 (Create player's basic demo HUD)
+=======
+            hud_faces[key] = surface
+        return hud_faces
+>>>>>>> 10c2261 (Minor changes in HUD misspell)
