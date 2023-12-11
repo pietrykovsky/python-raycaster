@@ -23,9 +23,12 @@ class AssetLoader:
             cls.WALL_TEXTURES_PATH = os.path.join(cls.ASSETS_PATH, "walls")
             cls.OBJECTS_SPRITES_PATH = os.path.join(cls.ASSETS_PATH, "objects")
             cls.STATIC_SPRITES_PATH = os.path.join(cls.OBJECTS_SPRITES_PATH, "static")
+            cls.HUD_TEXTURES_PATH = os.path.join(cls.ASSETS_PATH, "hud")
 
             cls._walls = cls._load_walls_textures()
             cls._static_objects = cls._load_static_sprites()
+            cls._hud_face = cls._load_hud_textures()
+
         return cls._instance
 
     @property
@@ -66,3 +69,16 @@ class AssetLoader:
             s_width, s_height = int(cell_size * s_ratio), cell_size  # TODO: fix this
             static_objects[key] = pygame.transform.scale(surface, (s_width, s_height))
         return static_objects
+
+    @classmethod
+    def _load_hud_textures(cls):
+        """
+        Loads all hud textures from the assets/hud directory.
+        """
+        hud_faces = {}
+        for file in os.listdir(cls.HUD_TEXTURES_PATH):
+            file_path = os.path.join(cls.HUD_TEXTURES_PATH, file)
+            key = str(os.path.splitext(file)[0])
+            surface = pygame.image.load(file_path).convert_alpha()
+            hud_faces[key] = surface
+        return hud_faces
