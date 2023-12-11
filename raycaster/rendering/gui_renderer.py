@@ -103,9 +103,7 @@ class GuiRenderer(Drawable):
         # Calculate the aspect ratio of the sprite
         face_aspect_ratio = face_sprite.get_width() / face_sprite.get_height()
 
-        face_sprite_max_height = (
-            hud_height * 0.8
-        )
+        face_sprite_max_height = hud_height * 0.8
         face_sprite_max_width = face_sprite_max_height * face_aspect_ratio
 
         # If the width exceeds the width of one segment, scale it down further
