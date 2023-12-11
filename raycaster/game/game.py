@@ -23,7 +23,14 @@ class Game:
             cls.settings = Settings()
             pygame.init()
             pygame.mouse.set_visible(False)
-            cls.screen = pygame.display.set_mode(const.RESOLUTION)
+            if Settings().FULLSCREEN_MODE:
+                cls.screen = pygame.display.set_mode(
+                    (const.SCREEN_WIDTH, const.SCREEN_HEIGHT), pygame.FULLSCREEN
+                )
+            else:
+                cls.screen = pygame.display.set_mode(
+                    (const.SCREEN_WIDTH, const.SCREEN_HEIGHT), pygame.RESIZABLE
+                )
             pygame.display.set_caption(cls.settings.CAPTION)
             cls.delta_time = 1
             cls.clock = pygame.time.Clock()
@@ -48,17 +55,41 @@ class Game:
 
     def handle_events(self):
         """
-        Handles all events.
+        Handling events and switch betwenn screen modes
         """
         for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_F4:
-                self.settings.MINIMAP_VISIBLE = not self.settings.MINIMAP_VISIBLE
-
-            if event.type == pygame.QUIT or (
-                event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE
-            ):
+            if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+
+            # Window resizing
+            if event.type == pygame.VIDEORESIZE and not Settings().FULLSCREEN_MODE:
+                const.SCREEN_WIDTH, const.SCREEN_HEIGHT = event.w, event.h
+                self.screen = pygame.display.set_mode(
+                    (const.SCREEN_WIDTH, const.SCREEN_HEIGHT), pygame.RESIZABLE
+                )
+
+            if event.type == pygame.KEYDOWN:
+                # Toggle full screen mode
+                if event.key == pygame.K_ESCAPE:
+                    Settings().FULLSCREEN_MODE = not Settings().FULLSCREEN_MODE
+                    if Settings().FULLSCREEN_MODE:
+                        const.SCREEN_WIDTH, const.SCREEN_HEIGHT = (
+                            Settings().BASIC_SCREEN_WIDTH,
+                            Settings().BASIC_SCREEN_HEIGHT,
+                        )  # IMPORTANT line, you need to reset the assignment the event.w and t h event.h to constants, otherwise it will not work
+                        self.screen = pygame.display.set_mode(
+                            (const.SCREEN_WIDTH, const.SCREEN_HEIGHT), pygame.FULLSCREEN
+                        )
+                    else:
+                        self.screen = pygame.display.set_mode(
+                            (const.SCREEN_WIDTH, const.SCREEN_HEIGHT), pygame.RESIZABLE
+                        )
+                elif event.key == pygame.K_F4:
+                    Settings().MINIMAP_VISIBLE = not Settings().MINIMAP_VISIBLE
+
+            # Screen update
+            pygame.display.flip()
 
     def update(self):
         """

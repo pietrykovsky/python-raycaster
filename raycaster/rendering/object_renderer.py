@@ -47,17 +47,17 @@ class ObjectRenderer:
         rel_angle = obj.angle - self.player.angle - math.pi
         spatial_width, spatial_height = self._calculate_spatial_dimensions(obj)
         screen_y = (
-            Settings().SCREEN_HEIGHT // 2 - spatial_height // 2
-            if spatial_height <= Settings().SCREEN_HEIGHT
+            const.SCREEN_HEIGHT // 2 - spatial_height // 2
+            if spatial_height <= const.SCREEN_HEIGHT
             else 0
         )
         screen_x = (
             (
                 math.tan(rel_angle) * screen_dist
-                + Settings().SCREEN_WIDTH // 2
+                + const.SCREEN_WIDTH // 2
                 - spatial_width // 2
             )
-            if spatial_width <= Settings().SCREEN_WIDTH
+            if spatial_width <= const.SCREEN_WIDTH
             else math.tan(rel_angle) * screen_dist
         )
         return int(screen_x), int(screen_y)
@@ -66,7 +66,7 @@ class ObjectRenderer:
         """
         Checks if the dimensions are smaller than the screen.
         """
-        return height <= Settings().SCREEN_HEIGHT and width <= Settings().SCREEN_WIDTH
+        return height <= const.SCREEN_HEIGHT and width <= const.SCREEN_WIDTH
 
     def _get_subsurface(
         self, obj: "SpriteObject", sprite: pygame.Surface
@@ -81,11 +81,9 @@ class ObjectRenderer:
         texture_width, texture_height = obj.texture.get_size()
         spatial_width, spatial_height = self._calculate_spatial_dimensions(obj)
 
-        if spatial_width > Settings().SCREEN_WIDTH:
+        if spatial_width > const.SCREEN_WIDTH:
             x_offset = (
-                (spatial_width - Settings().SCREEN_WIDTH)
-                / spatial_width
-                * texture_width
+                (spatial_width - const.SCREEN_WIDTH) / spatial_width * texture_width
             )
             x_start = x_offset / 2
             surface_width = texture_width - x_offset
@@ -93,11 +91,9 @@ class ObjectRenderer:
             x_start = 0
             surface_width = texture_width
 
-        if spatial_height > Settings().SCREEN_HEIGHT:
+        if spatial_height > const.SCREEN_HEIGHT:
             y_offset = (
-                (spatial_height - Settings().SCREEN_HEIGHT)
-                / spatial_height
-                * texture_height
+                (spatial_height - const.SCREEN_HEIGHT) / spatial_height * texture_height
             )
             y_start = y_offset / 2
             surface_height = texture_height - y_offset
@@ -113,10 +109,8 @@ class ObjectRenderer:
         """
         Returns the scaled dimensions of the object based on the spatial dimensions.
         """
-        width = Settings().SCREEN_WIDTH if width > Settings().SCREEN_WIDTH else width
-        height = (
-            Settings().SCREEN_HEIGHT if height > Settings().SCREEN_HEIGHT else height
-        )
+        width = const.SCREEN_WIDTH if width > const.SCREEN_WIDTH else width
+        height = const.SCREEN_HEIGHT if height > const.SCREEN_HEIGHT else height
         return int(width), int(height)
 
     def draw(self, obj: "SpriteObject"):

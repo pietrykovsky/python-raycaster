@@ -35,10 +35,9 @@ class WorldRenderer(Drawable):
         """
         Draws the background with gradient shading in the centre.
         """
-        for row in range(self.settings.SCREEN_HEIGHT // 2):
+        for row in range(const.SCREEN_HEIGHT // 2):
             shade_factor = (
-                (self.settings.SCREEN_HEIGHT // 2 - row)
-                / (self.settings.SCREEN_HEIGHT // 2)
+                (const.SCREEN_HEIGHT // 2 - row) / (const.SCREEN_HEIGHT // 2)
             ) ** 2
             pygame.draw.line(
                 self.screen,
@@ -48,13 +47,12 @@ class WorldRenderer(Drawable):
                     int(50) * shade_factor,
                 ),
                 (0, row),
-                (self.settings.SCREEN_WIDTH, row),
+                (const.SCREEN_WIDTH, row),
                 1,
             )
-        for row in range(self.settings.SCREEN_HEIGHT // 2, self.settings.SCREEN_HEIGHT):
+        for row in range(const.SCREEN_HEIGHT // 2, const.SCREEN_HEIGHT):
             shade_factor = (
-                (row - self.settings.SCREEN_HEIGHT // 2)
-                / (self.settings.SCREEN_HEIGHT // 2)
+                (row - const.SCREEN_HEIGHT // 2) / (const.SCREEN_HEIGHT // 2)
             ) ** 2
             pygame.draw.line(
                 self.screen,
@@ -64,7 +62,7 @@ class WorldRenderer(Drawable):
                     int(30) * shade_factor,
                 ),
                 (0, row),
-                (self.settings.SCREEN_WIDTH, row),
+                (const.SCREEN_WIDTH, row),
                 1,
             )
 
@@ -82,7 +80,7 @@ class WorldRenderer(Drawable):
 
         screen_dist = const.SCREEN_DISTANCE
         ray_count = self.settings.RAY_COUNT
-        column_width = math.ceil(self.settings.SCREEN_WIDTH / ray_count)
+        column_width = math.ceil(const.SCREEN_WIDTH / ray_count)
 
         wall_texture = self.wall_textures[ray.texture_id]
 
@@ -94,19 +92,17 @@ class WorldRenderer(Drawable):
         )
         texture_height = wall_texture.get_height()
 
-        if height <= self.settings.SCREEN_HEIGHT:
+        if height <= const.SCREEN_HEIGHT:
             column = wall_texture.subsurface(x_offset, 0, 1, texture_height)
             column = pygame.transform.scale(column, (column_width, height))
-            y_pos = self.settings.SCREEN_HEIGHT / 2 - height / 2
+            y_pos = const.SCREEN_HEIGHT / 2 - height / 2
         else:
-            y_offset = height - self.settings.SCREEN_HEIGHT
+            y_offset = height - const.SCREEN_HEIGHT
             y_offset = y_offset / height * self.settings.CELL_SIZE
             column = wall_texture.subsurface(
                 x_offset, y_offset / 2, 1, self.settings.CELL_SIZE - y_offset
             )
-            column = pygame.transform.scale(
-                column, (column_width, self.settings.SCREEN_HEIGHT)
-            )
+            column = pygame.transform.scale(column, (column_width, const.SCREEN_HEIGHT))
             y_pos = 0
 
         shade = calculate_shade_factor(ray.length)
@@ -135,9 +131,5 @@ class WorldRenderer(Drawable):
                 object_renderer.draw(obj)
 
     def draw(self):
-        """
-        TODO: Find out why sometimes(very often) screen turns black when player run into wall and fix this.
-        (objection: isn't it because of the player's falling into the wall? perhaps we should check wall hitbox)
-        """
         self._draw_background()
         self._draw_world()
