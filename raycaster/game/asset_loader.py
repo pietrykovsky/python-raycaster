@@ -94,7 +94,8 @@ class AssetLoader:
         for dir in os.listdir(cls.ANIMATED_SPRITES_PATH):
             dir_path = os.path.join(cls.ANIMATED_SPRITES_PATH, dir)
             animated_objects[dir] = []
-            for file in os.listdir(dir_path):
+            files = os.listdir(dir_path).sort()
+            for file in files:
                 file_path = os.path.join(dir_path, file)
                 surface = pygame.image.load(file_path).convert_alpha()
                 surface = cls._resize_to_cell_size(surface)
