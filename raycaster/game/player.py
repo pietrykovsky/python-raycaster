@@ -74,14 +74,23 @@ class Player(Updatable):
         return angle_deg >= fov_start or angle_deg <= fov_end
 
     def check_wall_collision(self, dx: int, dy: int):
+        margin = 5  # margin in pixels
+
+        # Check collision with horizontal walls
         if not self.map.is_wall(
-            int((self.x + dx) / self.settings.CELL_SIZE),
+            int(
+                (self.x + dx + margin * math.copysign(1, dx)) / self.settings.CELL_SIZE
+            ),
             int(self.y / self.settings.CELL_SIZE),
         ):
             self.x += dx
+
+        # Check collision with vertical walls
         if not self.map.is_wall(
             int(self.x / self.settings.CELL_SIZE),
-            int((self.y + dy) / self.settings.CELL_SIZE),
+            int(
+                (self.y + dy + margin * math.copysign(1, dy)) / self.settings.CELL_SIZE
+            ),
         ):
             self.y += dy
 
