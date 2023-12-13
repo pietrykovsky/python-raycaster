@@ -25,6 +25,7 @@ class ObjectManager:
         candlebra_texture = AssetLoader().static_objects.get("candlebra")
         npc_texture = AssetLoader().static_objects.get("npc")
         test_animation = AssetLoader().animated_objects.get("test")
+        quagmire = AssetLoader().animated_objects.get("quagmire")
         cell_size = Settings().CELL_SIZE
         cls._objects = [
             SpriteObject(
@@ -40,7 +41,7 @@ class ObjectManager:
             SpriteObject((7.5 * cell_size, 2.5 * cell_size), npc_texture, cls.player),
             AnimatedSpriteObject(
                 (9.5 * cell_size, 2.5 * cell_size),
-                test_animation,
+                quagmire,
                 cls.player,
                 animation_duration=5,
             ),
