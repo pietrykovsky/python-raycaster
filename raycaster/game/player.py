@@ -95,7 +95,7 @@ class Player(Updatable):
         if keys[pygame.K_RIGHT]:
             num_key_pressed += 1
             self.angle += self.sensitivity * self.delta_time
-            self.angle = self.angle % (2 * math.pi)
+            self.angle = self.angle % (2 * math.pi) 
 
     def update(self):
         self.delta_time = self.clock.get_time()

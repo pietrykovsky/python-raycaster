@@ -65,22 +65,22 @@ class GuiRenderer(Drawable):
     def _draw_minimap(self):
         if self.map.cols > self.map.rows:
             # Map is wider than it is tall
-            mini_map_width = const.SCREEN_WIDTH * self.settings.MINIMAP_RATIO
+            mini_map_width = Settings().SCREEN_WIDTH * self.settings.MINIMAP_RATIO
             mini_map_scale = mini_map_width / self.map.cols
             mini_map_height = mini_map_scale * self.map.rows
         else:
             # Map is taller than it is wide
-            mini_map_height = const.SCREEN_HEIGHT * self.settings.MINIMAP_RATIO
+            mini_map_height = Settings().SCREEN_HEIGHT * self.settings.MINIMAP_RATIO
             mini_map_scale = mini_map_height / self.map.rows
             mini_map_width = mini_map_scale * self.map.cols
 
         mini_map_cell = self.settings.CELL_SIZE / mini_map_scale
 
         mini_map_position_x = (
-            0  # (const.SCREEN_WIDTH - mini_map_width) --> right corner
+            0  # (Settings().SCREEN_WIDTH - mini_map_width) --> right corner
         )
         mini_map_position_y = (
-            0  # (const.SCREEN_HEIGHT - mini_map_height) --> down corner
+            0  # (Settings().SCREEN_HEIGHT - mini_map_height) --> down corner
         )
 
         additional_surface = pygame.Surface(
