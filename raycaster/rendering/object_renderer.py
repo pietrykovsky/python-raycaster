@@ -32,8 +32,12 @@ class ObjectRenderer:
         """
         screen_dist = const.SCREEN_DISTANCE
         texture_width, texture_height = obj.texture.get_size()
-        height = screen_dist * texture_height / obj.distance
-        width = screen_dist * texture_width / obj.distance
+        height_scale_factor = (
+            Settings().SCREEN_HEIGHT / Settings().ORIGINAL_SCREEN_HEIGHT
+        )
+        height = (screen_dist * texture_height / obj.distance) * height_scale_factor
+        width_scale_factor = Settings().SCREEN_WIDTH / Settings().ORIGINAL_SCREEN_WIDTH
+        width = (screen_dist * texture_width / obj.distance) * width_scale_factor
         return int(width), int(height)
 
     def _calculate_position_on_screen(self, obj: "SpriteObject") -> tuple[int, int]:

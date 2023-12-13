@@ -2,8 +2,13 @@ class Settings:
     _instance = None
 
     # GAME RELATED
+
     SCREEN_WIDTH = 1280
     SCREEN_HEIGHT = 720
+    ORIGINAL_SCREEN_WIDTH = SCREEN_WIDTH
+    ORIGINAL_SCREEN_HEIGHT = SCREEN_HEIGHT
+    FULLSCREEN_MODE = True  # Press F11 to change
+    MINIMIZE_RATIO = 0.5
 
     CAPTION = "DOOM - demo"
     FPS = 60
