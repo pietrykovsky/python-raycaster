@@ -9,6 +9,29 @@ from raycaster.game import AssetLoader
 if TYPE_CHECKING:
     from raycaster.game import Player
 
+class Animation:
+    def __init__(self, frames: list[pygame.Surface], duration: float):
+        self.frames = frames
+        self.duration = duration
+        self._frame_time = duration / len(self.frames)
+        self._frame_index = 0
+        self._time_prev = pygame.time.get_ticks()
+
+    @property
+    def current_frame(self) -> pygame.Surface:
+        self._update()
+        return self.frames[self._frame_index]
+    
+    def reset(self):
+        self._frame_index = 0
+        self._time_prev = pygame.time.get_ticks()
+
+    def _update(self):
+        time_now = pygame.time.get_ticks()
+        if time_now - self._time_prev > self._frame_time * 1000:  # convert to ms
+            self._time_prev = time_now
+            self._frame_index = (self._frame_index + 1) % len(self.frames)
+
 
 class Animation:
     def __init__(
