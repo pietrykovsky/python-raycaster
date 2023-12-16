@@ -120,6 +120,7 @@ class WorldRenderer(Drawable):
         objects = [
             *[ray for ray in self.raycaster.rays if ray.hit_wall],
             *object_manager.objects,
+            *object_manager.enemies,
         ]
         objects.sort(
             key=lambda obj: obj.distance

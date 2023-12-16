@@ -14,6 +14,7 @@ SCREEN_DISTANCE = (Settings().SCREEN_WIDTH // 2) / math.tan(
     math.radians(Settings().FOV // 2)
 )
 
+
 # SPRITES RELATED
 class AnimationType(Enum):
     IDLE = "idle"

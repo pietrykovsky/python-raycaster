@@ -46,7 +46,7 @@ class AssetLoader:
     @property
     def animated_objects(self) -> dict[int, list[pygame.Surface]]:
         return self._animated_objects.copy()
-    
+
     @property
     def enemies(self) -> dict[str, dict[AnimationType, list[pygame.Surface]]]:
         return self._enemies.copy()
@@ -109,7 +109,7 @@ class AssetLoader:
                 surface = cls._resize_to_cell_size(surface)
                 animated_objects[dir].append(surface)
         return animated_objects
-    
+
     @classmethod
     def _load_enemies(cls) -> dict[str, dict[AnimationType, list[pygame.Surface]]]:
         """

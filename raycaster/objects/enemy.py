@@ -1,14 +1,24 @@
 from typing import TYPE_CHECKING
+from enum import Enum
 
 import pygame
 
 from raycaster.objects.animated_sprite_object import AnimatedSpriteObject, Animation
 from raycaster.game import AssetLoader
+from raycaster.core import Settings, Event
 from raycaster.const import AnimationType
 
 
 if TYPE_CHECKING:
     from raycaster.game import Player
+
+
+class EnemyState(Enum):
+    IDLE = 0
+    MOVE = 1
+    ATTACK = 2
+    HIT = 3
+    DEATH = 4
 
 
 class Enemy(AnimatedSpriteObject):
@@ -36,64 +46,106 @@ class Enemy(AnimatedSpriteObject):
         self.attack_range = attack_range
         self.attack_cooldown = attack_cooldown
         self.attack_timer = 0
+        self.state = EnemyState.IDLE
+        self.death_handler = Event()
 
-    def _player_in_range(self) -> bool:
-        return self.distance <= self.attack_range
+    def apply_damage(self, damage: float):
+        self.health -= damage
+        if self.health <= 0:
+            self.state = EnemyState.DEATH
+        else:
+            self.state = EnemyState.HIT
 
-    def change_animation(self, animation_type: AnimationType):
+    def update(self):
+        self._update_state()
+        super().update()
+
+    def _update_state(self):
+        if self._can_attack():
+            self._attack()
+        elif self._can_move():
+            self._move()
+        elif self._got_hit():
+            self._hit()
+        elif self._is_killed():
+            self._die()
+        else:
+            self._idle()
+
+    def _can_attack(self) -> bool:
+        if self.state == EnemyState.ATTACK and not self._finished_attack():
+            return True
+        return (
+            self._player_in_attack_range()
+            and not self._attack_on_cooldown()
+            and not self._got_hit()
+            and not self._is_killed()
+        )
+
+    def _attack(self):
+        self.attack_timer = (
+            pygame.time.get_ticks()
+            + self.animations.get(AnimationType.ATTACK).duration * 1000
+        )
+        self._change_animation(AnimationType.ATTACK)
+        self.state = EnemyState.ATTACK
+
+    def _can_move(self) -> bool:
+        return (
+            not self._player_in_attack_range()
+            and not self._got_hit()
+            and not self._is_killed()
+            and not self.state == EnemyState.ATTACK
+            and self._player_in_move_range()
+        )
+
+    def _move(self):
+        self._change_animation(AnimationType.MOVE)
+        self.state = EnemyState.MOVE
+        # TODO: ADD PATHFINDING AND IMPLEMENT POSITION UPDATE
+
+    def _got_hit(self):
+        return self.state == EnemyState.HIT
+
+    def _hit(self):
+        self._change_animation(AnimationType.HIT)
+        if self.animation.finished:
+            self._idle()
+
+    def _is_killed(self):
+        return self.state == EnemyState.DEATH
+
+    def _die(self):
+        self._change_animation(AnimationType.DEATH)
+        if self.animation.finished:
+            self.death_handler.invoke(self)
+
+    def _idle(self):
+        self._change_animation(AnimationType.IDLE)
+        self.state = EnemyState.IDLE
+
+    def _change_animation(self, animation_type: AnimationType):
         if self.animation == self.animations.get(animation_type):
             return
         self.animation = self.animations.get(animation_type)
         self.animation.reset()
+
+    def _player_in_move_range(self) -> bool:
+        return self.distance <= Settings().MAX_DISTANCE
+
+    def _player_in_attack_range(self) -> bool:
+        return self.distance <= self.attack_range
 
     def _attack_on_cooldown(self) -> bool:
         if self.attack_timer == 0:
             return False
         return pygame.time.get_ticks() - self.attack_timer < self.attack_cooldown * 1000
 
-    def _got_hit(self):
-        return (
-            self.animation == self.animations.get(AnimationType.HIT)
-            and not self.animation.finished
-        )
-
-    def _can_attack(self) -> bool:
-        return (
-            self._player_in_range()
-            and not self._attack_on_cooldown()
-            and not self._got_hit()
-        )
-
     def _finished_attack(self) -> bool:
         return (
             self.animation == self.animations.get(AnimationType.ATTACK)
             and self.animation.finished
         )
-
-    def attack(self):
-        self.attack_timer = (
-            pygame.time.get_ticks()
-            + self.animations.get(AnimationType.ATTACK).duration * 1000
-        )
-        self.change_animation(AnimationType.ATTACK)
-
-    def _can_move(self) -> bool:
-        return not self._player_in_range() and not self._got_hit()
-
-    def move(self):
-        self.animation = self.animations.get(AnimationType.MOVE)
-
-    def update(self):
-        if self._can_attack():
-            self.attack()
-        elif self._can_move():
-            self.move()
-        elif (
-            not self._can_move() and not self._can_attack() and self._finished_attack()
-        ):
-            self.change_animation(AnimationType.IDLE)
-
-        super().update()
 
 
 class Test(Enemy):
@@ -102,7 +154,7 @@ class Test(Enemy):
         animations = {
             AnimationType.IDLE: Animation(
                 frames=assets.get(AnimationType.IDLE),
-                duration=0.5,
+                duration=3,
             ),
             AnimationType.MOVE: Animation(
                 frames=assets.get(AnimationType.MOVE),
@@ -115,7 +167,12 @@ class Test(Enemy):
             ),
             AnimationType.HIT: Animation(
                 frames=assets.get(AnimationType.HIT),
-                duration=0.5,
+                duration=3,
+                repeat=False,
+            ),
+            AnimationType.DEATH: Animation(
+                frames=assets.get(AnimationType.DEATH),
+                duration=2,
                 repeat=False,
             ),
         }
@@ -126,6 +183,6 @@ class Test(Enemy):
             animations=animations,
             damage=1,
             health=10,
-            attack_range=256 * 2,
+            attack_range=Settings().CELL_SIZE * 2,
             attack_cooldown=5,
         )
