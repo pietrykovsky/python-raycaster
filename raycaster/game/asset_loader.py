@@ -46,7 +46,7 @@ class AssetLoader:
     @property
     def animated_objects(self) -> dict[int, list[pygame.Surface]]:
         return self._animated_objects.copy()
-
+    
     @property
     def enemies(self) -> dict[str, dict[AnimationType, list[pygame.Surface]]]:
         return self._enemies.copy()
