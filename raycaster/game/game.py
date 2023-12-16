@@ -30,6 +30,7 @@ class Game:
             cls.clock = pygame.time.Clock()
             cls.map = Map()
             cls.player = Player(cls.clock, cls.map)
+            cls.object_manaer = ObjectManager(cls.player)
             cls.raycaster = Raycaster(cls.map, cls.player)
             cls.object_manager = ObjectManager(cls.player, cls.raycaster, cls.map)
             cls.renderer = WorldRenderer(cls.screen, cls.raycaster, cls.map, cls.player)
