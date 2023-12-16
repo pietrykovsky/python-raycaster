@@ -27,7 +27,7 @@ class ObjectManager:
             ObjectFactory.create("candlebra", (4.5 * cell_size, 4.5 * cell_size)),
             ObjectFactory.create("npc", (4.5 * cell_size, 5.5 * cell_size)),
             ObjectFactory.create("candlebra", (5.5 * cell_size, 5.5 * cell_size)),
-            ObjectFactory.create("npc", (7.5 * cell_size, 2.5 * cell_size)),
+            ObjectFactory.create("test", (7.5 * cell_size, 2.5 * cell_size)),
             ObjectFactory.create("quagmire", (9.5 * cell_size, 2.5 * cell_size)),
         ]
 

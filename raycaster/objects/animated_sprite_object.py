@@ -9,28 +9,44 @@ from raycaster.game import AssetLoader
 if TYPE_CHECKING:
     from raycaster.game import Player
 
+
 class Animation:
-    def __init__(self, frames: list[pygame.Surface], duration: float):
+    def __init__(
+        self, frames: list[pygame.Surface], duration: float, repeat: bool = True
+    ):
         self.frames = frames
         self.duration = duration
+        self.repeat = repeat
+        self._finished = False
         self._frame_time = duration / len(self.frames)
         self._frame_index = 0
         self._time_prev = pygame.time.get_ticks()
 
     @property
+    def finished(self) -> bool:
+        return self._finished
+
+    @property
     def current_frame(self) -> pygame.Surface:
         self._update()
         return self.frames[self._frame_index]
-    
+
     def reset(self):
         self._frame_index = 0
+        self._finished = False
         self._time_prev = pygame.time.get_ticks()
+
+    def _update_frame_index(self):
+        if self._frame_index == len(self.frames) - 1 and not self.repeat:
+            self._finished = True
+        else:
+            self._frame_index = (self._frame_index + 1) % len(self.frames)
 
     def _update(self):
         time_now = pygame.time.get_ticks()
         if time_now - self._time_prev > self._frame_time * 1000:  # convert to ms
             self._time_prev = time_now
-            self._frame_index = (self._frame_index + 1) % len(self.frames)
+            self._update_frame_index()
 
 
 class AnimatedSpriteObject(SpriteObject):
