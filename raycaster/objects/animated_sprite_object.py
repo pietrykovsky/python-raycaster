@@ -19,24 +19,36 @@ class Animation:
         self.repeat = repeat
         self._finished = False
         self._frame_time = duration / len(self.frames)
+        self._start_time = None
+        self._finish_time = None
         self._frame_index = 0
         self._time_prev = pygame.time.get_ticks()
 
     @property
     def finished(self) -> bool:
+        if self._finish_time is not None:
+            self._finished = pygame.time.get_ticks() >= self._finish_time
         return self._finished
 
     @property
     def current_frame(self) -> pygame.Surface:
-        self._update()
         return self.frames[self._frame_index]
+
+    def update_and_get_frame(self) -> pygame.Surface:
+        self._update()
+        return self.current_frame
 
     def reset(self):
         self._frame_index = 0
         self._finished = False
+        self._finish_time = None
+        self._start_time = None
         self._time_prev = pygame.time.get_ticks()
 
     def _update_frame_index(self):
+        if self._frame_index == 0:
+            self._start_time = pygame.time.get_ticks()
+            self._finish_time = self._start_time + self.duration * 1000
         if self._frame_index == len(self.frames) - 1 and not self.repeat:
             self._finished = True
         else:
@@ -67,7 +79,7 @@ class AnimatedSpriteObject(SpriteObject):
         )
 
     def update(self):
-        self.texture = self.animation.current_frame
+        self.texture = self.animation.update_and_get_frame()
         self.distance = calculate_distance(self.x, self.y, self.player.x, self.player.y)
         self.angle = math.atan2(self.y - self.player.y, self.x - self.player.x)
 

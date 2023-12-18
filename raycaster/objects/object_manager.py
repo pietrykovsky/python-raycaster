@@ -7,6 +7,7 @@ if TYPE_CHECKING:
     from raycaster.game import Player
     from raycaster.objects.sprite_object import SpriteObject
     from raycaster.objects.enemy import Enemy
+    from raycaster.objects.weapons import Weapon
 
 
 class ObjectManager:
@@ -15,7 +16,7 @@ class ObjectManager:
     def __new__(cls, player: "Player"):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
-
+            cls.player = player
             ObjectFactory.add_player(player)
             cls._initialize_objects()
             cls._register_event_handlers()
@@ -28,6 +29,10 @@ class ObjectManager:
     @property
     def enemies(self) -> tuple["Enemy"]:
         return tuple(self._enemies)
+
+    @property
+    def weapons(self) -> tuple["Weapon"]:
+        return tuple(self._weapons)
 
     @classmethod
     def _initialize_objects(cls):
@@ -44,6 +49,9 @@ class ObjectManager:
             ObjectFactory.create("test", (8.5 * cell_size, 2.5 * cell_size)),
             ObjectFactory.create("test", (7.5 * cell_size, 4.5 * cell_size)),
             ObjectFactory.create("test", (8.5 * cell_size, 3.5 * cell_size)),
+        ]
+        cls._weapons = [
+            ObjectFactory.create("shotgun", None),
         ]
 
     @classmethod
