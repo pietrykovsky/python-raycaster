@@ -31,12 +31,14 @@ class Weapon(SpriteObject):
         self._attack_cooldown = attack_cooldown
         self._attack_timer = 0
         self._is_shooting = False
+        self.can_be_picked_up = True
         super().__init__(
             position=position if position is not None else (player.x, player.y),
             shaded=shaded,
             player=player,
             texture=sprite_representation,
         )
+        self.PICKUP_RADIUS = self.texture.get_width() / 2
 
     @property
     def equipped(self) -> bool:
@@ -47,7 +49,7 @@ class Weapon(SpriteObject):
         self.player.weapon = self
 
     def unequip(self):
-        self.position = self.player.x, self.player.y
+        self.x, self.y = self.player.x, self.player.y
         self.player.weapon = None
         self._equipped = False
 
@@ -63,13 +65,26 @@ class Weapon(SpriteObject):
 
     def update(self):
         if self._shooting_animation.finished:
-            self._shooting_animation.reset()
-            self._is_shooting = False
-            self.gui_representation = self._shooting_animation.current_frame
+            self._reset_shooting_animation()
         if self._is_shooting:
             self.gui_representation = self._shooting_animation.update_and_get_frame()
         if not self._equipped:
             super().update()
+            self._check_pickup()
+            if self.distance > self.PICKUP_RADIUS:
+                self.can_be_picked_up = True
+
+    def _reset_shooting_animation(self):
+        self._shooting_animation.reset()
+        self._is_shooting = False
+        self.gui_representation = self._shooting_animation.current_frame
+
+    def _check_pickup(self):
+        if self.distance <= self.PICKUP_RADIUS and self.can_be_picked_up:
+            if self.player.weapon:
+                self.player.weapon.can_be_picked_up = False
+                self.player.weapon.unequip()
+            self.equip()
 
 
 class Shotgun(Weapon):
@@ -82,7 +97,7 @@ class Shotgun(Weapon):
         weapon_assets = AssetLoader().weapons.get("default")
         animation = Animation(
             frames=weapon_assets.get(WeaponRepresentation.GUI.value),
-            duration=0.5,
+            duration=0.75,
             repeat=False,
         )
         sprite_representation = weapon_assets.get(WeaponRepresentation.SPRITE.value)
@@ -92,7 +107,33 @@ class Shotgun(Weapon):
             sprite_representation=sprite_representation,
             damage=10,
             attack_range=10,
-            attack_cooldown=0.5,
+            attack_cooldown=0.0,
+            shaded=True,
+            position=position,
+        )
+
+
+class Pistol(Weapon):
+    def __init__(
+        self,
+        position: tuple[float, float] | None = None,
+        *,
+        player: "Player",
+    ):
+        weapon_assets = AssetLoader().weapons.get("pistol")
+        animation = Animation(
+            frames=weapon_assets.get(WeaponRepresentation.GUI.value),
+            duration=0.5,
+            repeat=False,
+        )
+        sprite_representation = weapon_assets.get(WeaponRepresentation.SPRITE.value)
+        super().__init__(
+            player=player,
+            shooting_animation=animation,
+            sprite_representation=sprite_representation,
+            damage=3,
+            attack_range=10,
+            attack_cooldown=0.0,
             shaded=True,
             position=position,
         )

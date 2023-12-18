@@ -51,6 +51,7 @@ class EnemyFactory(BaseObjectFactory):
 class WeaponFactory(BaseObjectFactory):
     _class_map = {
         "shotgun": weapons.Shotgun,
+        "pistol": weapons.Pistol,
     }
 
 

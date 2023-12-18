@@ -19,6 +19,10 @@ class Updatable(ABC):
         pass
 
     @classmethod
+    def unregister(cls, instance: "Updatable"):
+        cls._updatable_registry.remove(instance)
+
+    @classmethod
     def update_all(cls):
         """
         Update the state of all updatable objects.
