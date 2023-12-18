@@ -2,7 +2,7 @@ import os
 import pygame
 
 from raycaster.core import Settings
-from raycaster.const import AnimationType
+from raycaster.const import AnimationType, WeaponRepresentation
 
 
 class AssetLoader:
@@ -28,11 +28,13 @@ class AssetLoader:
                 cls.OBJECTS_SPRITES_PATH, "animated"
             )
             cls.ENEMIES_SPRITES_PATH = os.path.join(cls.OBJECTS_SPRITES_PATH, "enemies")
+            cls.WEAPONS_PATH = os.path.join(cls.OBJECTS_SPRITES_PATH, "weapons")
 
             cls._walls = cls._load_walls_textures()
             cls._static_objects = cls._load_static_sprites()
             cls._animated_objects = cls._load_animated_sprites()
             cls._enemies = cls._load_enemies()
+            cls._weapons = cls._load_weapons()
         return cls._instance
 
     @property
@@ -51,20 +53,9 @@ class AssetLoader:
     def enemies(self) -> dict[str, dict[AnimationType, list[pygame.Surface]]]:
         return self._enemies.copy()
 
-    @classmethod
-    def _resize_to_cell_size(cls, surface: pygame.Surface) -> pygame.Surface:
-        """
-        Resizes the given surface to the cell size.
-        """
-        cell_size = Settings().CELL_SIZE
-        s_width, s_height = surface.get_size()
-        s_ratio = s_width / s_height
-        s_width, s_height = (
-            (int(cell_size * s_ratio), cell_size)
-            if s_width < s_height
-            else (int(cell_size / s_ratio), cell_size)
-        )
-        return pygame.transform.scale(surface, (s_width, s_height))
+    @property
+    def weapons(self) -> dict[str, dict[str, list[pygame.Surface] | pygame.Surface]]:
+        return self._weapons.copy()
 
     @classmethod
     def _load_walls_textures(cls) -> dict[int, pygame.Surface]:
@@ -101,13 +92,9 @@ class AssetLoader:
         for dir in os.listdir(cls.ANIMATED_SPRITES_PATH):
             dir_path = os.path.join(cls.ANIMATED_SPRITES_PATH, dir)
             animated_objects[dir] = []
-            files = os.listdir(dir_path)
-            files.sort()
-            for file in files:
-                file_path = os.path.join(dir_path, file)
-                surface = pygame.image.load(file_path).convert_alpha()
-                surface = cls._resize_to_cell_size(surface)
-                animated_objects[dir].append(surface)
+            animated_objects[dir] = cls._load_sprites_to_list(
+                animated_objects[dir], dir_path
+            )
         return animated_objects
 
     @classmethod
@@ -122,11 +109,82 @@ class AssetLoader:
             for anim_type in AnimationType:
                 enemies[dir][anim_type] = []
                 anim_dir_path = os.path.join(dir_path, anim_type.value)
-                files = os.listdir(anim_dir_path)
-                files.sort()
-                for file in files:
-                    file_path = os.path.join(anim_dir_path, file)
-                    surface = pygame.image.load(file_path).convert_alpha()
-                    surface = cls._resize_to_cell_size(surface)
-                    enemies[dir][anim_type].append(surface)
+                enemies[dir][anim_type] = cls._load_sprites_to_list(
+                    enemies[dir][anim_type], anim_dir_path
+                )
         return enemies
+
+    @classmethod
+    def _load_weapons(
+        cls,
+    ) -> dict[str, dict[str, list[pygame.Surface] | pygame.Surface]]:
+        """
+        Loads all weapons from the assets/objects/weapons directory.
+        """
+        weapons = {}
+        for dir in os.listdir(cls.WEAPONS_PATH):
+            dir_path = os.path.join(cls.WEAPONS_PATH, dir)
+            gui = WeaponRepresentation.GUI.value
+            sprite = WeaponRepresentation.SPRITE.value
+            gui_path = os.path.join(dir_path, gui)
+            sprite_path = os.path.join(dir_path, sprite)
+            weapons[dir] = {}
+            weapons[dir][gui] = []
+            weapons[dir][gui] = cls._load_sprites_to_list(
+                weapons[dir][gui], gui_path, resize_to_cell_size=False
+            )
+            weapons[dir][gui] = [
+                cls._resize_weapon_gui_representation(surface)
+                for surface in weapons[dir][gui]
+            ]
+            weapons[dir][sprite] = []
+            weapons[dir][sprite] = cls._load_sprites_to_list(
+                weapons[dir][sprite], sprite_path
+            )[0]
+        return weapons
+
+    @classmethod
+    def _load_sprites_to_list(
+        cls, collection: list, dir_path: str, resize_to_cell_size=True
+    ) -> list[pygame.Surface]:
+        """
+        Loads all sprites from the given path and appends them to the given collection.
+        """
+        files = os.listdir(dir_path)
+        files.sort()
+        for file in files:
+            file_path = os.path.join(dir_path, file)
+            surface = pygame.image.load(file_path).convert_alpha()
+            if resize_to_cell_size:
+                surface = cls._resize_to_cell_size(surface)
+            collection.append(surface)
+        return collection
+
+    @classmethod
+    def _resize_to_cell_size(cls, surface: pygame.Surface) -> pygame.Surface:
+        """
+        Resizes the given surface to the cell size.
+        """
+        cell_size = Settings().CELL_SIZE
+        s_width, s_height = surface.get_size()
+        s_ratio = s_width / s_height
+        s_width, s_height = (
+            (int(cell_size * s_ratio), cell_size)
+            if s_width < s_height
+            else (int(cell_size / s_ratio), cell_size)
+        )
+        return pygame.transform.scale(surface, (s_width, s_height))
+
+    @classmethod
+    def _resize_weapon_gui_representation(
+        cls, surface: pygame.Surface
+    ) -> pygame.Surface:
+        """
+        Resizes the weapon's gui representation to half of the screen height.
+        """
+        dest_height = Settings().SCREEN_HEIGHT // 2
+        width, height = surface.get_size()
+        ratio = dest_height / height if height > dest_height else height / dest_height
+        dest_width = int(width * ratio)
+        surface = pygame.transform.scale(surface, (dest_width, dest_height))
+        return surface

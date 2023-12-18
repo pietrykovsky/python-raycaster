@@ -56,6 +56,9 @@ class Game:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_F4:
                 self.settings.MINIMAP_VISIBLE = not self.settings.MINIMAP_VISIBLE
 
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                self.player.shoot_handler.invoke()
+
             if event.type == pygame.QUIT or (
                 event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE
             ):

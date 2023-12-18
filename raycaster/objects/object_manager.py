@@ -10,6 +10,7 @@ if TYPE_CHECKING:
     from raycaster.objects.sprite_object import SpriteObject
     from raycaster.objects.enemy import Enemy
     from raycaster.game.map import Map
+    from raycaster.objects.weapons import Weapon
 
 
 class ObjectManager:
@@ -34,6 +35,10 @@ class ObjectManager:
     def enemies(self) -> tuple["Enemy"]:
         return tuple(self._enemies)
 
+    @property
+    def weapons(self) -> tuple["Weapon"]:
+        return tuple(self._weapons)
+
     @classmethod
     def _initialize_objects(cls):
         cell_size = Settings().CELL_SIZE
@@ -49,6 +54,9 @@ class ObjectManager:
             ObjectFactory.create("test", (8.5 * cell_size, 2.5 * cell_size)),
             ObjectFactory.create("test", (7.5 * cell_size, 4.5 * cell_size)),
             ObjectFactory.create("test", (8.5 * cell_size, 3.5 * cell_size)),
+        ]
+        cls._weapons = [
+            ObjectFactory.create("shotgun", None),
         ]
 
     @classmethod

@@ -22,3 +22,8 @@ class AnimationType(Enum):
     ATTACK = "attack"
     DEATH = "death"
     HIT = "hit"
+
+
+class WeaponRepresentation(Enum):
+    SPRITE = "sprite"
+    GUI = "gui"

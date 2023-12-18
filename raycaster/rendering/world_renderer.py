@@ -124,6 +124,7 @@ class WorldRenderer(Drawable):
             *[ray for ray in self.raycaster.rays if ray.hit_wall],
             *object_manager.objects,
             *object_manager.enemies,
+            *[weapon for weapon in object_manager.weapons if not weapon.equipped],
         ]
         objects.sort(
             key=lambda obj: obj.distance

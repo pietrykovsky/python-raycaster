@@ -124,7 +124,11 @@ class ObjectRenderer:
         :param obj: Object to draw
         """
         max_distance = Settings().MAX_DISTANCE
-        if obj.distance > max_distance or not self.player.in_fov(obj.angle):
+        if (
+            obj.distance > max_distance
+            or not self.player.in_fov(obj.angle)
+            or obj.distance == 0
+        ):
             return
         spatial_width, spatial_height = self._calculate_spatial_dimensions(obj)
         sprite = obj.texture.copy()
