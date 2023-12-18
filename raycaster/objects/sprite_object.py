@@ -3,6 +3,7 @@ import math
 import pygame
 
 from raycaster.core import Updatable, Settings
+from raycaster.game import AssetLoader
 from raycaster.utils import calculate_distance
 
 if TYPE_CHECKING:
@@ -12,21 +13,33 @@ if TYPE_CHECKING:
 class SpriteObject(Updatable):
     def __init__(
         self,
-        position: tuple[int, int],
-        texture: pygame.Surface,
+        position: tuple[float, float],
+        shaded: bool,
         player: "Player",
-        shaded: bool = True,
+        texture: pygame.Surface,
     ):
-        x, y = position
-        self.x = x
-        self.y = y
-        self.settings = Settings()
+        self.x, self.y = position
+        self.shaded = shaded
         self.player = player
         self.texture = texture
-        self.distance = calculate_distance(x, y, player.x, player.y)
-        self.angle = math.atan2(y - player.y, x - player.x)
-        self.shaded = shaded
+        self.settings = Settings()
+        self.distance = calculate_distance(self.x, self.y, self.player.x, self.player.y)
+        self.angle = math.atan2(self.y - self.player.y, self.x - self.player.x)
 
     def update(self):
         self.distance = calculate_distance(self.x, self.y, self.player.x, self.player.y)
         self.angle = math.atan2(self.y - self.player.y, self.x - self.player.x)
+
+
+class Candlebra(SpriteObject):
+    def __init__(self, position: tuple[float, float], player: "Player"):
+        texture = AssetLoader().static_objects.get("candlebra")
+        super().__init__(
+            position=position, shaded=False, player=player, texture=texture
+        )
+
+
+class NPC(SpriteObject):
+    def __init__(self, position: tuple[float, float], player: "Player"):
+        texture = AssetLoader().static_objects.get("npc")
+        super().__init__(position=position, shaded=True, player=player, texture=texture)
