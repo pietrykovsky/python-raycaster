@@ -3,7 +3,6 @@ from typing import TYPE_CHECKING
 import pygame
 
 from raycaster.core import Updatable, Settings, Event
-from raycaster.objects.weapons import Shotgun
 
 if TYPE_CHECKING:
     from raycaster.game.map import Map
@@ -99,7 +98,6 @@ class Player(Updatable):
 
     def _shoot(self):
         if self.weapon is not None and self.weapon.can_shoot():
-            print("shoot")
             self.weapon.shoot()
 
     def update(self):

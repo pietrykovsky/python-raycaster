@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+import pygame
 
 from raycaster.objects.object_factory import ObjectFactory
 from raycaster.objects.enemy_movement_controller import EnemyMovementController
@@ -56,17 +57,19 @@ class ObjectManager:
             ObjectFactory.create("test", (8.5 * cell_size, 3.5 * cell_size)),
         ]
         cls._weapons = [
-            ObjectFactory.create("shotgun", None),
+            ObjectFactory.create("shotgun", (7.5 * cell_size, 6.5 * cell_size)),
+            ObjectFactory.create("pistol", (8.5 * cell_size, 6.5 * cell_size)),
         ]
 
     @classmethod
     def _register_event_handlers(cls):
+        cls.player.shoot_handler += cls._on_player_shot
         for enemy in cls._enemies:
             enemy.death_handler += cls._on_enemy_death
             enemy.position_update_handler += cls._on_enemy_position_update
 
     @classmethod
-    def _on_enemy_death(cls, enemy: "Enemy"):
+    def _on_enemy_death(cls, enemy: "Enemy", **kwargs):
         if enemy in cls._enemies:
             cls._enemies.remove(enemy)
             Updatable.unregister(enemy)
@@ -74,3 +77,9 @@ class ObjectManager:
     @classmethod
     def _on_enemy_position_update(cls, enemy: "Enemy"):
         EnemyMovementController.update_position(enemy, cls.map)
+
+    @classmethod
+    def _on_player_shot(cls):
+        if cls.player.weapon:
+            for enemy in cls._enemies:
+                enemy.apply_damage(cls.player.weapon.damage)

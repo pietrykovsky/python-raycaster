@@ -170,7 +170,7 @@ class Test(Enemy):
             ),
             AnimationType.HIT: Animation(
                 frames=assets.get(AnimationType.HIT),
-                duration=3,
+                duration=0.5,
                 repeat=False,
             ),
             AnimationType.DEATH: Animation(
