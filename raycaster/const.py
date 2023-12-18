@@ -1,4 +1,5 @@
 import math
+from enum import Enum
 
 from raycaster.core import Settings
 
@@ -12,3 +13,12 @@ DELTA_ANGLE = math.radians(Settings().FOV / Settings().RAY_COUNT)
 SCREEN_DISTANCE = (Settings().SCREEN_WIDTH // 2) / math.tan(
     math.radians(Settings().FOV // 2)
 )
+
+
+# SPRITES RELATED
+class AnimationType(Enum):
+    IDLE = "idle"
+    MOVE = "move"
+    ATTACK = "attack"
+    DEATH = "death"
+    HIT = "hit"
