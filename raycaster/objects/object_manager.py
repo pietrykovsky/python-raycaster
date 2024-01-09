@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
-import pygame
 
 from raycaster.objects.object_factory import ObjectFactory
+from raycaster.rendering.sprite_projection_processor import SpriteProjectionProcessor
 from raycaster.objects.enemy_movement_controller import EnemyMovementController
 from raycaster.rendering.raycaster import Raycaster
 from raycaster.core import Settings, Updatable
@@ -81,5 +81,7 @@ class ObjectManager:
     @classmethod
     def _on_player_shot(cls):
         if cls.player.weapon:
-            for enemy in cls._enemies:
-                enemy.apply_damage(cls.player.weapon.damage)
+            for enemy in sorted(cls._enemies, key=lambda e: e.distance, reverse=True):
+                if SpriteProjectionProcessor.intersects_screen_center(enemy) and cls.player.in_fov(enemy.angle):
+                    # TODO: we should also check if the enemy is not behind a wall
+                    enemy.apply_damage(cls.player.weapon.damage)

@@ -7,7 +7,6 @@ from raycaster import const
 
 if TYPE_CHECKING:
     from raycaster.objects import SpriteObject
-    from raycaster.game import Player
 
 
 class SpriteProjectionProcessor:
@@ -74,6 +73,18 @@ class SpriteProjectionProcessor:
         Checks if the dimensions are smaller than the screen.
         """
         return height <= Settings().SCREEN_HEIGHT and width <= Settings().SCREEN_WIDTH
+    
+    @classmethod
+    def intersects_screen_center(cls, obj: "SpriteObject") -> bool:
+        """
+        Checks if the object's screen projection intersects the center of the screen.
+        """
+        screen_x, screen_y = cls.get_screen_position(obj)
+        screen_width, screen_height = cls.get_screen_dimensions(obj)
+        return (
+            screen_x <= Settings().SCREEN_WIDTH // 2 <= screen_x + screen_width
+            and screen_y <= Settings().SCREEN_HEIGHT // 2 <= screen_y + screen_height
+        )
     
     @staticmethod
     def _scale_dimensions(
