@@ -31,7 +31,10 @@ class ObjectRenderer:
         :return: Subsurface of the sprite
         """
         texture_width, texture_height = obj.texture.get_size()
-        spatial_width, spatial_height = SpriteProjectionProcessor.get_spatial_dimensions(obj)
+        (
+            spatial_width,
+            spatial_height,
+        ) = SpriteProjectionProcessor.get_spatial_dimensions(obj)
 
         if spatial_width > Settings().SCREEN_WIDTH:
             x_offset = (
@@ -67,15 +70,20 @@ class ObjectRenderer:
         """
         if not self._can_be_drawn(obj):
             return
-        
-        spatial_width, spatial_height = SpriteProjectionProcessor.get_spatial_dimensions(obj)
+
+        (
+            spatial_width,
+            spatial_height,
+        ) = SpriteProjectionProcessor.get_spatial_dimensions(obj)
         sprite = obj.texture.copy()
 
         if obj.shaded:
             shade_factor = calculate_shade_factor(obj.distance)
             shade_surface(sprite, shade_factor)
 
-        if not SpriteProjectionProcessor.smaller_than_screen(spatial_width, spatial_height):
+        if not SpriteProjectionProcessor.smaller_than_screen(
+            spatial_width, spatial_height
+        ):
             sprite = self._get_subsurface(obj, sprite)
 
         width, height = SpriteProjectionProcessor.get_screen_dimensions(obj)

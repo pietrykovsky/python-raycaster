@@ -49,10 +49,8 @@ class SpriteProjectionProcessor:
         if cls.smaller_than_screen(spatial_width, spatial_height):
             return (spatial_width, spatial_height)
         else:
-            return cls._scale_dimensions(
-                spatial_width, spatial_height
-            )
-    
+            return cls._scale_dimensions(spatial_width, spatial_height)
+
     @staticmethod
     def get_spatial_dimensions(obj: "SpriteObject") -> tuple[int, int]:
         """
@@ -66,14 +64,14 @@ class SpriteProjectionProcessor:
         height = screen_dist * texture_height / obj.distance
         width = screen_dist * texture_width / obj.distance
         return int(width), int(height)
-    
+
     @staticmethod
     def smaller_than_screen(width: float | int, height: float | int) -> bool:
         """
         Checks if the dimensions are smaller than the screen.
         """
         return height <= Settings().SCREEN_HEIGHT and width <= Settings().SCREEN_WIDTH
-    
+
     @classmethod
     def intersects_screen_center(cls, obj: "SpriteObject") -> bool:
         """
@@ -85,11 +83,9 @@ class SpriteProjectionProcessor:
             screen_x <= Settings().SCREEN_WIDTH // 2 <= screen_x + screen_width
             and screen_y <= Settings().SCREEN_HEIGHT // 2 <= screen_y + screen_height
         )
-    
+
     @staticmethod
-    def _scale_dimensions(
-        width: int | float, height: int | float
-    ) -> tuple[int, int]:
+    def _scale_dimensions(width: int | float, height: int | float) -> tuple[int, int]:
         """
         Returns the scaled dimensions of the object based on the spatial dimensions.
         """
@@ -98,4 +94,3 @@ class SpriteProjectionProcessor:
             Settings().SCREEN_HEIGHT if height > Settings().SCREEN_HEIGHT else height
         )
         return int(width), int(height)
-    
