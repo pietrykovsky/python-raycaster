@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING
 import pygame
 
-from raycaster.core import Settings
 from raycaster.objects.animated_sprite_object import Animation
 from raycaster.objects.sprite_object import SpriteObject
 from raycaster.game import AssetLoader

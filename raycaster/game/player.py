@@ -24,6 +24,11 @@ class Player(Updatable):
         self.shoot_handler = Event()
         self.shoot_handler += self._shoot
 
+        self.health = 100
+
+    def apply_damage(self, damage: float):
+        self.health -= damage
+
     def handle_movement(self):
         sin_a = math.sin(self.angle)
         cos_a = math.cos(self.angle)
