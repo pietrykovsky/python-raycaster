@@ -82,10 +82,11 @@ class ObjectManager:
     def _on_player_shot(cls):
         ray = cls.raycaster.cast_ray(cls.player.angle)
         if cls.player.weapon:
-            for enemy in sorted(cls._enemies, key=lambda e: e.distance, reverse=True):
+            for enemy in sorted(cls._enemies, key=lambda e: e.distance):
                 if (
                     SpriteProjectionProcessor.intersects_screen_center(enemy)
                     and cls.player.in_fov(enemy.angle)
                     and not (ray.hit_wall and ray.length < enemy.distance)
                 ):
                     enemy.apply_damage(cls.player.weapon.damage)
+                    return
