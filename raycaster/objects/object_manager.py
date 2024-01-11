@@ -92,7 +92,8 @@ class ObjectManager:
         if cls.player.weapon:
             for enemy in sorted(cls._enemies, key=lambda e: e.distance):
                 if (
-                    SpriteProjectionProcessor.intersects_screen_center(enemy) and not (ray.hit_wall and ray.length < enemy.distance) 
+                    SpriteProjectionProcessor.intersects_screen_center(enemy)
+                    and not (ray.hit_wall and ray.length < enemy.distance)
                     and cls.player.in_fov(enemy.angle)
                 ):
                     enemy.apply_damage(cls.player.weapon.damage)

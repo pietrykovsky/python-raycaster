@@ -34,7 +34,7 @@ class Enemy(AnimatedSpriteObject):
         speed: float,
         attack_range: float,
         attack_cooldown: float,
-        attack_chance: float
+        attack_chance: float,
     ):
         super().__init__(
             position=position,
