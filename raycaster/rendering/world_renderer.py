@@ -117,7 +117,9 @@ class WorldRenderer(Drawable):
 
     def _draw_world(self):
         object_renderer = ObjectRenderer(screen=self.screen, player=self.player)
-        object_manager = ObjectManager(player=self.player, raycaster=self.raycaster, map=self.map)
+        object_manager = ObjectManager(
+            player=self.player, raycaster=self.raycaster, map=self.map
+        )
         objects = [
             *[ray for ray in self.raycaster.rays if ray.hit_wall],
             *object_manager.objects,

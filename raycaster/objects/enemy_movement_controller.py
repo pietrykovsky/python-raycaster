@@ -33,7 +33,7 @@ class EnemyMovementController:
         dx = -speed * math.cos(enemy.angle)
         dy = -speed * math.sin(enemy.angle)
         new_x, new_y = enemy.x, enemy.y
-    
+
         if not map.is_wall(
             int((new_x + dx) / Settings().CELL_SIZE),
             int(new_y / Settings().CELL_SIZE),
