@@ -29,6 +29,7 @@ class WorldRenderer(Drawable):
         self.player = player
         self.settings = Settings()
         self.wall_textures = AssetLoader().wall_textures
+        self.object_manager = ObjectManager(player, raycaster, map)
         self.map = map
 
     def _draw_background(self):
@@ -116,10 +117,13 @@ class WorldRenderer(Drawable):
 
     def _draw_world(self):
         object_renderer = ObjectRenderer(screen=self.screen, player=self.player)
-        object_manager = ObjectManager(player=self.player)
+        object_manager = ObjectManager(
+            player=self.player, raycaster=self.raycaster, map=self.map
+        )
         objects = [
             *[ray for ray in self.raycaster.rays if ray.hit_wall],
             *object_manager.objects,
+            *object_manager.enemies,
         ]
         objects.sort(
             key=lambda obj: obj.distance

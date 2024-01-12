@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING
 
-from raycaster.objects import sprite_object
-from raycaster.objects import animated_sprite_object
+from raycaster.objects import sprite_object, animated_sprite_object, enemy
 
 
 if TYPE_CHECKING:
@@ -43,11 +42,18 @@ class AnimatedObjectFactory(BaseObjectFactory):
     }
 
 
+class EnemyFactory(BaseObjectFactory):
+    _class_map = {
+        "test": enemy.Test,
+    }
+
+
 class ObjectFactory:
     @classmethod
     def add_player(cls, player: "Player"):
         StaticObjectFactory.add_player(player)
         AnimatedObjectFactory.add_player(player)
+        EnemyFactory.add_player(player)
 
     @classmethod
     def create(
@@ -57,5 +63,7 @@ class ObjectFactory:
             return StaticObjectFactory.create(name, position)
         elif AnimatedObjectFactory.object_exists(name):
             return AnimatedObjectFactory.create(name, position)
+        elif EnemyFactory.object_exists(name):
+            return EnemyFactory.create(name, position)
         else:
             raise ValueError(f"Unknown object name: {name}")

@@ -5,6 +5,7 @@ from raycaster.core import Settings, Drawable, Updatable
 from raycaster.game.player import Player
 from raycaster.game.map import Map
 from raycaster.rendering import WorldRenderer, GuiRenderer, Raycaster
+from raycaster.objects import ObjectManager
 from raycaster import const
 
 
@@ -30,6 +31,7 @@ class Game:
             cls.map = Map()
             cls.player = Player(cls.clock, cls.map)
             cls.raycaster = Raycaster(cls.map, cls.player)
+            cls.object_manager = ObjectManager(cls.player, cls.raycaster, cls.map)
             cls.renderer = WorldRenderer(cls.screen, cls.raycaster, cls.map, cls.player)
             cls.gui_renderer = GuiRenderer(
                 cls.screen, cls.map, cls.player, cls.raycaster

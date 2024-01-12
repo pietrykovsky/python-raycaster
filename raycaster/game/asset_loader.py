@@ -2,6 +2,7 @@ import os
 import pygame
 
 from raycaster.core import Settings
+from raycaster.const import AnimationType
 
 
 class AssetLoader:
@@ -26,10 +27,12 @@ class AssetLoader:
             cls.ANIMATED_SPRITES_PATH = os.path.join(
                 cls.OBJECTS_SPRITES_PATH, "animated"
             )
+            cls.ENEMIES_SPRITES_PATH = os.path.join(cls.OBJECTS_SPRITES_PATH, "enemies")
 
             cls._walls = cls._load_walls_textures()
             cls._static_objects = cls._load_static_sprites()
             cls._animated_objects = cls._load_animated_sprites()
+            cls._enemies = cls._load_enemies()
         return cls._instance
 
     @property
@@ -43,6 +46,10 @@ class AssetLoader:
     @property
     def animated_objects(self) -> dict[int, list[pygame.Surface]]:
         return self._animated_objects.copy()
+
+    @property
+    def enemies(self) -> dict[str, dict[AnimationType, list[pygame.Surface]]]:
+        return self._enemies.copy()
 
     @classmethod
     def _resize_to_cell_size(cls, surface: pygame.Surface) -> pygame.Surface:
@@ -102,3 +109,24 @@ class AssetLoader:
                 surface = cls._resize_to_cell_size(surface)
                 animated_objects[dir].append(surface)
         return animated_objects
+
+    @classmethod
+    def _load_enemies(cls) -> dict[str, dict[AnimationType, list[pygame.Surface]]]:
+        """
+        Loads all enemies from the assets/objects/enemies directory.
+        """
+        enemies = {}
+        for dir in os.listdir(cls.ENEMIES_SPRITES_PATH):
+            dir_path = os.path.join(cls.ENEMIES_SPRITES_PATH, dir)
+            enemies[dir] = {}
+            for anim_type in AnimationType:
+                enemies[dir][anim_type] = []
+                anim_dir_path = os.path.join(dir_path, anim_type.value)
+                files = os.listdir(anim_dir_path)
+                files.sort()
+                for file in files:
+                    file_path = os.path.join(anim_dir_path, file)
+                    surface = pygame.image.load(file_path).convert_alpha()
+                    surface = cls._resize_to_cell_size(surface)
+                    enemies[dir][anim_type].append(surface)
+        return enemies
