@@ -3,7 +3,6 @@ import pygame
 import math
 
 from raycaster.core import Settings
-from raycaster.objects import ObjectManager
 from raycaster.utils import calculate_shade_factor, shade_surface
 from raycaster import const
 
@@ -20,7 +19,6 @@ class ObjectRenderer:
             cls._instance = super().__new__(cls)
             cls.player = player
             cls.screen = screen
-            cls.object_manager = ObjectManager(player)
         return cls._instance
 
     def _calculate_spatial_dimensions(self, obj: "SpriteObject") -> tuple[int, int]:

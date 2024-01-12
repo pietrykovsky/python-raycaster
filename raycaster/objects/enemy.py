@@ -30,6 +30,7 @@ class Enemy(AnimatedSpriteObject):
         animations: dict[AnimationType, Animation],
         damage: float,
         health: float,
+        speed: float,
         attack_range: float,
         attack_cooldown: float,
     ):
@@ -43,11 +44,13 @@ class Enemy(AnimatedSpriteObject):
         self.animations = animations
         self.damage = damage
         self.health = health
+        self.speed = speed
         self.attack_range = attack_range
         self.attack_cooldown = attack_cooldown
         self.attack_timer = 0
         self.state = EnemyState.IDLE
         self.death_handler = Event()
+        self.position_update_handler = Event()
 
     def apply_damage(self, damage: float):
         self.health -= damage
@@ -102,7 +105,7 @@ class Enemy(AnimatedSpriteObject):
     def _move(self):
         self._change_animation(AnimationType.MOVE)
         self.state = EnemyState.MOVE
-        # TODO: ADD PATHFINDING AND IMPLEMENT POSITION UPDATE
+        self.position_update_handler.invoke(self)
 
     def _got_hit(self):
         return self.state == EnemyState.HIT
@@ -183,6 +186,7 @@ class Test(Enemy):
             animations=animations,
             damage=1,
             health=10,
+            speed=0.1,
             attack_range=Settings().CELL_SIZE * 2,
             attack_cooldown=5,
         )

@@ -1,21 +1,26 @@
 from typing import TYPE_CHECKING
 
 from raycaster.objects.object_factory import ObjectFactory
-from raycaster.core import Settings
+from raycaster.objects.enemy_movement_controller import EnemyMovementController
+from raycaster.rendering.raycaster import Raycaster
+from raycaster.core import Settings, Updatable
 
 if TYPE_CHECKING:
     from raycaster.game import Player
     from raycaster.objects.sprite_object import SpriteObject
     from raycaster.objects.enemy import Enemy
+    from raycaster.game.map import Map
 
 
 class ObjectManager:
     _instance = None
 
-    def __new__(cls, player: "Player"):
+    def __new__(cls, player: "Player", raycaster: "Raycaster", map: "Map"):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
-
+            cls.player = player
+            cls.raycaster = raycaster
+            cls.map = map
             ObjectFactory.add_player(player)
             cls._initialize_objects()
             cls._register_event_handlers()
@@ -50,8 +55,14 @@ class ObjectManager:
     def _register_event_handlers(cls):
         for enemy in cls._enemies:
             enemy.death_handler += cls._on_enemy_death
+            enemy.position_update_handler += cls._on_enemy_position_update
 
     @classmethod
     def _on_enemy_death(cls, enemy: "Enemy"):
         if enemy in cls._enemies:
             cls._enemies.remove(enemy)
+            Updatable.unregister(enemy)
+
+    @classmethod
+    def _on_enemy_position_update(cls, enemy: "Enemy"):
+        EnemyMovementController.update_position(enemy, cls.map)

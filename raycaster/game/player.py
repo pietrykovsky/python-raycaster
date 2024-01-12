@@ -19,7 +19,6 @@ class Player(Updatable):
         self.x = 3.5 * self.settings.CELL_SIZE
         self.y = 3.5 * self.settings.CELL_SIZE
         self.angle = 0
-        self.time_prev = pygame.time.get_ticks()
         self.delta_time = 1
 
     def handle_movement(self):
