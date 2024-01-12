@@ -60,6 +60,7 @@ class Animation:
             self._time_prev = time_now
             self._update_frame_index()
 
+
 class AnimatedSpriteObject(SpriteObject):
     def __init__(
         self,
