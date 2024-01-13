@@ -22,11 +22,7 @@ class GuiRenderer(Drawable):
         self.raycaster = raycaster
         self.player = player
         self.map = map
-<<<<<<< HEAD
         self.font = pygame.font.Font("raycaster/assets/fonts/DooM.ttf", 15)
-=======
-        self.hud_textures = AssetLoader()._hud_face
->>>>>>> e51666e41d05d7b58d0550781750d9bbe27b9bc6
 
     def _draw_walls_on_minimap(self, surface: pygame.Surface, minimap_scale: float):
         for x, y in self.map.walls:
