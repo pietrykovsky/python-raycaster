@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from raycaster.objects import sprite_object, animated_sprite_object, enemy
+from raycaster.objects import sprite_object, animated_sprite_object, enemy, weapons
 
 
 if TYPE_CHECKING:
@@ -24,7 +24,7 @@ class BaseObjectFactory:
         cls, name: str, position: tuple[float, float]
     ) -> sprite_object.SpriteObject:
         if cls.object_exists(name):
-            return cls._class_map.get(name)(position, cls.player)
+            return cls._class_map.get(name)(position=position, player=cls.player)
         else:
             raise ValueError(f"Unknown object name: {name}")
 
@@ -48,16 +48,24 @@ class EnemyFactory(BaseObjectFactory):
     }
 
 
+class WeaponFactory(BaseObjectFactory):
+    _class_map = {
+        "shotgun": weapons.Shotgun,
+        "pistol": weapons.Pistol,
+    }
+
+
 class ObjectFactory:
     @classmethod
     def add_player(cls, player: "Player"):
         StaticObjectFactory.add_player(player)
         AnimatedObjectFactory.add_player(player)
         EnemyFactory.add_player(player)
+        WeaponFactory.add_player(player)
 
     @classmethod
     def create(
-        cls, name: str, position: tuple[float, float]
+        cls, name: str, position: tuple[float, float] | None
     ) -> sprite_object.SpriteObject:
         if StaticObjectFactory.object_exists(name):
             return StaticObjectFactory.create(name, position)
@@ -65,5 +73,7 @@ class ObjectFactory:
             return AnimatedObjectFactory.create(name, position)
         elif EnemyFactory.object_exists(name):
             return EnemyFactory.create(name, position)
+        elif WeaponFactory.object_exists(name):
+            return WeaponFactory.create(name, position)
         else:
             raise ValueError(f"Unknown object name: {name}")

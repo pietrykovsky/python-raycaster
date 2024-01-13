@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 from enum import Enum
+import random
 
 import pygame
 
@@ -33,6 +34,7 @@ class Enemy(AnimatedSpriteObject):
         speed: float,
         attack_range: float,
         attack_cooldown: float,
+        attack_chance: float,
     ):
         super().__init__(
             position=position,
@@ -47,10 +49,12 @@ class Enemy(AnimatedSpriteObject):
         self.speed = speed
         self.attack_range = attack_range
         self.attack_cooldown = attack_cooldown
+        self.attack_chance = attack_chance
         self.attack_timer = 0
         self.state = EnemyState.IDLE
         self.death_handler = Event()
         self.position_update_handler = Event()
+        self.attack_handler = Event()
 
     def apply_damage(self, damage: float):
         self.health -= damage
@@ -86,12 +90,21 @@ class Enemy(AnimatedSpriteObject):
         )
 
     def _attack(self):
+        if not self.state == EnemyState.ATTACK:
+            self._draw_hit()
         self.attack_timer = (
             pygame.time.get_ticks()
             + self.animations.get(AnimationType.ATTACK).duration * 1000
         )
         self._change_animation(AnimationType.ATTACK)
         self.state = EnemyState.ATTACK
+
+    def _draw_hit(self):
+        """
+        Draws a player hit based on the attack chance. If hit is successful, the attack handler is invoked.
+        """
+        if random.random() <= self.attack_chance:
+            self.attack_handler.invoke(self)
 
     def _can_move(self) -> bool:
         return (
@@ -170,7 +183,7 @@ class Test(Enemy):
             ),
             AnimationType.HIT: Animation(
                 frames=assets.get(AnimationType.HIT),
-                duration=3,
+                duration=0.5,
                 repeat=False,
             ),
             AnimationType.DEATH: Animation(
@@ -189,4 +202,5 @@ class Test(Enemy):
             speed=0.1,
             attack_range=Settings().CELL_SIZE * 2,
             attack_cooldown=5,
+            attack_chance=0.9,
         )

@@ -96,3 +96,13 @@ class GuiRenderer(Drawable):
     def draw(self):
         if self.settings.MINIMAP_VISIBLE:
             self._draw_minimap()
+        self._draw_weapon()
+
+    def _draw_weapon(self):
+        weapon = self.player.weapon
+        if not weapon:
+            return
+        gui_representation = weapon.gui_representation
+        x = self.settings.SCREEN_WIDTH / 2 - gui_representation.get_width() / 2
+        y = self.settings.SCREEN_HEIGHT - gui_representation.get_height()
+        self.screen.blit(gui_representation, (x, y))

@@ -2,8 +2,7 @@ import math
 from typing import TYPE_CHECKING
 import pygame
 
-from raycaster.core import Updatable, Settings
-
+from raycaster.core import Updatable, Settings, Event
 
 if TYPE_CHECKING:
     from raycaster.game.map import Map
@@ -20,6 +19,15 @@ class Player(Updatable):
         self.y = 3.5 * self.settings.CELL_SIZE
         self.angle = 0
         self.delta_time = 1
+
+        self.weapon = None
+        self.shoot_handler = Event()
+        self.shoot_handler += self._shoot
+
+        self.health = 100
+
+    def apply_damage(self, damage: float):
+        self.health -= damage
 
     def handle_movement(self):
         sin_a = math.sin(self.angle)
@@ -85,16 +93,17 @@ class Player(Updatable):
             self.y += dy
 
     def handle_camera(self):
-        num_key_pressed = -1
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
-            num_key_pressed += 1
             self.angle -= self.sensitivity * self.delta_time
             self.angle = self.angle % (2 * math.pi)
         if keys[pygame.K_RIGHT]:
-            num_key_pressed += 1
             self.angle += self.sensitivity * self.delta_time
             self.angle = self.angle % (2 * math.pi)
+
+    def _shoot(self):
+        if self.weapon is not None and self.weapon.can_shoot():
+            self.weapon.shoot()
 
     def update(self):
         self.delta_time = self.clock.get_time()
