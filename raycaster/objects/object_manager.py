@@ -98,3 +98,15 @@ class ObjectManager:
                 ):
                     enemy.apply_damage(cls.player.weapon.damage)
                     return
+
+    @classmethod
+    def reset(cls):
+        cls._remove_all_obj()
+        cls._initialize_objects()
+        cls._register_event_handlers()
+
+    @classmethod
+    def _remove_all_obj(cls):
+        for enemy in cls._enemies:
+            cls._enemies.remove(enemy)
+            Updatable.unregister(enemy)

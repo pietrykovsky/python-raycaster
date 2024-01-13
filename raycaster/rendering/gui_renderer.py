@@ -166,3 +166,25 @@ class GuiRenderer(Drawable):
         self._draw_health_bar()
         self._draw_score()
         self._draw_weapon()
+
+    def draw_game_over_screen(self):
+        # Load the background image
+        background_image = pygame.image.load("raycaster/assets/img/ggg.png")
+        background_image = pygame.transform.scale(
+            background_image, (self.screen.get_width(), self.screen.get_height())
+        )
+        self.screen.blit(background_image, (0, 0))
+
+        font = self.font
+        reset_text = font.render('PRESS "R" TO RESET', True, (255, 255, 255))
+        reset_text_x = (self.screen.get_width() - reset_text.get_width()) // 2
+        reset_text_y = self.screen.get_height() // 4  # 1/4 wysokości ekranu od góry
+        self.screen.blit(reset_text, (reset_text_x, reset_text_y))
+
+        # score_text = font.render(f"SCORE: {self.players.score}", True, (255, 255, 255))
+        score_text = font.render("SCORE: 1233", True, (255, 255, 255))
+        score_text_x = (self.screen.get_width() - score_text.get_width()) // 2
+        score_text_y = reset_text_y + reset_text.get_height() + 10
+        self.screen.blit(score_text, (score_text_x, score_text_y))
+
+        pygame.display.flip()

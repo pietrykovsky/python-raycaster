@@ -40,12 +40,11 @@ class Game:
         return cls._instance
 
     def reset_game(self):
-        # Reset the game state (e.g., player position, health, etc.)
-        self.player.health = 100
-        self.player.x, self.player.y = (
-            3.5 * self.settings.CELL_SIZE,
-            3.5 * self.settings.CELL_SIZE,
-        )
+        """
+        Reset the game state (e.g., player position, health, etc.)
+        """
+        self.player.reset()
+        self.object_manager.reset()
 
     def wait_for_reset(self):
         while True:
@@ -59,26 +58,10 @@ class Game:
                         return
 
     def show_game_over_screen(self):
-        # Load the background image
-        background_image = pygame.image.load(
-            "raycaster/assets/img/ggg.png"
-        )  # Replace with the correct file path
-        background_image = pygame.transform.scale(
-            background_image, (self.screen.get_width(), self.screen.get_height())
-        )
-
-        # Blit the background image
-        self.screen.blit(background_image, (0, 0))
-
-        # Display 'Game Over' text
-        font = pygame.font.SysFont("arial", 50)
-        text = font.render("Game Over", True, (255, 0, 0))
-        text_x = (self.screen.get_width() - text.get_width()) // 2
-        text_y = (self.screen.get_height() - text.get_height()) // 2
-        self.screen.blit(text, (text_x, text_y))
-
-        # Update the display
-        pygame.display.flip()
+        """
+        Displaing game over Screen with score.
+        """
+        self.gui_renderer.draw_game_over_screen()
 
         # Wait for reset
         self.wait_for_reset()
