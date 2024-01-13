@@ -197,7 +197,7 @@ class Test(Enemy):
             player=player,
             shaded=True,
             animations=animations,
-            damage=1,
+            damage=20,
             health=10,
             speed=0.1,
             attack_range=Settings().CELL_SIZE * 2,

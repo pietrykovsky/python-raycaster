@@ -39,14 +39,61 @@ class Game:
 
         return cls._instance
 
+    def reset_game(self):
+        # Reset the game state (e.g., player position, health, etc.)
+        self.player.health = 100
+        self.player.x, self.player.y = (
+            3.5 * self.settings.CELL_SIZE,
+            3.5 * self.settings.CELL_SIZE,
+        )
+
+    def wait_for_reset(self):
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_r:
+                        self.reset_game()
+                        return
+
+    def show_game_over_screen(self):
+        # Load the background image
+        background_image = pygame.image.load(
+            "raycaster/assets/img/ggg.png"
+        )  # Replace with the correct file path
+        background_image = pygame.transform.scale(
+            background_image, (self.screen.get_width(), self.screen.get_height())
+        )
+
+        # Blit the background image
+        self.screen.blit(background_image, (0, 0))
+
+        # Display 'Game Over' text
+        font = pygame.font.SysFont("arial", 50)
+        text = font.render("Game Over", True, (255, 0, 0))
+        text_x = (self.screen.get_width() - text.get_width()) // 2
+        text_y = (self.screen.get_height() - text.get_height()) // 2
+        self.screen.blit(text, (text_x, text_y))
+
+        # Update the display
+        pygame.display.flip()
+
+        # Wait for reset
+        self.wait_for_reset()
+
     def run(self):
         """
         The main loop of the game.
         """
         while True:
-            self.handle_events()
-            self.update()
-            self.draw()
+            if self.player.is_dead():
+                self.show_game_over_screen()
+            else:
+                self.handle_events()
+                self.update()
+                self.draw()
 
     def handle_events(self):
         """
@@ -72,7 +119,9 @@ class Game:
         Updatable.update_all()
         pygame.display.flip()
         self.delta_time = self.clock.tick(self.settings.FPS)
-        pygame.display.set_caption(f"{self.clock.get_fps() :.1f}")
+        pygame.display.set_caption(
+            f"{self.clock.get_fps() :.1f} HEALTH: {self.player.health}"
+        )
 
     def draw(self):
         """
