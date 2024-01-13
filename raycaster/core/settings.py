@@ -24,6 +24,10 @@ class Settings:
     MINIMAP_RATIO = 0.25
     MINIMAP_OPACITY_RATIO = 0.33
 
+    # HUD RELATED
+    HUD_VISIBLE = True  # Press F5 to change
+    HUD_RATIO_HEIGHT = 0.15
+
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super(Settings, cls).__new__(cls)

@@ -24,6 +24,7 @@ class AssetLoader:
             cls.WALL_TEXTURES_PATH = os.path.join(cls.ASSETS_PATH, "walls")
             cls.OBJECTS_SPRITES_PATH = os.path.join(cls.ASSETS_PATH, "objects")
             cls.STATIC_SPRITES_PATH = os.path.join(cls.OBJECTS_SPRITES_PATH, "static")
+<<<<<<< HEAD
             cls.ANIMATED_SPRITES_PATH = os.path.join(
                 cls.OBJECTS_SPRITES_PATH, "animated"
             )
@@ -38,6 +39,13 @@ class AssetLoader:
 
             cls._walls = cls._load_walls_textures()
             cls._static_objects = cls._load_static_sprites()
+=======
+            cls.HUD_TEXTURES_PATH = os.path.join(cls.ASSETS_PATH, "hud")
+
+            cls._walls = cls._load_walls_textures()
+            cls._static_objects = cls._load_static_sprites()
+            cls._hud_face = cls._load_hud_textures()
+>>>>>>> e51666e41d05d7b58d0550781750d9bbe27b9bc6
 
         return cls._instance
 
