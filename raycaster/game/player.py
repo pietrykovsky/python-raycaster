@@ -24,6 +24,7 @@ class Player(Updatable):
         self.shoot_handler = Event()
         self.shoot_handler += self._shoot
 
+        self.max_health = self.settings.PLAYER_MAX_HEALTH
         self.health = 100
 
     def apply_damage(self, damage: float):

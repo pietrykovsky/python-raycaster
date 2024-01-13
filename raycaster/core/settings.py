@@ -13,6 +13,7 @@ class Settings:
     RAY_COUNT = 150
     PLAYER_SPEED = 0.5
     PLAYER_SENSITIVITY = 0.001
+    PLAYER_MAX_HEALTH = 100
 
     # MAP RELATED
     CELL_SIZE = 256
@@ -22,10 +23,6 @@ class Settings:
     MINIMAP_VISIBLE = True  # Press F4 to change
     MINIMAP_RATIO = 0.25
     MINIMAP_OPACITY_RATIO = 0.33
-
-    # HUD RELATED
-    HUD_VISIBLE = True  # Press F5 to change
-    HUD_RATIO_HEIGHT = 0.15
 
     def __new__(cls):
         if cls._instance is None:
