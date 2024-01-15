@@ -13,6 +13,7 @@ class Settings:
     RAY_COUNT = 150
     PLAYER_SPEED = 0.5
     PLAYER_SENSITIVITY = 0.001
+    PLAYER_MAX_HEALTH = 100
 
     # MAP RELATED
     CELL_SIZE = 256
