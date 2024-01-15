@@ -101,12 +101,12 @@ class ObjectManager:
 
     @classmethod
     def reset(cls):
-        cls._remove_all_obj()
+        cls._remove_all_objects()
         cls._initialize_objects()
         cls._register_event_handlers()
 
     @classmethod
-    def _remove_all_obj(cls):
+    def _remove_all_objects(cls):
         for enemy in cls._enemies:
             cls._enemies.remove(enemy)
             Updatable.unregister(enemy)

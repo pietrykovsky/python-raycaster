@@ -29,6 +29,7 @@ class GuiRenderer(Drawable):
         self.player = player
         self.map = map
         self.font = AssetLoader().load_doom_font(15)
+        self.background_image = AssetLoader().background_image
 
     def _draw_walls_on_minimap(self, surface: pygame.Surface, minimap_scale: float):
         for x, y in self.map.walls:
@@ -167,24 +168,31 @@ class GuiRenderer(Drawable):
         self._draw_score()
         self._draw_weapon()
 
-    def draw_game_over_screen(self):
-        # Load the background image
-        background_image = pygame.image.load("raycaster/assets/img/ggg.png")
+    def _draw_call_to_action_text(self):
         background_image = pygame.transform.scale(
-            background_image, (self.screen.get_width(), self.screen.get_height())
+            self.background_image, (self.screen.get_width(), self.screen.get_height())
         )
         self.screen.blit(background_image, (0, 0))
 
-        font = self.font
-        reset_text = font.render('PRESS "R" TO RESET', True, (255, 255, 255))
+        reset_text = self.font.render('PRESS "R" TO RESET', True, (255, 255, 255))
         reset_text_x = (self.screen.get_width() - reset_text.get_width()) // 2
-        reset_text_y = self.screen.get_height() // 4  # 1/4 wysokości ekranu od góry
+        reset_text_y = self.screen.get_height() // 4
         self.screen.blit(reset_text, (reset_text_x, reset_text_y))
 
-        # score_text = font.render(f"SCORE: {self.players.score}", True, (255, 255, 255))
-        score_text = font.render("SCORE: 1233", True, (255, 255, 255))
+        score_text_y = (
+            reset_text_y + reset_text.get_height() + 10
+        )  # We need to return this value to make score text resposive
+
+        return score_text_y
+
+    def _draw_score_text(self, score_text_y):
+        # score_text = self.font.render(f"SCORE: {self.players.score}", True, (255, 255, 255))
+        score_text = self.font.render("SCORE: 1233", True, (255, 255, 255))
         score_text_x = (self.screen.get_width() - score_text.get_width()) // 2
-        score_text_y = reset_text_y + reset_text.get_height() + 10
         self.screen.blit(score_text, (score_text_x, score_text_y))
+
+    def draw_game_over_screen(self):
+        score_text_y = self._draw_call_to_action_text()
+        self._draw_score_text(score_text_y)
 
         pygame.display.flip()

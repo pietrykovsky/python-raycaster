@@ -5,7 +5,7 @@ class Settings:
     SCREEN_WIDTH = 1280
     SCREEN_HEIGHT = 720
 
-    CAPTION = "DOOM - demo"
+    CAPTION = "Python raycaster"
     FPS = 60
 
     # PLAYER RELATED

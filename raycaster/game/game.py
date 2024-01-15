@@ -7,6 +7,7 @@ from raycaster.game.map import Map
 from raycaster.rendering import WorldRenderer, GuiRenderer, Raycaster
 from raycaster.objects import ObjectManager
 from raycaster import const
+from raycaster.game.game_state_manager import GameStateManager
 
 
 class Game:
@@ -36,47 +37,19 @@ class Game:
             cls.gui_renderer = GuiRenderer(
                 cls.screen, cls.map, cls.player, cls.raycaster
             )
+            cls.game_state_manager = GameStateManager(
+                cls._instance, cls.player, cls.object_manager, cls.gui_renderer
+            )
+            cls.game_state_manager.change_state("gameplay")
 
         return cls._instance
 
-    def reset_game(self):
-        """
-        Reset the game state (e.g., player position, health, etc.)
-        """
-        self.player.reset()
-        self.object_manager.reset()
-
-    def wait_for_reset(self):
-        while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_r:
-                        self.reset_game()
-                        return
-
-    def show_game_over_screen(self):
-        """
-        Displaing game over Screen with score.
-        """
-        self.gui_renderer.draw_game_over_screen()
-
-        # Wait for reset
-        self.wait_for_reset()
-
     def run(self):
-        """
-        The main loop of the game.
-        """
         while True:
-            if self.player.is_dead():
-                self.show_game_over_screen()
-            else:
-                self.handle_events()
-                self.update()
-                self.draw()
+            self.game_state_manager.update(self.delta_time)
+            self.game_state_manager.draw(self.screen)
+            pygame.display.flip()
+            self.delta_time = self.clock.tick(self.settings.FPS)
 
     def handle_events(self):
         """
@@ -95,19 +68,9 @@ class Game:
                 pygame.quit()
                 sys.exit()
 
-    def update(self):
-        """
-        Updates the game state.
-        """
+    def update_game_state(self, delta_time):
         Updatable.update_all()
-        pygame.display.flip()
-        self.delta_time = self.clock.tick(self.settings.FPS)
-        pygame.display.set_caption(
-            f"{self.clock.get_fps() :.1f} HEALTH: {self.player.health}"
-        )
+        self.delta_time = delta_time
 
-    def draw(self):
-        """
-        Renders the game.
-        """
+    def draw_game_state(self, screen):
         Drawable.draw_all()

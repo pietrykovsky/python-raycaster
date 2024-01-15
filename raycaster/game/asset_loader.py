@@ -23,6 +23,8 @@ class AssetLoader:
             cls.ASSETS_PATH = os.path.join(cls.ROOT_PATH, "assets")
             cls.WALL_TEXTURES_PATH = os.path.join(cls.ASSETS_PATH, "walls")
             cls.OBJECTS_SPRITES_PATH = os.path.join(cls.ASSETS_PATH, "objects")
+            cls.FONT_PATH = os.path.join(cls.ASSETS_PATH, "fonts")
+            cls.BACKROUND_IMAGE_PATH = os.path.join(cls.ASSETS_PATH, "images")
             cls.STATIC_SPRITES_PATH = os.path.join(cls.OBJECTS_SPRITES_PATH, "static")
             cls.ANIMATED_SPRITES_PATH = os.path.join(
                 cls.OBJECTS_SPRITES_PATH, "animated"
@@ -37,7 +39,18 @@ class AssetLoader:
             cls._animated_objects = cls._load_animated_sprites()
             cls._enemies = cls._load_enemies()
             cls._weapons = cls._load_weapons()
+            cls._font = cls._load_font()
+            cls._background_image = cls._load_background_image()
+
         return cls._instance
+
+    @property
+    def font(self) -> pygame.font.Font:
+        return self._font
+
+    @property
+    def background_image(self) -> pygame.Surface:
+        return self._background_image.copy()
 
     @property
     def wall_textures(self) -> dict[int, pygame.Surface]:
@@ -58,6 +71,23 @@ class AssetLoader:
     @property
     def weapons(self) -> dict[str, dict[str, list[pygame.Surface] | pygame.Surface]]:
         return self._weapons.copy()
+
+    @classmethod
+    def _load_background_image(cls) -> pygame.Surface:
+        """
+        Loads background image from the background_image directory.
+        """
+        background_image_path = os.path.join(cls.BACKROUND_IMAGE_PATH, "background.png")
+        return pygame.image.load(background_image_path)
+
+    @classmethod
+    def _load_font(cls) -> pygame.font.Font:
+        """
+        Loads font from the fonts directory.
+        """
+        font_path = os.path.join(cls.FONT_PATH, "DooM.ttf")
+        font_size = 20
+        return pygame.font.Font(font_path, font_size)
 
     @classmethod
     def load_doom_font(cls, size: int) -> pygame.font.Font:
