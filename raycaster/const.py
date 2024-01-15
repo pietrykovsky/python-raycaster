@@ -8,6 +8,7 @@ RESOLUTION = Settings().SCREEN_WIDTH, Settings().SCREEN_HEIGHT
 
 # PLAYER RELATED
 DELTA_ANGLE = math.radians(Settings().FOV / Settings().RAY_COUNT)
+PLAYER_INIT_HEALTH = 100
 
 # MAP RELATED
 SCREEN_DISTANCE = (Settings().SCREEN_WIDTH // 2) / math.tan(

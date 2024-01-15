@@ -29,6 +29,8 @@ class AssetLoader:
             )
             cls.ENEMIES_SPRITES_PATH = os.path.join(cls.OBJECTS_SPRITES_PATH, "enemies")
             cls.WEAPONS_PATH = os.path.join(cls.OBJECTS_SPRITES_PATH, "weapons")
+            cls.FONTS_PATH = os.path.join(cls.ASSETS_PATH, "fonts")
+            cls.DOOM_FONT_PATH = os.path.join(cls.FONTS_PATH, "DooM.ttf")
 
             cls._walls = cls._load_walls_textures()
             cls._static_objects = cls._load_static_sprites()
@@ -56,6 +58,14 @@ class AssetLoader:
     @property
     def weapons(self) -> dict[str, dict[str, list[pygame.Surface] | pygame.Surface]]:
         return self._weapons.copy()
+
+    @classmethod
+    def load_doom_font(cls, size: int) -> pygame.font.Font:
+        """
+        Loads the font from the assets/fonts directory.
+        """
+        font_path = cls.DOOM_FONT_PATH
+        return pygame.font.Font(font_path, size)
 
     @classmethod
     def _load_walls_textures(cls) -> dict[int, pygame.Surface]:
