@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 import pygame
 
 from raycaster.core import Updatable, Settings, Event
+from raycaster.const import PLAYER_INIT_HEALTH
 
 if TYPE_CHECKING:
     from raycaster.game.map import Map
@@ -24,8 +25,7 @@ class Player(Updatable):
         self.shoot_handler = Event()
         self.shoot_handler += self._shoot
 
-        self.max_health = self.settings.PLAYER_MAX_HEALTH
-        self.health = 100
+        self.health = PLAYER_INIT_HEALTH
 
     def apply_damage(self, damage: float):
         self.health -= damage
