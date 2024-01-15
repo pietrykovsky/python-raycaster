@@ -28,7 +28,7 @@ class GuiRenderer(Drawable):
         self.raycaster = raycaster
         self.player = player
         self.map = map
-        self.font = pygame.font.Font("raycaster/assets/fonts/DooM.ttf", 15)
+        self.font = AssetLoader().load_doom_font(15)
 
     def _draw_walls_on_minimap(self, surface: pygame.Surface, minimap_scale: float):
         for x, y in self.map.walls:
