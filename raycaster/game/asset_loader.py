@@ -33,24 +33,16 @@ class AssetLoader:
             cls.WEAPONS_PATH = os.path.join(cls.OBJECTS_SPRITES_PATH, "weapons")
             cls.FONTS_PATH = os.path.join(cls.ASSETS_PATH, "fonts")
             cls.DOOM_FONT_PATH = os.path.join(cls.FONTS_PATH, "DooM.ttf")
+            cls.CTA_DIR_PATH = os.path.join(cls.ASSETS_PATH, "call_to_action")
 
             cls._walls = cls._load_walls_textures()
             cls._static_objects = cls._load_static_sprites()
             cls._animated_objects = cls._load_animated_sprites()
             cls._enemies = cls._load_enemies()
             cls._weapons = cls._load_weapons()
-            cls._font = cls._load_font()
-            cls._background_image = cls._load_background_image()
+            cls._cta_screens = cls._load_cta_screens()
 
         return cls._instance
-
-    @property
-    def font(self) -> pygame.font.Font:
-        return self._font
-
-    @property
-    def background_image(self) -> pygame.Surface:
-        return self._background_image.copy()
 
     @property
     def wall_textures(self) -> dict[int, pygame.Surface]:
@@ -71,23 +63,18 @@ class AssetLoader:
     @property
     def weapons(self) -> dict[str, dict[str, list[pygame.Surface] | pygame.Surface]]:
         return self._weapons.copy()
-
-    @classmethod
-    def _load_background_image(cls) -> pygame.Surface:
-        """
-        Loads background image from the background_image directory.
-        """
-        background_image_path = os.path.join(cls.BACKROUND_IMAGE_PATH, "background.png")
-        return pygame.image.load(background_image_path)
-
-    @classmethod
-    def _load_font(cls) -> pygame.font.Font:
-        """
-        Loads font from the fonts directory.
-        """
-        font_path = os.path.join(cls.FONT_PATH, "DooM.ttf")
-        font_size = 20
-        return pygame.font.Font(font_path, font_size)
+    
+    @property
+    def game_over_cta(self) -> pygame.Surface:
+        return self._cta_screens["game_over"]
+    
+    @property
+    def victory_cta(self) -> pygame.Surface:
+        return self._cta_screens["victory"]
+    
+    @property
+    def start_game_cta(self) -> pygame.Surface:
+        return self._cta_screens["start"]
 
     @classmethod
     def load_doom_font(cls, size: int) -> pygame.font.Font:
@@ -228,3 +215,16 @@ class AssetLoader:
         dest_width = int(width * ratio)
         surface = pygame.transform.scale(surface, (dest_width, dest_height))
         return surface
+
+    @classmethod
+    def _load_cta_screens(cls) -> pygame.Surface:
+        """
+        Loads background image from the background_image directory.
+        """
+        screens = {}
+        for file in os.listdir(cls.CTA_DIR_PATH):
+            file_path = os.path.join(cls.CTA_DIR_PATH, file)
+            key = str(os.path.splitext(file)[0])
+            surface = pygame.image.load(file_path).convert()
+            screens[key] = surface
+        return screens

@@ -29,7 +29,6 @@ class GuiRenderer:
         self.player = player
         self.map = map
         self.font = AssetLoader().load_doom_font(15)
-        self.background_image = AssetLoader().background_image
 
     def _draw_walls_on_minimap(self, surface: pygame.Surface, minimap_scale: float):
         for x, y in self.map.walls:
@@ -168,29 +167,28 @@ class GuiRenderer:
         self._draw_score()
         self._draw_weapon()
 
-    def _draw_call_to_action_text(self):
+    def draw_game_over_cta(self):
+        self._draw_cta_background(AssetLoader().game_over_cta)
+        self._draw_center_text("PRESS 'R' TO RESTART", 4/20*self.screen.get_height())
+        self._draw_center_text(f"SCORE: 0", 5/20*self.screen.get_height())
+
+    def draw_victory_cta(self):
+        self._draw_cta_background(AssetLoader().victory_cta)
+        self._draw_center_text("PRESS 'R' TO RESTART", 17/20*self.screen.get_height())
+        self._draw_center_text(f"SCORE: 0", 18/20*self.screen.get_height())
+
+    def draw_start_cta(self):
+        self._draw_cta_background(AssetLoader().start_game_cta)
+        self._draw_center_text("PRESS 'F' TO START", 18/20*self.screen.get_height())
+
+    def _draw_cta_background(self, background_image: pygame.Surface):
         background_image = pygame.transform.scale(
-            self.background_image, (self.screen.get_width(), self.screen.get_height())
+            background_image, (self.screen.get_width(), self.screen.get_height())
         )
         self.screen.blit(background_image, (0, 0))
 
-        reset_text = self.font.render('PRESS "R" TO RESET', True, (255, 255, 255))
-        reset_text_x = (self.screen.get_width() - reset_text.get_width()) // 2
-        reset_text_y = self.screen.get_height() // 4
-        self.screen.blit(reset_text, (reset_text_x, reset_text_y))
-
-        score_text_y = (
-            reset_text_y + reset_text.get_height() + 10
-        )  # We need to return this value to make score text resposive
-
-        return score_text_y
-
-    def _draw_score_text(self, score_text_y):
-        # score_text = self.font.render(f"SCORE: {self.players.score}", True, (255, 255, 255))
-        score_text = self.font.render("SCORE: 1233", True, (255, 255, 255))
-        score_text_x = (self.screen.get_width() - score_text.get_width()) // 2
-        self.screen.blit(score_text, (score_text_x, score_text_y))
-
-    def draw_game_over_screen(self):
-        score_text_y = self._draw_call_to_action_text()
-        self._draw_score_text(score_text_y)
+    def _draw_center_text(self, text: str, row: int):
+        text = self.font.render(text, True, WHITE)
+        text_x = (self.screen.get_width() - text.get_width()) // 2
+        text_y = row
+        self.screen.blit(text, (text_x, text_y))

@@ -32,7 +32,7 @@ class GameStateManager:
             cls.object_manager = object_manager
             cls.gui_renderer = gui_renderer
             cls.settings = Settings()
-            cls.current_state = GameState.GAMEPLAY
+            cls.current_state = GameState.START
         return cls._instance
 
     @classmethod
@@ -60,7 +60,11 @@ class GameStateManager:
             Drawable.draw_all()
             cls.gui_renderer.draw_hud()
         elif cls.current_state == GameState.GAME_OVER:
-            cls.gui_renderer.draw_game_over_screen()
+            cls.gui_renderer.draw_game_over_cta()
+        elif cls.current_state == GameState.VICTORY:
+            cls.gui_renderer.draw_victory_cta()
+        elif cls.current_state == GameState.START:
+            cls.gui_renderer.draw_start_cta()
         else:
             raise ValueError("Unknown state")
 
