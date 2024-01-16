@@ -209,9 +209,10 @@ class AssetLoader:
         """
         dest_height = Settings().SCREEN_HEIGHT // 2
         width, height = surface.get_size()
-        ratio = dest_height / height if height > dest_height else height / dest_height
+        ratio = dest_height / height
         dest_width = int(width * ratio)
         surface = pygame.transform.scale(surface, (dest_width, dest_height))
+ 
         return surface
 
     @classmethod
