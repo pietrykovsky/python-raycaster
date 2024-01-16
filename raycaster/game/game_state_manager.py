@@ -94,7 +94,7 @@ class GameStateManager:
     @classmethod
     def _update_gameplay(cls):
         Updatable.update_all()
-        if cls.player.health <= 0:
+        if cls.player.is_dead():
             cls.current_state = GameState.GAME_OVER
         elif len(cls.object_manager.enemies) == 0:
             cls.current_state = GameState.VICTORY
