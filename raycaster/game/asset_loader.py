@@ -23,8 +23,6 @@ class AssetLoader:
             cls.ASSETS_PATH = os.path.join(cls.ROOT_PATH, "assets")
             cls.WALL_TEXTURES_PATH = os.path.join(cls.ASSETS_PATH, "walls")
             cls.OBJECTS_SPRITES_PATH = os.path.join(cls.ASSETS_PATH, "objects")
-            cls.FONT_PATH = os.path.join(cls.ASSETS_PATH, "fonts")
-            cls.BACKROUND_IMAGE_PATH = os.path.join(cls.ASSETS_PATH, "images")
             cls.STATIC_SPRITES_PATH = os.path.join(cls.OBJECTS_SPRITES_PATH, "static")
             cls.ANIMATED_SPRITES_PATH = os.path.join(
                 cls.OBJECTS_SPRITES_PATH, "animated"
