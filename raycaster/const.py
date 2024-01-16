@@ -7,6 +7,10 @@ from raycaster.core import Settings
 RESOLUTION = Settings().SCREEN_WIDTH, Settings().SCREEN_HEIGHT
 CAPTION = "Python Raycaster"
 
+# SOUND RELATED
+MUSIC_VOLUME = Settings().MUSIC_VOLUME * Settings().MASTER_VOLUME
+EFFECTS_VOLUME = Settings().EFFECTS_VOLUME * Settings().MASTER_VOLUME
+
 # PLAYER RELATED
 DELTA_ANGLE = math.radians(Settings().FOV / Settings().RAY_COUNT)
 PLAYER_INIT_HEALTH = 100
@@ -15,7 +19,6 @@ PLAYER_INIT_HEALTH = 100
 SCREEN_DISTANCE = (Settings().SCREEN_WIDTH // 2) / math.tan(
     math.radians(Settings().FOV // 2)
 )
-
 
 # SPRITES RELATED
 class AnimationType(Enum):

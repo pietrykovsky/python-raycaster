@@ -32,6 +32,7 @@ class AssetLoader:
             cls.FONTS_PATH = os.path.join(cls.ASSETS_PATH, "fonts")
             cls.DOOM_FONT_PATH = os.path.join(cls.FONTS_PATH, "DooM.ttf")
             cls.CTA_DIR_PATH = os.path.join(cls.ASSETS_PATH, "call_to_action")
+            cls.SOUNDTRACK_PATH = os.path.join(cls.ASSETS_PATH, "soundtrack.mp3")
 
             cls._walls = cls._load_walls_textures()
             cls._static_objects = cls._load_static_sprites()
@@ -39,6 +40,8 @@ class AssetLoader:
             cls._enemies = cls._load_enemies()
             cls._weapons = cls._load_weapons()
             cls._cta_screens = cls._load_cta_screens()
+
+            pygame.mixer.music.load(cls.SOUNDTRACK_PATH)
 
         return cls._instance
 

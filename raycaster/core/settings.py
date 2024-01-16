@@ -6,6 +6,11 @@ class Settings:
     SCREEN_HEIGHT = 900
     FPS = 60
 
+    # SOUND RELATED
+    MASTER_VOLUME = 0.8
+    MUSIC_VOLUME = 0.5
+    EFFECTS_VOLUME = 0.5
+
     # MAP RELATED
     CELL_SIZE = 256
     MAX_DISTANCE = 8 * CELL_SIZE
