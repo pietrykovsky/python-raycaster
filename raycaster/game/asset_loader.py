@@ -212,7 +212,7 @@ class AssetLoader:
         ratio = dest_height / height
         dest_width = int(width * ratio)
         surface = pygame.transform.scale(surface, (dest_width, dest_height))
- 
+
         return surface
 
     @classmethod
