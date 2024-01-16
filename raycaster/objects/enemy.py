@@ -166,13 +166,13 @@ class Enemy(AnimatedSpriteObject):
         )
 
 
-class Test(Enemy):
+class Soldier(Enemy):
     def __init__(self, position: tuple[float, float], player: "Player"):
-        assets = AssetLoader().enemies.get("test")
+        assets = AssetLoader().enemies.get("soldier")
         animations = {
             AnimationType.IDLE: Animation(
                 frames=assets.get(AnimationType.IDLE),
-                duration=3,
+                duration=1.5,
             ),
             AnimationType.MOVE: Animation(
                 frames=assets.get(AnimationType.MOVE),
@@ -180,7 +180,7 @@ class Test(Enemy):
             ),
             AnimationType.ATTACK: Animation(
                 frames=assets.get(AnimationType.ATTACK),
-                duration=4,
+                duration=2,
                 repeat=False,
             ),
             AnimationType.HIT: Animation(
@@ -190,7 +190,93 @@ class Test(Enemy):
             ),
             AnimationType.DEATH: Animation(
                 frames=assets.get(AnimationType.DEATH),
+                duration=1,
+                repeat=False,
+            ),
+        }
+        super().__init__(
+            position=position,
+            player=player,
+            shaded=True,
+            animations=animations,
+            damage=5,
+            health=10,
+            speed=0.2,
+            attack_range=Settings().CELL_SIZE * 3,
+            attack_cooldown=3,
+            attack_chance=0.5,
+            score=50,
+        )
+
+
+class LostSoul(Enemy):
+    def __init__(self, position: tuple[float, float], player: "Player"):
+        assets = AssetLoader().enemies.get("lost_soul")
+        animations = {
+            AnimationType.IDLE: Animation(
+                frames=assets.get(AnimationType.IDLE),
                 duration=2,
+            ),
+            AnimationType.MOVE: Animation(
+                frames=assets.get(AnimationType.MOVE),
+                duration=2,
+            ),
+            AnimationType.ATTACK: Animation(
+                frames=assets.get(AnimationType.ATTACK),
+                duration=2,
+                repeat=False,
+            ),
+            AnimationType.HIT: Animation(
+                frames=assets.get(AnimationType.HIT),
+                duration=0.5,
+                repeat=False,
+            ),
+            AnimationType.DEATH: Animation(
+                frames=assets.get(AnimationType.DEATH),
+                duration=1,
+                repeat=False,
+            ),
+        }
+        super().__init__(
+            position=position,
+            player=player,
+            shaded=True,
+            animations=animations,
+            damage=20,
+            health=50,
+            speed=0.3,
+            attack_range=Settings().CELL_SIZE * 3,
+            attack_cooldown=2,
+            attack_chance=0.7,
+            score=200,
+        )
+
+
+class CacoDemon(Enemy):
+    def __init__(self, position: tuple[float, float], player: "Player"):
+        assets = AssetLoader().enemies.get("caco_demon")
+        animations = {
+            AnimationType.IDLE: Animation(
+                frames=assets.get(AnimationType.IDLE),
+                duration=2,
+            ),
+            AnimationType.MOVE: Animation(
+                frames=assets.get(AnimationType.MOVE),
+                duration=1.5,
+            ),
+            AnimationType.ATTACK: Animation(
+                frames=assets.get(AnimationType.ATTACK),
+                duration=2,
+                repeat=False,
+            ),
+            AnimationType.HIT: Animation(
+                frames=assets.get(AnimationType.HIT),
+                duration=0.5,
+                repeat=False,
+            ),
+            AnimationType.DEATH: Animation(
+                frames=assets.get(AnimationType.DEATH),
+                duration=1,
                 repeat=False,
             ),
         }
@@ -202,8 +288,51 @@ class Test(Enemy):
             damage=20,
             health=10,
             speed=0.1,
-            attack_range=Settings().CELL_SIZE * 2,
-            attack_cooldown=5,
+            attack_range=Settings().CELL_SIZE * 3,
+            attack_cooldown=4,
             attack_chance=0.9,
             score=100,
+        )
+
+
+class CyberDemon(Enemy):
+    def __init__(self, position: tuple[float, float], player: "Player"):
+        assets = AssetLoader().enemies.get("cyber_demon")
+        animations = {
+            AnimationType.IDLE: Animation(
+                frames=assets.get(AnimationType.IDLE),
+                duration=3,
+            ),
+            AnimationType.MOVE: Animation(
+                frames=assets.get(AnimationType.MOVE),
+                duration=1.5,
+            ),
+            AnimationType.ATTACK: Animation(
+                frames=assets.get(AnimationType.ATTACK),
+                duration=1,
+                repeat=False,
+            ),
+            AnimationType.HIT: Animation(
+                frames=assets.get(AnimationType.HIT),
+                duration=0.5,
+                repeat=False,
+            ),
+            AnimationType.DEATH: Animation(
+                frames=assets.get(AnimationType.DEATH),
+                duration=1,
+                repeat=False,
+            ),
+        }
+        super().__init__(
+            position=position,
+            player=player,
+            shaded=True,
+            animations=animations,
+            damage=30,
+            health=500,
+            speed=0.4,
+            attack_range=Settings().CELL_SIZE * 3,
+            attack_cooldown=1,
+            attack_chance=3,
+            score=1000,
         )

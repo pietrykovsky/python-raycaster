@@ -45,21 +45,111 @@ class ObjectManager:
     def _initialize_objects(cls):
         cell_size = Settings().CELL_SIZE
         cls._objects = [
-            ObjectFactory.create("candlebra", (2.5 * cell_size, 2.5 * cell_size)),
-            ObjectFactory.create("candlebra", (4.5 * cell_size, 4.5 * cell_size)),
-            ObjectFactory.create("npc", (4.5 * cell_size, 5.5 * cell_size)),
-            ObjectFactory.create("candlebra", (5.5 * cell_size, 5.5 * cell_size)),
-            ObjectFactory.create("quagmire", (9.5 * cell_size, 2.5 * cell_size)),
+            ObjectFactory.create("green_torch", (1.5 * cell_size, 1.5 * cell_size)),
+            ObjectFactory.create("green_torch", (1.5 * cell_size, 7.5 * cell_size)),
+            ObjectFactory.create("green_torch", (13.5 * cell_size, 3.5 * cell_size)),
+            ObjectFactory.create("green_torch", (1.5 * cell_size, 12.5 * cell_size)),
+            ObjectFactory.create("green_torch", (14.5 * cell_size, 12.5 * cell_size)),
+            ObjectFactory.create("green_torch", (4.5 * cell_size, 16.5 * cell_size)),
+            ObjectFactory.create("green_torch", (14.5 * cell_size, 24.5 * cell_size)),
+            ObjectFactory.create("green_torch", (1.5 * cell_size, 24.5 * cell_size)),
+            ObjectFactory.create("green_torch", (14.5 * cell_size, 30.5 * cell_size)),
+            ObjectFactory.create("green_torch", (1.5 * cell_size, 30.5 * cell_size)),
+            ObjectFactory.create("corps", (5.5 * cell_size, 3.5 * cell_size)),
+            ObjectFactory.create("corps_2", (5.5 * cell_size, 4.5 * cell_size)),
+            ObjectFactory.create("corps", (1.5 * cell_size, 19.5 * cell_size)),
+            ObjectFactory.create("corps_2", (2.5 * cell_size, 20.5 * cell_size)),
+            ObjectFactory.create("corps", (7.5 * cell_size, 29.5 * cell_size)),
+            ObjectFactory.create("corps_2", (8.5 * cell_size, 29.5 * cell_size)),
+            ObjectFactory.create("green_column", (9.5 * cell_size, 7.5 * cell_size)),
+            ObjectFactory.create("green_column", (12.5 * cell_size, 7.5 * cell_size)),
+            ObjectFactory.create("red_column", (3.5 * cell_size, 20.5 * cell_size)),
+            ObjectFactory.create("red_column", (6.5 * cell_size, 20.5 * cell_size)),
+            ObjectFactory.create(
+                "stick_with_head", (6.5 * cell_size, 31.5 * cell_size)
+            ),
+            ObjectFactory.create(
+                "stick_with_head", (9.5 * cell_size, 31.5 * cell_size)
+            ),
+            ObjectFactory.create(
+                "stick_with_head", (6.5 * cell_size, 32.5 * cell_size)
+            ),
+            ObjectFactory.create(
+                "stick_with_head", (9.5 * cell_size, 32.5 * cell_size)
+            ),
+            ObjectFactory.create(
+                "stick_with_head", (6.5 * cell_size, 33.5 * cell_size)
+            ),
+            ObjectFactory.create(
+                "stick_with_head", (9.5 * cell_size, 33.5 * cell_size)
+            ),
+            ObjectFactory.create(
+                "stick_with_head", (6.5 * cell_size, 34.5 * cell_size)
+            ),
+            ObjectFactory.create(
+                "stick_with_head", (9.5 * cell_size, 34.5 * cell_size)
+            ),
+            ObjectFactory.create(
+                "stick_with_heads", (6.5 * cell_size, 35.5 * cell_size)
+            ),
+            ObjectFactory.create(
+                "stick_with_heads", (9.5 * cell_size, 35.5 * cell_size)
+            ),
+            ObjectFactory.create(
+                "stick_with_heads", (6.5 * cell_size, 36.5 * cell_size)
+            ),
+            ObjectFactory.create(
+                "stick_with_heads", (9.5 * cell_size, 36.5 * cell_size)
+            ),
+            ObjectFactory.create(
+                "stick_with_heads", (6.5 * cell_size, 37.5 * cell_size)
+            ),
+            ObjectFactory.create(
+                "stick_with_heads", (9.5 * cell_size, 37.5 * cell_size)
+            ),
+            ObjectFactory.create(
+                "stick_with_heads", (6.5 * cell_size, 38.5 * cell_size)
+            ),
+            ObjectFactory.create(
+                "stick_with_heads", (9.5 * cell_size, 38.5 * cell_size)
+            ),
+            ObjectFactory.create("hanging_corpse", (7.5 * cell_size, 41.5 * cell_size)),
+            ObjectFactory.create(
+                "hanging_corpse_2", (8.5 * cell_size, 41.5 * cell_size)
+            ),
+            ObjectFactory.create(
+                "hanging_corpse_3", (5.5 * cell_size, 44.5 * cell_size)
+            ),
+            ObjectFactory.create(
+                "hanging_corpse_4", (10.5 * cell_size, 44.5 * cell_size)
+            ),
+            ObjectFactory.create(
+                "hanging_corpse_4", (5.5 * cell_size, 47.5 * cell_size)
+            ),
+            ObjectFactory.create(
+                "hanging_corpse_3", (10.5 * cell_size, 47.5 * cell_size)
+            ),
+            ObjectFactory.create("evil_eye", (7.5 * cell_size, 50.5 * cell_size)),
+            ObjectFactory.create("evil_eye", (8.5 * cell_size, 50.5 * cell_size)),
         ]
         cls._enemies = [
-            ObjectFactory.create("test", (7.5 * cell_size, 2.5 * cell_size)),
-            ObjectFactory.create("test", (8.5 * cell_size, 2.5 * cell_size)),
-            ObjectFactory.create("test", (7.5 * cell_size, 4.5 * cell_size)),
-            ObjectFactory.create("test", (8.5 * cell_size, 3.5 * cell_size)),
+            ObjectFactory.create("soldier", (11.5 * cell_size, 3.5 * cell_size)),
+            ObjectFactory.create("soldier", (14.5 * cell_size, 1.5 * cell_size)),
+            ObjectFactory.create("soldier", (14.5 * cell_size, 7.5 * cell_size)),
+            ObjectFactory.create("soldier", (7.5 * cell_size, 16.5 * cell_size)),
+            ObjectFactory.create("caco_demon", (10.5 * cell_size, 12.5 * cell_size)),
+            ObjectFactory.create("caco_demon", (1.5 * cell_size, 18.5 * cell_size)),
+            ObjectFactory.create("caco_demon", (2.5 * cell_size, 18.5 * cell_size)),
+            ObjectFactory.create("caco_demon", (4.5 * cell_size, 24.5 * cell_size)),
+            ObjectFactory.create("caco_demon", (5.5 * cell_size, 24.5 * cell_size)),
+            ObjectFactory.create("lost_soul", (13.5 * cell_size, 19.5 * cell_size)),
+            ObjectFactory.create("lost_soul", (5.5 * cell_size, 29.5 * cell_size)),
+            ObjectFactory.create("lost_soul", (10.5 * cell_size, 29.5 * cell_size)),
+            ObjectFactory.create("cyber_demon", (7.5 * cell_size, 49.5 * cell_size)),
         ]
         cls._weapons = [
-            ObjectFactory.create("shotgun", (7.5 * cell_size, 6.5 * cell_size)),
-            ObjectFactory.create("pistol", (8.5 * cell_size, 6.5 * cell_size)),
+            ObjectFactory.create("shotgun", (14.5 * cell_size, 20.5 * cell_size)),
+            ObjectFactory.create("pistol", (4.5 * cell_size, 4.5 * cell_size)),
         ]
 
     @classmethod
