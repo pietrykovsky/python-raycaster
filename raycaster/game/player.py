@@ -106,6 +106,17 @@ class Player(Updatable):
         if self.weapon is not None and self.weapon.can_shoot():
             self.weapon.shoot()
 
+    def is_dead(self):
+        return self.health <= 0
+
+    def reset(self):
+        self.angle = 0
+        self.x = 3.5 * self.settings.CELL_SIZE
+        self.y = 3.5 * self.settings.CELL_SIZE
+        self.weapon = None
+        self.health = 100
+        self.score = 0
+
     def update(self):
         self.delta_time = self.clock.get_time()
         self.handle_movement()

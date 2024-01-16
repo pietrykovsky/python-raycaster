@@ -4,8 +4,6 @@ class Settings:
     # GAME RELATED
     SCREEN_WIDTH = 1280
     SCREEN_HEIGHT = 720
-
-    CAPTION = "DOOM - demo"
     FPS = 60
 
     # PLAYER RELATED

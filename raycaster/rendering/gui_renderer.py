@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 import pygame
 
-from raycaster.core import Settings, Drawable
+from raycaster.core import Settings
 from raycaster.const import PLAYER_INIT_HEALTH
 from raycaster.game import AssetLoader
 
@@ -15,7 +15,7 @@ RED = 200, 0, 0
 WHITE = 255, 255, 255
 
 
-class GuiRenderer(Drawable):
+class GuiRenderer:
     def __init__(
         self,
         screen: pygame.Surface,
@@ -159,10 +159,40 @@ class GuiRenderer(Drawable):
         y = self.settings.SCREEN_HEIGHT - gui_representation.get_height()
         self.screen.blit(gui_representation, (x, y))
 
-    def draw(self):
+    def draw_hud(self):
         if self.settings.MINIMAP_VISIBLE:
             self._draw_minimap()
 
         self._draw_health_bar()
         self._draw_score()
         self._draw_weapon()
+
+    def draw_game_over_cta(self):
+        self._draw_cta_background(AssetLoader().game_over_cta)
+        self._draw_center_text(
+            "PRESS 'R' TO RESTART", 4 / 20 * self.screen.get_height()
+        )
+        self._draw_center_text(f"SCORE: 0", 5 / 20 * self.screen.get_height())
+
+    def draw_victory_cta(self):
+        self._draw_cta_background(AssetLoader().victory_cta)
+        self._draw_center_text(
+            "PRESS 'R' TO RESTART", 17 / 20 * self.screen.get_height()
+        )
+        self._draw_center_text(f"SCORE: 0", 18 / 20 * self.screen.get_height())
+
+    def draw_start_cta(self):
+        self._draw_cta_background(AssetLoader().start_game_cta)
+        self._draw_center_text("PRESS 'F' TO START", 18 / 20 * self.screen.get_height())
+
+    def _draw_cta_background(self, background_image: pygame.Surface):
+        background_image = pygame.transform.scale(
+            background_image, (self.screen.get_width(), self.screen.get_height())
+        )
+        self.screen.blit(background_image, (0, 0))
+
+    def _draw_center_text(self, text: str, row: int):
+        text = self.font.render(text, True, WHITE)
+        text_x = (self.screen.get_width() - text.get_width()) // 2
+        text_y = row
+        self.screen.blit(text, (text_x, text_y))
