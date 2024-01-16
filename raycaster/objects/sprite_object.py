@@ -31,15 +31,27 @@ class SpriteObject(Updatable):
         self.angle = math.atan2(self.y - self.player.y, self.x - self.player.x)
 
 
-class Candlebra(SpriteObject):
+class Corps(SpriteObject):
     def __init__(self, position: tuple[float, float], player: "Player"):
-        texture = AssetLoader().static_objects.get("candlebra")
+        texture = AssetLoader().static_objects.get("corps")
         super().__init__(
             position=position, shaded=False, player=player, texture=texture
         )
 
 
-class NPC(SpriteObject):
+class Corps_2(SpriteObject):
     def __init__(self, position: tuple[float, float], player: "Player"):
-        texture = AssetLoader().static_objects.get("npc")
+        texture = AssetLoader().static_objects.get("corps_2")
+        super().__init__(position=position, shaded=True, player=player, texture=texture)
+
+
+class Green_Column(SpriteObject):
+    def __init__(self, position: tuple[float, float], player: "Player"):
+        texture = AssetLoader().static_objects.get("green_column")
+        super().__init__(position=position, shaded=True, player=player, texture=texture)
+
+
+class Red_Column(SpriteObject):
+    def __init__(self, position: tuple[float, float], player: "Player"):
+        texture = AssetLoader().static_objects.get("red_column")
         super().__init__(position=position, shaded=True, player=player, texture=texture)
