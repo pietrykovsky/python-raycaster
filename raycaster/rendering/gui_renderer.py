@@ -77,7 +77,7 @@ class GuiRenderer:
             mini_map_height = mini_map_scale * self.map.rows
         else:
             # Map is taller than it is wide
-            mini_map_height = self.settings.SCREEN_HEIGHT * self.settings.HUD_RATIO
+            mini_map_height = self.settings.SCREEN_HEIGHT * self.settings.MINIMAP_RATIO
             mini_map_scale = mini_map_height / self.map.rows
             mini_map_width = mini_map_scale * self.map.cols
 
