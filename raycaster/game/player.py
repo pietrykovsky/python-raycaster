@@ -18,7 +18,7 @@ class Player(Updatable):
         self.sensitivity = self.settings.PLAYER_SENSITIVITY
         self.x = 3.5 * self.settings.CELL_SIZE
         self.y = 3.5 * self.settings.CELL_SIZE
-        self.angle = 0
+        self.angle = 180
         self.delta_time = 1
 
         self.weapon = None

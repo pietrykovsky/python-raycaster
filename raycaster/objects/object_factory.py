@@ -32,9 +32,16 @@ class BaseObjectFactory:
 class StaticObjectFactory(BaseObjectFactory):
     _class_map = {
         "corps": sprite_object.Corps,
-        "corps_2": sprite_object.Corps_2,
-        "green_column": sprite_object.Green_Column,
-        "red_column": sprite_object.Red_Column,
+        "corps_2": sprite_object.Corps2,
+        "green_column": sprite_object.GreenColumn,
+        "red_column": sprite_object.RedColumn,
+        "hanging_corpse": sprite_object.HangingCorpse,
+        "hanging_corpse_2": sprite_object.HangingCorpse2,
+        "hanging_corpse_3": sprite_object.HangingCorpse3,
+        "hanging_corpse_4": sprite_object.HangingCorpse4,
+        "stick_with_head": sprite_object.StickWithHead,
+        "stick_with_heads": sprite_object.StickWithHeads,
+        "evil_eye": sprite_object.EvilEye,
     }
 
 
@@ -46,6 +53,7 @@ class AnimatedObjectFactory(BaseObjectFactory):
 
 class EnemyFactory(BaseObjectFactory):
     _class_map = {
+        "lost_soul": enemy.Lost_Soul,
         "caco_demon": enemy.Caco_Demon,
         "cyber_demon": enemy.Cyber_Demon,
         "soldier": enemy.Soldier,

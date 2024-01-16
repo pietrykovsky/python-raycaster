@@ -18,7 +18,7 @@ class Settings:
 
     # MINIMAP RELATED
     MINIMAP_VISIBLE = True  # Press F4 to change
-    MINIMAP_RATIO = 0.25
+    MINIMAP_RATIO = 0.50
     MINIMAP_OPACITY_RATIO = 0.33
 
     def __new__(cls):
