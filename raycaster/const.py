@@ -5,6 +5,7 @@ from raycaster.core import Settings
 
 # GAME RELATED
 RESOLUTION = Settings().SCREEN_WIDTH, Settings().SCREEN_HEIGHT
+CAPTION = "Python Raycaster"
 
 # PLAYER RELATED
 DELTA_ANGLE = math.radians(Settings().FOV / Settings().RAY_COUNT)

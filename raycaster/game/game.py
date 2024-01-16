@@ -1,7 +1,7 @@
 import sys
 import pygame
 
-from raycaster.core import Settings, Drawable, Updatable
+from raycaster.core import Settings
 from raycaster.game.player import Player
 from raycaster.game.map import Map
 from raycaster.game.game_state_manager import GameStateManager
@@ -26,7 +26,6 @@ class Game:
             pygame.init()
             pygame.mouse.set_visible(False)
             cls.screen = pygame.display.set_mode(const.RESOLUTION)
-            pygame.display.set_caption(cls.settings.CAPTION)
             cls.delta_time = 1
             cls.clock = pygame.time.Clock()
             cls.map = Map()
@@ -72,7 +71,7 @@ class Game:
         self.game_state_manager.update()
         pygame.display.flip()
         self.delta_time = self.clock.tick(self.settings.FPS)
-        pygame.display.set_caption(f"{self.clock.get_fps() :.1f}")
+        pygame.display.set_caption(f"{const.CAPTION} - {self.clock.get_fps() :.1f}")
 
     def draw(self):
         """
