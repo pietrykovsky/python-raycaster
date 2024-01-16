@@ -205,5 +205,5 @@ class Test(Enemy):
             attack_range=Settings().CELL_SIZE * 2,
             attack_cooldown=5,
             attack_chance=0.9,
-            score=100
+            score=100,
         )

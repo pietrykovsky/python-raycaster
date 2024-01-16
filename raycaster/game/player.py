@@ -37,7 +37,7 @@ class Player(Updatable):
     @property
     def health(self) -> float:
         return self._health
-    
+
     @property
     def score(self) -> int:
         return self._score
