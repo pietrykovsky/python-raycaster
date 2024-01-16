@@ -7,7 +7,6 @@ from raycaster.game.map import Map
 from raycaster.rendering import WorldRenderer, GuiRenderer, Raycaster
 from raycaster.objects import ObjectManager
 from raycaster import const
-from raycaster.game.game_state_manager import GameStateManager
 
 
 class Game:
@@ -37,19 +36,17 @@ class Game:
             cls.gui_renderer = GuiRenderer(
                 cls.screen, cls.map, cls.player, cls.raycaster
             )
-            cls.game_state_manager = GameStateManager(
-                cls._instance, cls.player, cls.object_manager, cls.gui_renderer
-            )
-            cls.game_state_manager.change_state("gameplay")
 
         return cls._instance
 
     def run(self):
+        """
+        The main loop of the game.
+        """
         while True:
-            self.game_state_manager.update(self.delta_time)
-            self.game_state_manager.draw(self.screen)
-            pygame.display.flip()
-            self.delta_time = self.clock.tick(self.settings.FPS)
+            self.handle_events()
+            self.update()
+            self.draw()
 
     def handle_events(self):
         """
@@ -68,9 +65,17 @@ class Game:
                 pygame.quit()
                 sys.exit()
 
-    def update_game_state(self, delta_time):
+    def update(self):
+        """
+        Updates the game state.
+        """
         Updatable.update_all()
-        self.delta_time = delta_time
+        pygame.display.flip()
+        self.delta_time = self.clock.tick(self.settings.FPS)
+        pygame.display.set_caption(f"{self.clock.get_fps() :.1f}")
 
-    def draw_game_state(self, screen):
+    def draw(self):
+        """
+        Renders the game.
+        """
         Drawable.draw_all()
