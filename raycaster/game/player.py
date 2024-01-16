@@ -23,6 +23,7 @@ class Player(Updatable):
         self.hitbox_radius = self.settings.PLAYER_HITBOX_RADIUS
 
         self.weapon = None
+        self.update_position_handler = Event()
         self.shoot_handler = Event()
         self.shoot_handler += self._shoot
 
@@ -75,7 +76,7 @@ class Player(Updatable):
             dx *= 1 / math.sqrt(2)
             dy *= 1 / math.sqrt(2)
 
-        self.check_wall_collision(dx, dy)
+        self.update_position_handler.invoke(dx=dx, dy=dy)
 
     def in_fov(self, angle: float) -> bool:
         """
@@ -94,17 +95,30 @@ class Player(Updatable):
             return fov_start <= angle_deg <= fov_end
         return angle_deg >= fov_start or angle_deg <= fov_end
 
-    def check_wall_collision(self, dx: int, dy: int):
-        if not self.map.is_wall(
-            int((self.x + dx) / self.settings.CELL_SIZE),
-            int(self.y / self.settings.CELL_SIZE),
-        ):
+    def update_position(self, dx: float, dy: float):
+        # Check and update position in the X direction
+        if not self._is_wall_collision(self.x + dx, self.y):
             self.x += dx
-        if not self.map.is_wall(
-            int(self.x / self.settings.CELL_SIZE),
-            int((self.y + dy) / self.settings.CELL_SIZE),
-        ):
+
+        # Check and update position in the Y direction
+        if not self._is_wall_collision(self.x, self.y + dy):
             self.y += dy
+
+    def _is_wall_collision(self, x: float, y: float) -> bool:
+        """
+        Determines if the given position collides with a wall.
+
+        :param x: X-coordinate of the position to check
+        :param y: Y-coordinate of the position to check
+        :return: True if there is a collision with a wall, False otherwise
+        """
+        # Check all four corners of the player hitbox
+        for corner_angle in [0, math.pi / 2, math.pi, 3 * math.pi / 2]:
+            check_x = x + self.hitbox_radius * math.cos(corner_angle)
+            check_y = y + self.hitbox_radius * math.sin(corner_angle)
+            if self.map.is_wall(int(check_x / self.settings.CELL_SIZE), int(check_y / self.settings.CELL_SIZE)):
+                return True
+        return False
 
     def handle_camera(self):
         keys = pygame.key.get_pressed()

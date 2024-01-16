@@ -155,6 +155,7 @@ class ObjectManager:
     @classmethod
     def _register_event_handlers(cls):
         cls.player.shoot_handler += cls._on_player_shot
+        cls.player.update_position_handler += cls._on_player_position_update
         for enemy in cls._enemies:
             enemy.death_handler += cls._on_enemy_death
             enemy.position_update_handler += cls._on_enemy_position_update
@@ -204,3 +205,7 @@ class ObjectManager:
         for enemy in cls._enemies:
             cls._enemies.remove(enemy)
             Updatable.unregister(enemy)
+
+    @classmethod
+    def _on_player_position_update(cls, dx: float, dy: float):
+        cls.player.update_position(dx, dy)
