@@ -84,13 +84,13 @@ class AnimatedSpriteObject(SpriteObject):
         self.angle = math.atan2(self.y - self.player.y, self.x - self.player.x)
 
 
-class Quagmire(AnimatedSpriteObject):
+class Green_Torch(AnimatedSpriteObject):
     def __init__(self, position: tuple[int, int], player: "Player"):
-        frames = AssetLoader().animated_objects.get("quagmire")
+        frames = AssetLoader().animated_objects.get("green_torch")
         super().__init__(
             position=position,
             player=player,
             frames=frames,
             shaded=True,
-            animation_duration=5,
+            animation_duration=2,
         )
