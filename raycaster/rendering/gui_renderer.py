@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 import pygame
 
-from raycaster.core import Settings, Drawable
+from raycaster.core import Settings
 from raycaster.const import PLAYER_INIT_HEALTH
 from raycaster.game import AssetLoader
 
@@ -15,7 +15,7 @@ RED = 200, 0, 0
 WHITE = 255, 255, 255
 
 
-class GuiRenderer(Drawable):
+class GuiRenderer:
     def __init__(
         self,
         screen: pygame.Surface,
@@ -160,7 +160,7 @@ class GuiRenderer(Drawable):
         y = self.settings.SCREEN_HEIGHT - gui_representation.get_height()
         self.screen.blit(gui_representation, (x, y))
 
-    def draw(self):
+    def draw_hud(self):
         if self.settings.MINIMAP_VISIBLE:
             self._draw_minimap()
 
@@ -194,5 +194,3 @@ class GuiRenderer(Drawable):
     def draw_game_over_screen(self):
         score_text_y = self._draw_call_to_action_text()
         self._draw_score_text(score_text_y)
-
-        pygame.display.flip()

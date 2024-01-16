@@ -4,6 +4,7 @@ import pygame
 from raycaster.core import Settings, Drawable, Updatable
 from raycaster.game.player import Player
 from raycaster.game.map import Map
+from raycaster.game.game_state_manager import GameStateManager
 from raycaster.rendering import WorldRenderer, GuiRenderer, Raycaster
 from raycaster.objects import ObjectManager
 from raycaster import const
@@ -36,6 +37,7 @@ class Game:
             cls.gui_renderer = GuiRenderer(
                 cls.screen, cls.map, cls.player, cls.raycaster
             )
+            cls.game_state_manager = GameStateManager(cls.player, cls.object_manager, cls.gui_renderer)
 
         return cls._instance
 
@@ -53,23 +55,19 @@ class Game:
         Handles all events.
         """
         for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_F4:
-                self.settings.MINIMAP_VISIBLE = not self.settings.MINIMAP_VISIBLE
-
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                self.player.shoot_handler.invoke()
-
             if event.type == pygame.QUIT or (
                 event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE
             ):
                 pygame.quit()
                 sys.exit()
 
+            self.game_state_manager.handle_events(event)
+
     def update(self):
         """
         Updates the game state.
         """
-        Updatable.update_all()
+        self.game_state_manager.update()
         pygame.display.flip()
         self.delta_time = self.clock.tick(self.settings.FPS)
         pygame.display.set_caption(f"{self.clock.get_fps() :.1f}")
@@ -78,4 +76,4 @@ class Game:
         """
         Renders the game.
         """
-        Drawable.draw_all()
+        self.game_state_manager.draw()
