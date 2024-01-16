@@ -20,7 +20,12 @@ class GameState(Enum):
 class GameStateManager:
     _instance = None
 
-    def __new__(cls, player: "Player", object_manager: "ObjectManager", gui_renderer: "GuiRenderer"):
+    def __new__(
+        cls,
+        player: "Player",
+        object_manager: "ObjectManager",
+        gui_renderer: "GuiRenderer",
+    ):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
             cls.player = player
@@ -36,7 +41,10 @@ class GameStateManager:
             cls._handle_start_game_events(event)
         elif cls.current_state == GameState.GAMEPLAY:
             cls._handle_gameplay_events(event)
-        elif cls.current_state == GameState.GAME_OVER or cls.current_state == GameState.VICTORY:
+        elif (
+            cls.current_state == GameState.GAME_OVER
+            or cls.current_state == GameState.VICTORY
+        ):
             cls._handle_restart_game_events(event)
         else:
             raise ValueError("Unknown state")
@@ -64,7 +72,7 @@ class GameStateManager:
     @classmethod
     def _handle_gameplay_events(cls, event: pygame.event.Event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_F4:
-                    cls.settings.MINIMAP_VISIBLE = not cls.settings.MINIMAP_VISIBLE
+            cls.settings.MINIMAP_VISIBLE = not cls.settings.MINIMAP_VISIBLE
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             cls.player.shoot_handler.invoke()
 

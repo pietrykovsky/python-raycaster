@@ -37,7 +37,9 @@ class Game:
             cls.gui_renderer = GuiRenderer(
                 cls.screen, cls.map, cls.player, cls.raycaster
             )
-            cls.game_state_manager = GameStateManager(cls.player, cls.object_manager, cls.gui_renderer)
+            cls.game_state_manager = GameStateManager(
+                cls.player, cls.object_manager, cls.gui_renderer
+            )
 
         return cls._instance
 
