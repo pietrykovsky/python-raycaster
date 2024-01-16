@@ -169,17 +169,21 @@ class GuiRenderer:
 
     def draw_game_over_cta(self):
         self._draw_cta_background(AssetLoader().game_over_cta)
-        self._draw_center_text("PRESS 'R' TO RESTART", 4/20*self.screen.get_height())
-        self._draw_center_text(f"SCORE: 0", 5/20*self.screen.get_height())
+        self._draw_center_text(
+            "PRESS 'R' TO RESTART", 4 / 20 * self.screen.get_height()
+        )
+        self._draw_center_text(f"SCORE: 0", 5 / 20 * self.screen.get_height())
 
     def draw_victory_cta(self):
         self._draw_cta_background(AssetLoader().victory_cta)
-        self._draw_center_text("PRESS 'R' TO RESTART", 17/20*self.screen.get_height())
-        self._draw_center_text(f"SCORE: 0", 18/20*self.screen.get_height())
+        self._draw_center_text(
+            "PRESS 'R' TO RESTART", 17 / 20 * self.screen.get_height()
+        )
+        self._draw_center_text(f"SCORE: 0", 18 / 20 * self.screen.get_height())
 
     def draw_start_cta(self):
         self._draw_cta_background(AssetLoader().start_game_cta)
-        self._draw_center_text("PRESS 'F' TO START", 18/20*self.screen.get_height())
+        self._draw_center_text("PRESS 'F' TO START", 18 / 20 * self.screen.get_height())
 
     def _draw_cta_background(self, background_image: pygame.Surface):
         background_image = pygame.transform.scale(

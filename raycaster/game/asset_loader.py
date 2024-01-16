@@ -61,15 +61,15 @@ class AssetLoader:
     @property
     def weapons(self) -> dict[str, dict[str, list[pygame.Surface] | pygame.Surface]]:
         return self._weapons.copy()
-    
+
     @property
     def game_over_cta(self) -> pygame.Surface:
         return self._cta_screens["game_over"]
-    
+
     @property
     def victory_cta(self) -> pygame.Surface:
         return self._cta_screens["victory"]
-    
+
     @property
     def start_game_cta(self) -> pygame.Surface:
         return self._cta_screens["start"]
