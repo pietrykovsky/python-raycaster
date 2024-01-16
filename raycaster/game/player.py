@@ -20,6 +20,7 @@ class Player(Updatable):
         self.y = 3.5 * self.settings.CELL_SIZE
         self.angle = 45
         self.delta_time = 1
+        self.hitbox_radius = self.settings.PLAYER_HITBOX_RADIUS
 
         self.weapon = None
         self.shoot_handler = Event()

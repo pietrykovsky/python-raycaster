@@ -25,6 +25,7 @@ class SpriteObject(Updatable):
         self.settings = Settings()
         self.distance = calculate_distance(self.x, self.y, self.player.x, self.player.y)
         self.angle = math.atan2(self.y - self.player.y, self.x - self.player.x)
+        self.hitbox_radius = self.texture.get_width() / 2
 
     def update(self):
         self.distance = calculate_distance(self.x, self.y, self.player.x, self.player.y)

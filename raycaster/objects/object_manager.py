@@ -169,7 +169,10 @@ class ObjectManager:
 
     @classmethod
     def _on_enemy_position_update(cls, enemy: "Enemy"):
-        EnemyMovementController.update_position(enemy, cls.map)
+        enemies = cls._enemies.copy()
+        objects = cls._objects.copy()
+        objects = [*enemies, *objects]
+        EnemyMovementController.update_position(enemy, cls.map, objects)
 
     @classmethod
     def _on_enemy_attack(cls, enemy: "Enemy"):
