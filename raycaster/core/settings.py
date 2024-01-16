@@ -2,13 +2,13 @@ class Settings:
     _instance = None
 
     # GAME RELATED
-    SCREEN_WIDTH = 1280
-    SCREEN_HEIGHT = 720
+    SCREEN_WIDTH = 1600
+    SCREEN_HEIGHT = 900
     FPS = 60
 
     # PLAYER RELATED
     FOV = 60
-    RAY_COUNT = 300
+    RAY_COUNT = 400
     PLAYER_SPEED = 0.5
     PLAYER_SENSITIVITY = 0.001
 

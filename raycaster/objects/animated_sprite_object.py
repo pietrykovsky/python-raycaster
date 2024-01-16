@@ -84,7 +84,7 @@ class AnimatedSpriteObject(SpriteObject):
         self.angle = math.atan2(self.y - self.player.y, self.x - self.player.x)
 
 
-class Green_Torch(AnimatedSpriteObject):
+class GreenTorch(AnimatedSpriteObject):
     def __init__(self, position: tuple[int, int], player: "Player"):
         frames = AssetLoader().animated_objects.get("green_torch")
         super().__init__(

@@ -47,15 +47,15 @@ class StaticObjectFactory(BaseObjectFactory):
 
 class AnimatedObjectFactory(BaseObjectFactory):
     _class_map = {
-        "green_torch": animated_sprite_object.Green_Torch,
+        "green_torch": animated_sprite_object.GreenTorch,
     }
 
 
 class EnemyFactory(BaseObjectFactory):
     _class_map = {
-        "lost_soul": enemy.Lost_Soul,
-        "caco_demon": enemy.Caco_Demon,
-        "cyber_demon": enemy.Cyber_Demon,
+        "lost_soul": enemy.LostSoul,
+        "caco_demon": enemy.CacoDemon,
+        "cyber_demon": enemy.CyberDemon,
         "soldier": enemy.Soldier,
     }
 

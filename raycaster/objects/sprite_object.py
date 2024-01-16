@@ -34,9 +34,7 @@ class SpriteObject(Updatable):
 class Corps(SpriteObject):
     def __init__(self, position: tuple[float, float], player: "Player"):
         texture = AssetLoader().static_objects.get("corps")
-        super().__init__(
-            position=position, shaded=False, player=player, texture=texture
-        )
+        super().__init__(position=position, shaded=True, player=player, texture=texture)
 
 
 class Corps2(SpriteObject):
