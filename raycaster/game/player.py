@@ -25,10 +25,22 @@ class Player(Updatable):
         self.shoot_handler = Event()
         self.shoot_handler += self._shoot
 
-        self.health = PLAYER_INIT_HEALTH
+        self._health = PLAYER_INIT_HEALTH
+        self._score = 0
 
     def apply_damage(self, damage: float):
-        self.health -= damage
+        self._health -= damage
+
+    def add_score(self, score: int):
+        self._score += score
+
+    @property
+    def health(self) -> float:
+        return self._health
+    
+    @property
+    def score(self) -> int:
+        return self._score
 
     def handle_movement(self):
         sin_a = math.sin(self.angle)
@@ -114,8 +126,8 @@ class Player(Updatable):
         self.x = 3.5 * self.settings.CELL_SIZE
         self.y = 3.5 * self.settings.CELL_SIZE
         self.weapon = None
-        self.health = 100
-        self.score = 0
+        self._health = 100
+        self._score = 0
 
     def update(self):
         self.delta_time = self.clock.get_time()
