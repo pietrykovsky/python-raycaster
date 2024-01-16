@@ -8,7 +8,7 @@ class Settings:
 
     # PLAYER RELATED
     FOV = 60
-    RAY_COUNT = 150
+    RAY_COUNT = 300
     PLAYER_SPEED = 0.5
     PLAYER_SENSITIVITY = 0.001
 
