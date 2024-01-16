@@ -95,31 +95,6 @@ class Player(Updatable):
             return fov_start <= angle_deg <= fov_end
         return angle_deg >= fov_start or angle_deg <= fov_end
 
-    def update_position(self, dx: float, dy: float):
-        # Check and update position in the X direction
-        if not self._is_wall_collision(self.x + dx, self.y):
-            self.x += dx
-
-        # Check and update position in the Y direction
-        if not self._is_wall_collision(self.x, self.y + dy):
-            self.y += dy
-
-    def _is_wall_collision(self, x: float, y: float) -> bool:
-        """
-        Determines if the given position collides with a wall.
-
-        :param x: X-coordinate of the position to check
-        :param y: Y-coordinate of the position to check
-        :return: True if there is a collision with a wall, False otherwise
-        """
-        # Check all four corners of the player hitbox
-        for corner_angle in [0, math.pi / 2, math.pi, 3 * math.pi / 2]:
-            check_x = x + self.hitbox_radius * math.cos(corner_angle)
-            check_y = y + self.hitbox_radius * math.sin(corner_angle)
-            if self.map.is_wall(int(check_x / self.settings.CELL_SIZE), int(check_y / self.settings.CELL_SIZE)):
-                return True
-        return False
-
     def handle_camera(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:

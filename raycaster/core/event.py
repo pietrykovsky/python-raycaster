@@ -10,7 +10,8 @@ class Event:
         return self
 
     def __isub__(self, event: Callable) -> "Event":
-        self._event_handler.remove(event)
+        if event in self._event_handler:
+            self._event_handler.remove(event)
         return self
 
     def invoke(self, *args, **kwargs) -> None:

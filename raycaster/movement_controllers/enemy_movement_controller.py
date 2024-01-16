@@ -2,7 +2,9 @@ import math
 
 from typing import TYPE_CHECKING
 
-from raycaster.core import Settings
+from raycaster.movement_controllers.base_movement_controller import (
+    BaseMovementController,
+)
 
 
 if TYPE_CHECKING:
@@ -11,17 +13,17 @@ if TYPE_CHECKING:
     from raycaster.game.map import Map
 
 
-class EnemyMovementController:
+class EnemyMovementController(BaseMovementController):
     @classmethod
     def update_position(cls, enemy: "Enemy", map: "Map", objects: list["SpriteObject"]):
         """
         Updates the position of the enemy.
 
         :param enemy: Enemy to update position for
+        :param map: Game map for collision detection
+        :param objects: List of objects to check for collisions
         """
-        if not cls._collides_with_objects(
-            enemy, objects
-        ) and not cls._collides_with_player(enemy):
+        if not cls._collides_with_player(enemy):
             new_position = cls._generate_new_position(enemy, map)
             enemy.x, enemy.y = new_position
 
@@ -31,6 +33,7 @@ class EnemyMovementController:
         Checks if the enemy collides with any of the objects.
 
         :param enemy: Enemy to check collision for
+        :param objects: List of objects to check against
         :return: True if the enemy collides with any of the objects, False otherwise
         """
         for object in objects:
@@ -42,6 +45,7 @@ class EnemyMovementController:
                     return True
         return False
 
+    @staticmethod
     def _collides_with_player(enemy: "Enemy") -> bool:
         """
         Checks if the enemy collides with the player.
@@ -60,6 +64,7 @@ class EnemyMovementController:
         Generates a new position for the enemy.
 
         :param enemy: Enemy to generate new position for
+        :param map: Game map for collision detection
         :return: New position for the enemy
         """
         speed = enemy.speed * enemy.player.delta_time
@@ -73,23 +78,3 @@ class EnemyMovementController:
             new_y += dy
 
         return new_x, new_y
-
-    @staticmethod
-    def _collides_with_wall(x: float, y: float, radius: float, map: "Map") -> bool:
-        """
-        Checks if the position is valid (not colliding with walls).
-
-        :param x: X-coordinate of the position to check
-        :param y: Y-coordinate of the position to check
-        :param radius: The radius of the hitbox to consider
-        :param map: The map to check against
-        :return: True if the position is valid, False otherwise
-        """
-        for angle in [0, math.pi / 2, math.pi, 3 * math.pi / 2]:
-            check_x = x + radius * math.cos(angle)
-            check_y = y + radius * math.sin(angle)
-            if map.is_wall(
-                int(check_x / Settings().CELL_SIZE), int(check_y / Settings().CELL_SIZE)
-            ):
-                return True
-        return False

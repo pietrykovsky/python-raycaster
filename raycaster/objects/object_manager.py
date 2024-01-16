@@ -2,7 +2,10 @@ from typing import TYPE_CHECKING
 
 from raycaster.objects.object_factory import ObjectFactory
 from raycaster.rendering.sprite_projection_processor import SpriteProjectionProcessor
-from raycaster.objects.enemy_movement_controller import EnemyMovementController
+from raycaster.movement_controllers import (
+    EnemyMovementController,
+    PlayerMovementController,
+)
 from raycaster.rendering.raycaster import Raycaster
 from raycaster.core import Settings, Updatable
 
@@ -154,6 +157,8 @@ class ObjectManager:
 
     @classmethod
     def _register_event_handlers(cls):
+        cls.player.shoot_handler -= cls._on_player_shot
+        cls.player.update_position_handler -= cls._on_player_position_update
         cls.player.shoot_handler += cls._on_player_shot
         cls.player.update_position_handler += cls._on_player_position_update
         for enemy in cls._enemies:
@@ -208,4 +213,7 @@ class ObjectManager:
 
     @classmethod
     def _on_player_position_update(cls, dx: float, dy: float):
-        cls.player.update_position(dx, dy)
+        enemies = cls._enemies.copy()
+        objects = cls._objects.copy()
+        objects = [*enemies, *objects]
+        PlayerMovementController.update_position(cls.player, (dx, dy), cls.map, objects)
