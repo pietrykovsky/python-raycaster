@@ -20,8 +20,10 @@ class Player(Updatable):
         self.y = 3.5 * self.settings.CELL_SIZE
         self.angle = 45
         self.delta_time = 1
+        self.hitbox_radius = self.settings.PLAYER_HITBOX_RADIUS
 
         self.weapon = None
+        self.update_position_handler = Event()
         self.shoot_handler = Event()
         self.shoot_handler += self._shoot
 
@@ -74,7 +76,7 @@ class Player(Updatable):
             dx *= 1 / math.sqrt(2)
             dy *= 1 / math.sqrt(2)
 
-        self.check_wall_collision(dx, dy)
+        self.update_position_handler.invoke(dx=dx, dy=dy)
 
     def in_fov(self, angle: float) -> bool:
         """
@@ -92,18 +94,6 @@ class Player(Updatable):
         if fov_start < fov_end:
             return fov_start <= angle_deg <= fov_end
         return angle_deg >= fov_start or angle_deg <= fov_end
-
-    def check_wall_collision(self, dx: int, dy: int):
-        if not self.map.is_wall(
-            int((self.x + dx) / self.settings.CELL_SIZE),
-            int(self.y / self.settings.CELL_SIZE),
-        ):
-            self.x += dx
-        if not self.map.is_wall(
-            int(self.x / self.settings.CELL_SIZE),
-            int((self.y + dy) / self.settings.CELL_SIZE),
-        ):
-            self.y += dy
 
     def handle_camera(self):
         keys = pygame.key.get_pressed()

@@ -2,7 +2,10 @@ from typing import TYPE_CHECKING
 
 from raycaster.objects.object_factory import ObjectFactory
 from raycaster.rendering.sprite_projection_processor import SpriteProjectionProcessor
-from raycaster.objects.enemy_movement_controller import EnemyMovementController
+from raycaster.movement_controllers import (
+    EnemyMovementController,
+    PlayerMovementController,
+)
 from raycaster.rendering.raycaster import Raycaster
 from raycaster.core import Settings, Updatable
 
@@ -154,7 +157,10 @@ class ObjectManager:
 
     @classmethod
     def _register_event_handlers(cls):
+        cls.player.shoot_handler -= cls._on_player_shot
+        cls.player.update_position_handler -= cls._on_player_position_update
         cls.player.shoot_handler += cls._on_player_shot
+        cls.player.update_position_handler += cls._on_player_position_update
         for enemy in cls._enemies:
             enemy.death_handler += cls._on_enemy_death
             enemy.position_update_handler += cls._on_enemy_position_update
@@ -169,7 +175,10 @@ class ObjectManager:
 
     @classmethod
     def _on_enemy_position_update(cls, enemy: "Enemy"):
-        EnemyMovementController.update_position(enemy, cls.map)
+        enemies = cls._enemies.copy()
+        objects = cls._objects.copy()
+        objects = [*enemies, *objects]
+        EnemyMovementController.update_position(enemy, cls.map, objects)
 
     @classmethod
     def _on_enemy_attack(cls, enemy: "Enemy"):
@@ -201,3 +210,10 @@ class ObjectManager:
         for enemy in cls._enemies:
             cls._enemies.remove(enemy)
             Updatable.unregister(enemy)
+
+    @classmethod
+    def _on_player_position_update(cls, dx: float, dy: float):
+        enemies = cls._enemies.copy()
+        objects = cls._objects.copy()
+        objects = [*enemies, *objects]
+        PlayerMovementController.update_position(cls.player, (dx, dy), cls.map, objects)
