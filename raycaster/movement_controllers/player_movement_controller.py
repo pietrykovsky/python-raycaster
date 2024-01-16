@@ -62,9 +62,9 @@ class PlayerMovementController(BaseMovementController):
         ):
             player.y = new_y
 
-    @classmethod
+    @staticmethod
     def _collides_with_any_object(
-        cls, x: float, y: float, radius: float, objects: list["SpriteObject"]
+        x: float, y: float, radius: float, objects: list["SpriteObject"]
     ) -> bool:
         """
         Checks if the position collides with any of the objects.

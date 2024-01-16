@@ -23,7 +23,9 @@ class EnemyMovementController(BaseMovementController):
         :param map: Game map for collision detection
         :param objects: List of objects to check for collisions
         """
-        if not cls._collides_with_player(enemy):
+        if not cls._collides_with_objects(
+            enemy, objects
+        ) and not cls._collides_with_player(enemy):
             new_position = cls._generate_new_position(enemy, map)
             enemy.x, enemy.y = new_position
 
