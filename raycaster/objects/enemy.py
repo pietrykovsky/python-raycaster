@@ -35,6 +35,7 @@ class Enemy(AnimatedSpriteObject):
         attack_range: float,
         attack_cooldown: float,
         attack_chance: float,
+        score: int,
     ):
         super().__init__(
             position=position,
@@ -47,6 +48,7 @@ class Enemy(AnimatedSpriteObject):
         self.damage = damage
         self.health = health
         self.speed = speed
+        self.score = score
         self.attack_range = attack_range
         self.attack_cooldown = attack_cooldown
         self.attack_chance = attack_chance
@@ -203,4 +205,5 @@ class Test(Enemy):
             attack_range=Settings().CELL_SIZE * 2,
             attack_cooldown=5,
             attack_chance=0.9,
+            score=100,
         )

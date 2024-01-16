@@ -73,6 +73,7 @@ class ObjectManager:
     @classmethod
     def _on_enemy_death(cls, enemy: "Enemy"):
         if enemy in cls._enemies:
+            cls.player.add_score(enemy.score)
             cls._enemies.remove(enemy)
             Updatable.unregister(enemy)
 

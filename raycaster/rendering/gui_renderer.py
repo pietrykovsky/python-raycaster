@@ -140,7 +140,7 @@ class GuiRenderer:
         return pygame.transform.scale(element, (element_width, element_height))
 
     def _draw_score(self):
-        value = 0  # value = self.player.score
+        value = self.player.score
         score_text_content = f"SCORE: {value}"
         score_text = self.font.render(score_text_content, True, WHITE)
         text_width, _ = self.font.size(score_text_content)
@@ -172,14 +172,18 @@ class GuiRenderer:
         self._draw_center_text(
             "PRESS 'R' TO RESTART", 4 / 20 * self.screen.get_height()
         )
-        self._draw_center_text(f"SCORE: 0", 5 / 20 * self.screen.get_height())
+        self._draw_center_text(
+            f"SCORE: {self.player.score}", 5 / 20 * self.screen.get_height()
+        )
 
     def draw_victory_cta(self):
         self._draw_cta_background(AssetLoader().victory_cta)
         self._draw_center_text(
             "PRESS 'R' TO RESTART", 17 / 20 * self.screen.get_height()
         )
-        self._draw_center_text(f"SCORE: 0", 18 / 20 * self.screen.get_height())
+        self._draw_center_text(
+            f"SCORE: {self.player.score}", 18 / 20 * self.screen.get_height()
+        )
 
     def draw_start_cta(self):
         self._draw_cta_background(AssetLoader().start_game_cta)
