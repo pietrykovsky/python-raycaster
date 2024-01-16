@@ -93,7 +93,7 @@ class Shotgun(Weapon):
         *,
         player: "Player",
     ):
-        weapon_assets = AssetLoader().weapons.get("default")
+        weapon_assets = AssetLoader().weapons.get("shotgun")
         animation = Animation(
             frames=weapon_assets.get(WeaponRepresentation.GUI.value),
             duration=0.75,
