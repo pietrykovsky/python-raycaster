@@ -91,10 +91,9 @@ class AssetLoader:
         """
         Loads the player hit sound from the assets/player directory.
         """
-        hit_sound = cls._load_sound_file(cls.PLAYER_PATH)
+        hit_sound = pygame.mixer.Sound(os.path.join(cls.PLAYER_PATH, "hit.mp3"))
         hit_sound.set_volume(EFFECTS_VOLUME)
         return hit_sound
-
 
     @classmethod
     def _load_walls_textures(cls) -> dict[int, pygame.Surface]:
@@ -186,17 +185,10 @@ class AssetLoader:
             weapons[dir][sprite] = cls._load_sprites_to_list(
                 weapons[dir][sprite], sprite_path
             )[0]
-            weapons[dir][sound] = cls._load_sound_file(sound_path)
+            weapons[dir][sound] = {}
+            weapons[dir][sound]["shot"] = pygame.mixer.Sound(os.path.join(sound_path, "shot.mp3"))
+            weapons[dir][sound]["equip"] = pygame.mixer.Sound(os.path.join(sound_path, "equip.mp3"))
         return weapons
-    
-    @classmethod
-    def _load_sound_file(cls, dir_path: str) -> pygame.mixer.Sound:
-        """
-        Loads a sound file from the given path.
-        """
-        file = os.listdir(dir_path)[0]
-        file_path = os.path.join(dir_path, file)
-        return pygame.mixer.Sound(file_path)
 
     @classmethod
     def _load_sprites_to_list(

@@ -16,6 +16,7 @@ class Weapon(SpriteObject):
         player: "Player",
         shooting_animation: "Animation",
         shooting_sound: pygame.mixer.Sound,
+        equip_sound: pygame.mixer.Sound,
         sprite_representation: pygame.Surface,
         damage: float,
         attack_range: float,
@@ -28,6 +29,7 @@ class Weapon(SpriteObject):
         self._equipped = False
         self._shooting_animation = shooting_animation
         self._shooting_sound = shooting_sound
+        self._equip_sound = equip_sound
         self._shooting_sound.set_volume(EFFECTS_VOLUME)
         self._attack_range = attack_range
         self._attack_cooldown = attack_cooldown
@@ -49,6 +51,7 @@ class Weapon(SpriteObject):
     def equip(self):
         self._equipped = True
         self.player.weapon = self
+        self._equip_sound.play()
 
     def unequip(self):
         self.x, self.y = self.player.x, self.player.y
@@ -108,7 +111,8 @@ class Shotgun(Weapon):
         super().__init__(
             player=player,
             shooting_animation=animation,
-            shooting_sound=weapon_sound,
+            shooting_sound=weapon_sound.get("shot"),
+            equip_sound=weapon_sound.get("equip"),
             sprite_representation=sprite_representation,
             damage=10,
             attack_range=10,
@@ -136,7 +140,8 @@ class Pistol(Weapon):
         super().__init__(
             player=player,
             shooting_animation=animation,
-            shooting_sound=weapon_sound,
+            shooting_sound=weapon_sound.get("shot"),
+            equip_sound=weapon_sound.get("equip"),
             sprite_representation=sprite_representation,
             damage=3,
             attack_range=10,
