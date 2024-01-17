@@ -131,8 +131,8 @@ class ObjectManager:
             ObjectFactory.create(
                 "hanging_corpse_3", (10.5 * cell_size, 47.5 * cell_size)
             ),
-            ObjectFactory.create("evil_eye", (6.5 * cell_size, 50.5 * cell_size)),
-            ObjectFactory.create("evil_eye", (9.5 * cell_size, 50.5 * cell_size)),
+            ObjectFactory.create("evil_eye", (7.5 * cell_size, 50.5 * cell_size)),
+            ObjectFactory.create("evil_eye", (8.5 * cell_size, 50.5 * cell_size)),
         ]
         cls._enemies = [
             ObjectFactory.create("soldier", (11.5 * cell_size, 3.5 * cell_size)),
