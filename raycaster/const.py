@@ -7,9 +7,20 @@ from raycaster.core import Settings
 RESOLUTION = Settings().SCREEN_WIDTH, Settings().SCREEN_HEIGHT
 CAPTION = "Python Raycaster"
 
+# SOUND RELATED
+MUSIC_VOLUME = Settings().MUSIC_VOLUME * Settings().MASTER_VOLUME
+EFFECTS_VOLUME = Settings().EFFECTS_VOLUME * Settings().MASTER_VOLUME
+
 # PLAYER RELATED
 DELTA_ANGLE = math.radians(Settings().FOV / Settings().RAY_COUNT)
 PLAYER_INIT_HEALTH = 100
+
+
+class PlayerState(Enum):
+    DEATH = "death"
+    HIT = "hit"
+    VICTORY = "victory"
+
 
 # MAP RELATED
 SCREEN_DISTANCE = (Settings().SCREEN_WIDTH // 2) / math.tan(
@@ -18,7 +29,7 @@ SCREEN_DISTANCE = (Settings().SCREEN_WIDTH // 2) / math.tan(
 
 
 # SPRITES RELATED
-class AnimationType(Enum):
+class EnemyState(Enum):
     IDLE = "idle"
     MOVE = "move"
     ATTACK = "attack"
@@ -29,3 +40,9 @@ class AnimationType(Enum):
 class WeaponRepresentation(Enum):
     SPRITE = "sprite"
     GUI = "gui"
+    SOUND = "sound"
+
+
+class WeaponState(Enum):
+    EQUIP = "equip"
+    SHOOT = "shoot"

@@ -3,7 +3,8 @@ from typing import TYPE_CHECKING
 import pygame
 
 from raycaster.core import Updatable, Settings, Event
-from raycaster.const import PLAYER_INIT_HEALTH
+from raycaster.const import PLAYER_INIT_HEALTH, PlayerState
+from raycaster.game.asset_loader import AssetLoader
 
 if TYPE_CHECKING:
     from raycaster.game.map import Map
@@ -21,6 +22,7 @@ class Player(Updatable):
         self.angle = 45
         self.delta_time = 1
         self.hitbox_radius = self.settings.PLAYER_HITBOX_RADIUS
+        self.sounds = AssetLoader().load_player_sounds()
 
         self.weapon = None
         self.update_position_handler = Event()
@@ -32,6 +34,7 @@ class Player(Updatable):
 
     def apply_damage(self, damage: float):
         self._health -= damage
+        self.sounds.get(PlayerState.HIT).play()
 
     def add_score(self, score: int):
         self._score += score
@@ -105,18 +108,17 @@ class Player(Updatable):
             self.angle = self.angle % (2 * math.pi)
 
     def _shoot(self):
-        if self.weapon is not None and self.weapon.can_shoot():
-            self.weapon.shoot()
+        self.weapon.shoot()
 
     def is_dead(self):
         return self.health <= 0
 
     def reset(self):
-        self.angle = 0
+        self.angle = 45
         self.x = 3.5 * self.settings.CELL_SIZE
         self.y = 3.5 * self.settings.CELL_SIZE
         self.weapon = None
-        self._health = 100
+        self._health = PLAYER_INIT_HEALTH
         self._score = 0
 
     def update(self):

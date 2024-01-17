@@ -22,9 +22,9 @@ class Game:
             cls._instance = super().__new__(cls)
 
             # INITIALIZATION
-            cls.settings = Settings()
             pygame.init()
             pygame.mouse.set_visible(False)
+            cls.settings = Settings()
             cls.screen = pygame.display.set_mode(const.RESOLUTION)
             cls.delta_time = 1
             cls.clock = pygame.time.Clock()
@@ -39,8 +39,14 @@ class Game:
             cls.game_state_manager = GameStateManager(
                 cls.player, cls.object_manager, cls.gui_renderer
             )
+            cls._play_soundtrack()
 
         return cls._instance
+
+    @staticmethod
+    def _play_soundtrack():
+        pygame.mixer.music.set_volume(const.MUSIC_VOLUME)
+        pygame.mixer.music.play(-1)
 
     def run(self):
         """

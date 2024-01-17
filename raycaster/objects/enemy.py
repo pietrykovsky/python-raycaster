@@ -7,19 +7,11 @@ import pygame
 from raycaster.objects.animated_sprite_object import AnimatedSpriteObject, Animation
 from raycaster.game import AssetLoader
 from raycaster.core import Settings, Event
-from raycaster.const import AnimationType
+from raycaster.const import EnemyState, EFFECTS_VOLUME
 
 
 if TYPE_CHECKING:
     from raycaster.game import Player
-
-
-class EnemyState(Enum):
-    IDLE = 0
-    MOVE = 1
-    ATTACK = 2
-    HIT = 3
-    DEATH = 4
 
 
 class Enemy(AnimatedSpriteObject):
@@ -28,7 +20,8 @@ class Enemy(AnimatedSpriteObject):
         position: tuple[float, float],
         player: "Player",
         shaded: bool,
-        animations: dict[AnimationType, Animation],
+        animations: dict[EnemyState, Animation],
+        sounds: dict[EnemyState, pygame.mixer.Sound],
         damage: float,
         health: float,
         speed: float,
@@ -41,10 +34,11 @@ class Enemy(AnimatedSpriteObject):
             position=position,
             player=player,
             shaded=shaded,
-            frames=animations.get(AnimationType.IDLE).frames,
-            animation_duration=animations.get(AnimationType.IDLE).duration,
+            frames=animations.get(EnemyState.IDLE).frames,
+            animation_duration=animations.get(EnemyState.IDLE).duration,
         )
         self.animations = animations
+        self.sounds = sounds
         self.damage = damage
         self.health = health
         self.speed = speed
@@ -61,13 +55,21 @@ class Enemy(AnimatedSpriteObject):
     def apply_damage(self, damage: float):
         self.health -= damage
         if self.health <= 0:
+            self._play_sound(EnemyState.DEATH)
             self.state = EnemyState.DEATH
         else:
+            self._play_sound(EnemyState.HIT)
             self.state = EnemyState.HIT
 
     def update(self):
         self._update_state()
         super().update()
+
+    def _play_sound(self, state: EnemyState):
+        sound = self.sounds.get(state)
+        volume = max(0, 1 - self.distance / Settings().MAX_DISTANCE) * EFFECTS_VOLUME
+        sound.set_volume(volume)
+        sound.play()
 
     def _update_state(self):
         if self._can_attack():
@@ -94,11 +96,12 @@ class Enemy(AnimatedSpriteObject):
     def _attack(self):
         if not self.state == EnemyState.ATTACK:
             self._draw_hit()
+            self._play_sound(EnemyState.ATTACK)
         self.attack_timer = (
             pygame.time.get_ticks()
-            + self.animations.get(AnimationType.ATTACK).duration * 1000
+            + self.animations.get(EnemyState.ATTACK).duration * 1000
         )
-        self._change_animation(AnimationType.ATTACK)
+        self._change_animation(EnemyState.ATTACK)
         self.state = EnemyState.ATTACK
 
     def _draw_hit(self):
@@ -118,7 +121,9 @@ class Enemy(AnimatedSpriteObject):
         )
 
     def _move(self):
-        self._change_animation(AnimationType.MOVE)
+        if self.state != EnemyState.MOVE:
+            self._play_sound(EnemyState.MOVE)
+        self._change_animation(EnemyState.MOVE)
         self.state = EnemyState.MOVE
         self.position_update_handler.invoke(self)
 
@@ -126,7 +131,7 @@ class Enemy(AnimatedSpriteObject):
         return self.state == EnemyState.HIT
 
     def _hit(self):
-        self._change_animation(AnimationType.HIT)
+        self._change_animation(EnemyState.HIT)
         if self.animation.finished:
             self._idle()
 
@@ -134,15 +139,17 @@ class Enemy(AnimatedSpriteObject):
         return self.state == EnemyState.DEATH
 
     def _die(self):
-        self._change_animation(AnimationType.DEATH)
+        self._change_animation(EnemyState.DEATH)
         if self.animation.finished:
             self.death_handler.invoke(self)
 
     def _idle(self):
-        self._change_animation(AnimationType.IDLE)
+        if self.state != EnemyState.IDLE:
+            self._play_sound(EnemyState.IDLE)
+        self._change_animation(EnemyState.IDLE)
         self.state = EnemyState.IDLE
 
-    def _change_animation(self, animation_type: AnimationType):
+    def _change_animation(self, animation_type: EnemyState):
         if self.animation == self.animations.get(animation_type):
             return
         self.animation = self.animations.get(animation_type)
@@ -161,7 +168,7 @@ class Enemy(AnimatedSpriteObject):
 
     def _finished_attack(self) -> bool:
         return (
-            self.animation == self.animations.get(AnimationType.ATTACK)
+            self.animation == self.animations.get(EnemyState.ATTACK)
             and self.animation.finished
         )
 
@@ -170,26 +177,26 @@ class Soldier(Enemy):
     def __init__(self, position: tuple[float, float], player: "Player"):
         assets = AssetLoader().enemies.get("soldier")
         animations = {
-            AnimationType.IDLE: Animation(
-                frames=assets.get(AnimationType.IDLE),
+            EnemyState.IDLE: Animation(
+                frames=assets.get(EnemyState.IDLE),
                 duration=1.5,
             ),
-            AnimationType.MOVE: Animation(
-                frames=assets.get(AnimationType.MOVE),
+            EnemyState.MOVE: Animation(
+                frames=assets.get(EnemyState.MOVE),
                 duration=2.5,
             ),
-            AnimationType.ATTACK: Animation(
-                frames=assets.get(AnimationType.ATTACK),
+            EnemyState.ATTACK: Animation(
+                frames=assets.get(EnemyState.ATTACK),
                 duration=2,
                 repeat=False,
             ),
-            AnimationType.HIT: Animation(
-                frames=assets.get(AnimationType.HIT),
+            EnemyState.HIT: Animation(
+                frames=assets.get(EnemyState.HIT),
                 duration=0.5,
                 repeat=False,
             ),
-            AnimationType.DEATH: Animation(
-                frames=assets.get(AnimationType.DEATH),
+            EnemyState.DEATH: Animation(
+                frames=assets.get(EnemyState.DEATH),
                 duration=1,
                 repeat=False,
             ),
@@ -199,6 +206,7 @@ class Soldier(Enemy):
             player=player,
             shaded=True,
             animations=animations,
+            sounds=assets.get("sound"),
             damage=5,
             health=10,
             speed=0.2,
@@ -213,26 +221,26 @@ class LostSoul(Enemy):
     def __init__(self, position: tuple[float, float], player: "Player"):
         assets = AssetLoader().enemies.get("lost_soul")
         animations = {
-            AnimationType.IDLE: Animation(
-                frames=assets.get(AnimationType.IDLE),
+            EnemyState.IDLE: Animation(
+                frames=assets.get(EnemyState.IDLE),
                 duration=2,
             ),
-            AnimationType.MOVE: Animation(
-                frames=assets.get(AnimationType.MOVE),
+            EnemyState.MOVE: Animation(
+                frames=assets.get(EnemyState.MOVE),
                 duration=2,
             ),
-            AnimationType.ATTACK: Animation(
-                frames=assets.get(AnimationType.ATTACK),
+            EnemyState.ATTACK: Animation(
+                frames=assets.get(EnemyState.ATTACK),
                 duration=2,
                 repeat=False,
             ),
-            AnimationType.HIT: Animation(
-                frames=assets.get(AnimationType.HIT),
+            EnemyState.HIT: Animation(
+                frames=assets.get(EnemyState.HIT),
                 duration=0.5,
                 repeat=False,
             ),
-            AnimationType.DEATH: Animation(
-                frames=assets.get(AnimationType.DEATH),
+            EnemyState.DEATH: Animation(
+                frames=assets.get(EnemyState.DEATH),
                 duration=1,
                 repeat=False,
             ),
@@ -242,6 +250,7 @@ class LostSoul(Enemy):
             player=player,
             shaded=True,
             animations=animations,
+            sounds=assets.get("sound"),
             damage=20,
             health=50,
             speed=0.3,
@@ -256,26 +265,26 @@ class CacoDemon(Enemy):
     def __init__(self, position: tuple[float, float], player: "Player"):
         assets = AssetLoader().enemies.get("caco_demon")
         animations = {
-            AnimationType.IDLE: Animation(
-                frames=assets.get(AnimationType.IDLE),
+            EnemyState.IDLE: Animation(
+                frames=assets.get(EnemyState.IDLE),
                 duration=2,
             ),
-            AnimationType.MOVE: Animation(
-                frames=assets.get(AnimationType.MOVE),
+            EnemyState.MOVE: Animation(
+                frames=assets.get(EnemyState.MOVE),
                 duration=1.5,
             ),
-            AnimationType.ATTACK: Animation(
-                frames=assets.get(AnimationType.ATTACK),
+            EnemyState.ATTACK: Animation(
+                frames=assets.get(EnemyState.ATTACK),
                 duration=2,
                 repeat=False,
             ),
-            AnimationType.HIT: Animation(
-                frames=assets.get(AnimationType.HIT),
+            EnemyState.HIT: Animation(
+                frames=assets.get(EnemyState.HIT),
                 duration=0.5,
                 repeat=False,
             ),
-            AnimationType.DEATH: Animation(
-                frames=assets.get(AnimationType.DEATH),
+            EnemyState.DEATH: Animation(
+                frames=assets.get(EnemyState.DEATH),
                 duration=1,
                 repeat=False,
             ),
@@ -285,6 +294,7 @@ class CacoDemon(Enemy):
             player=player,
             shaded=True,
             animations=animations,
+            sounds=assets.get("sound"),
             damage=20,
             health=10,
             speed=0.1,
@@ -299,26 +309,26 @@ class CyberDemon(Enemy):
     def __init__(self, position: tuple[float, float], player: "Player"):
         assets = AssetLoader().enemies.get("cyber_demon")
         animations = {
-            AnimationType.IDLE: Animation(
-                frames=assets.get(AnimationType.IDLE),
+            EnemyState.IDLE: Animation(
+                frames=assets.get(EnemyState.IDLE),
                 duration=3,
             ),
-            AnimationType.MOVE: Animation(
-                frames=assets.get(AnimationType.MOVE),
+            EnemyState.MOVE: Animation(
+                frames=assets.get(EnemyState.MOVE),
                 duration=1.5,
             ),
-            AnimationType.ATTACK: Animation(
-                frames=assets.get(AnimationType.ATTACK),
+            EnemyState.ATTACK: Animation(
+                frames=assets.get(EnemyState.ATTACK),
                 duration=1,
                 repeat=False,
             ),
-            AnimationType.HIT: Animation(
-                frames=assets.get(AnimationType.HIT),
+            EnemyState.HIT: Animation(
+                frames=assets.get(EnemyState.HIT),
                 duration=0.5,
                 repeat=False,
             ),
-            AnimationType.DEATH: Animation(
-                frames=assets.get(AnimationType.DEATH),
+            EnemyState.DEATH: Animation(
+                frames=assets.get(EnemyState.DEATH),
                 duration=1,
                 repeat=False,
             ),
@@ -328,6 +338,7 @@ class CyberDemon(Enemy):
             player=player,
             shaded=True,
             animations=animations,
+            sounds=assets.get("sound"),
             damage=30,
             health=500,
             speed=0.4,

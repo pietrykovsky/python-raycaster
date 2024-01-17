@@ -2,6 +2,7 @@ from enum import Enum
 from typing import TYPE_CHECKING
 import pygame
 from raycaster.core import Updatable, Drawable, Settings
+from raycaster.const import PlayerState
 
 
 if TYPE_CHECKING:
@@ -78,7 +79,8 @@ class GameStateManager:
         if event.type == pygame.KEYDOWN and event.key == pygame.K_F4:
             cls.settings.MINIMAP_VISIBLE = not cls.settings.MINIMAP_VISIBLE
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-            cls.player.shoot_handler.invoke()
+            if cls.player.weapon is not None and cls.player.weapon.can_shoot():
+                cls.player.shoot_handler.invoke()
 
     @classmethod
     def _handle_start_game_events(cls, event: pygame.event.Event):
@@ -96,5 +98,7 @@ class GameStateManager:
         Updatable.update_all()
         if cls.player.is_dead():
             cls.current_state = GameState.GAME_OVER
+            cls.player.sounds.get(PlayerState.DEATH).play()
         elif len(cls.object_manager.enemies) == 0:
             cls.current_state = GameState.VICTORY
+            cls.player.sounds.get(PlayerState.VICTORY).play()
