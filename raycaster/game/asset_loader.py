@@ -199,9 +199,11 @@ class AssetLoader:
             )[0]
             weapons[dir][sound] = cls._load_weapon_sounds(sound_path)
         return weapons
-    
+
     @classmethod
-    def _load_weapon_sounds(cls, dir_path: str) -> dict[WeaponState, pygame.mixer.Sound]:
+    def _load_weapon_sounds(
+        cls, dir_path: str
+    ) -> dict[WeaponState, pygame.mixer.Sound]:
         """
         Loads all weapon state sounds from the given path.
         """
