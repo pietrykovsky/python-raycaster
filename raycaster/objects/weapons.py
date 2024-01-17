@@ -138,7 +138,7 @@ class Pistol(Weapon):
             shooting_animation=animation,
             sounds=weapon_sounds,
             sprite_representation=sprite_representation,
-            damage=5,
+            damage=3,
             attack_range=10,
             attack_cooldown=1,
             shaded=True,
