@@ -41,3 +41,7 @@ class WeaponRepresentation(Enum):
     SPRITE = "sprite"
     GUI = "gui"
     SOUND = "sound"
+
+class WeaponState(Enum):
+    EQUIP = "equip"
+    SHOOT = "shoot"

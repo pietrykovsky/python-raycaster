@@ -4,7 +4,7 @@ import pygame
 from raycaster.objects.animated_sprite_object import Animation
 from raycaster.objects.sprite_object import SpriteObject
 from raycaster.game import AssetLoader
-from raycaster.const import WeaponRepresentation, EFFECTS_VOLUME
+from raycaster.const import WeaponRepresentation, WeaponState
 
 if TYPE_CHECKING:
     from raycaster.game import Player
@@ -15,8 +15,7 @@ class Weapon(SpriteObject):
         self,
         player: "Player",
         shooting_animation: "Animation",
-        shooting_sound: pygame.mixer.Sound,
-        equip_sound: pygame.mixer.Sound,
+        sounds: dict[WeaponState, pygame.mixer.Sound],
         sprite_representation: pygame.Surface,
         damage: float,
         attack_range: float,
@@ -28,9 +27,7 @@ class Weapon(SpriteObject):
         self.damage = damage
         self._equipped = False
         self._shooting_animation = shooting_animation
-        self._shooting_sound = shooting_sound
-        self._equip_sound = equip_sound
-        self._shooting_sound.set_volume(EFFECTS_VOLUME)
+        self._sounds = sounds
         self._attack_range = attack_range
         self._attack_cooldown = attack_cooldown
         self._attack_timer = 0
@@ -51,7 +48,7 @@ class Weapon(SpriteObject):
     def equip(self):
         self._equipped = True
         self.player.weapon = self
-        self._equip_sound.play()
+        self._sounds.get(WeaponState.EQUIP).play()
 
     def unequip(self):
         self.x, self.y = self.player.x, self.player.y
@@ -67,7 +64,7 @@ class Weapon(SpriteObject):
             pygame.time.get_ticks()
             + (self._shooting_animation.duration + self._attack_cooldown) * 1000
         )
-        self._shooting_sound.play()
+        self._sounds.get(WeaponState.SHOOT).play()
 
     def update(self):
         if self._shooting_animation.finished:
@@ -107,12 +104,11 @@ class Shotgun(Weapon):
             repeat=False,
         )
         sprite_representation = weapon_assets.get(WeaponRepresentation.SPRITE.value)
-        weapon_sound = weapon_assets.get(WeaponRepresentation.SOUND.value)
+        weapon_sounds = weapon_assets.get(WeaponRepresentation.SOUND.value)
         super().__init__(
             player=player,
             shooting_animation=animation,
-            shooting_sound=weapon_sound.get("shot"),
-            equip_sound=weapon_sound.get("equip"),
+            sounds=weapon_sounds,
             sprite_representation=sprite_representation,
             damage=10,
             attack_range=10,
@@ -136,12 +132,11 @@ class Pistol(Weapon):
             repeat=False,
         )
         sprite_representation = weapon_assets.get(WeaponRepresentation.SPRITE.value)
-        weapon_sound = weapon_assets.get(WeaponRepresentation.SOUND.value)
+        weapon_sounds = weapon_assets.get(WeaponRepresentation.SOUND.value)
         super().__init__(
             player=player,
             shooting_animation=animation,
-            shooting_sound=weapon_sound.get("shot"),
-            equip_sound=weapon_sound.get("equip"),
+            sounds=weapon_sounds,
             sprite_representation=sprite_representation,
             damage=3,
             attack_range=10,

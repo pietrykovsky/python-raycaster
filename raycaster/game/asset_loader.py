@@ -5,6 +5,7 @@ from raycaster.core import Settings
 from raycaster.const import (
     EnemyState,
     WeaponRepresentation,
+    WeaponState,
     EFFECTS_VOLUME,
     PlayerState,
 )
@@ -196,14 +197,21 @@ class AssetLoader:
             weapons[dir][sprite] = cls._load_sprites_to_list(
                 weapons[dir][sprite], sprite_path
             )[0]
-            weapons[dir][sound] = {}
-            weapons[dir][sound]["shot"] = pygame.mixer.Sound(
-                os.path.join(sound_path, "shot.mp3")
-            )
-            weapons[dir][sound]["equip"] = pygame.mixer.Sound(
-                os.path.join(sound_path, "equip.mp3")
-            )
+            weapons[dir][sound] = cls._load_weapon_sounds(sound_path)
         return weapons
+    
+    @classmethod
+    def _load_weapon_sounds(cls, dir_path: str) -> dict[WeaponState, pygame.mixer.Sound]:
+        """
+        Loads all weapon state sounds from the given path.
+        """
+        sounds = {}
+        for state in WeaponState:
+            sound_path = os.path.join(dir_path, f"{state.value}.mp3")
+            sound = pygame.mixer.Sound(sound_path)
+            sound.set_volume(EFFECTS_VOLUME)
+            sounds[state] = sound
+        return sounds
 
     @classmethod
     def _load_sprites_to_list(
