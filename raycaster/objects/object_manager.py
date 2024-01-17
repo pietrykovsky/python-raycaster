@@ -49,7 +49,7 @@ class ObjectManager:
         cls._objects = [
             ObjectFactory.create("green_torch", (1.5 * cell_size, 1.5 * cell_size)),
             ObjectFactory.create("green_torch", (1.5 * cell_size, 7.5 * cell_size)),
-            ObjectFactory.create("green_torch", (13.5 * cell_size, 3.5 * cell_size)),
+            ObjectFactory.create("green_torch", (14.5 * cell_size, 1.5 * cell_size)),
             ObjectFactory.create("green_torch", (1.5 * cell_size, 12.5 * cell_size)),
             ObjectFactory.create("green_torch", (14.5 * cell_size, 12.5 * cell_size)),
             ObjectFactory.create("green_torch", (4.5 * cell_size, 16.5 * cell_size)),
@@ -136,12 +136,12 @@ class ObjectManager:
         ]
         cls._enemies = [
             ObjectFactory.create("soldier", (11.5 * cell_size, 3.5 * cell_size)),
-            ObjectFactory.create("soldier", (14.5 * cell_size, 1.5 * cell_size)),
-            ObjectFactory.create("soldier", (14.5 * cell_size, 7.5 * cell_size)),
+            ObjectFactory.create("soldier", (13.5 * cell_size, 3.5 * cell_size)),
+            ObjectFactory.create("soldier", (12.5 * cell_size, 6.5 * cell_size)),
             ObjectFactory.create("soldier", (7.5 * cell_size, 16.5 * cell_size)),
-            ObjectFactory.create("caco_demon", (10.5 * cell_size, 12.5 * cell_size)),
-            ObjectFactory.create("caco_demon", (1.5 * cell_size, 18.5 * cell_size)),
-            ObjectFactory.create("caco_demon", (2.5 * cell_size, 18.5 * cell_size)),
+            ObjectFactory.create("caco_demon", (11.5 * cell_size, 13.5 * cell_size)),
+            ObjectFactory.create("caco_demon", (3.5 * cell_size, 18.5 * cell_size)),
+            ObjectFactory.create("caco_demon", (3.5 * cell_size, 19.5 * cell_size)),
             ObjectFactory.create("caco_demon", (4.5 * cell_size, 24.5 * cell_size)),
             ObjectFactory.create("caco_demon", (5.5 * cell_size, 24.5 * cell_size)),
             ObjectFactory.create("lost_soul", (13.5 * cell_size, 19.5 * cell_size)),

@@ -112,7 +112,7 @@ class Shotgun(Weapon):
             sprite_representation=sprite_representation,
             damage=10,
             attack_range=10,
-            attack_cooldown=0.0,
+            attack_cooldown=1.2,
             shaded=True,
             position=position,
         )
@@ -140,7 +140,7 @@ class Pistol(Weapon):
             sprite_representation=sprite_representation,
             damage=3,
             attack_range=10,
-            attack_cooldown=0.0,
+            attack_cooldown=1,
             shaded=True,
             position=position,
         )

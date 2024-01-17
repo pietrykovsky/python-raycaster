@@ -190,9 +190,9 @@ class Soldier(Enemy):
                 duration=2,
                 repeat=False,
             ),
-            EnemyState.HIT: Animation(
-                frames=assets.get(EnemyState.HIT),
-                duration=0.5,
+            AnimationType.HIT: Animation(
+                frames=assets.get(AnimationType.HIT),
+                duration=0.3,
                 repeat=False,
             ),
             EnemyState.DEATH: Animation(
@@ -208,12 +208,12 @@ class Soldier(Enemy):
             animations=animations,
             sounds=assets.get("sound"),
             damage=5,
-            health=10,
-            speed=0.2,
-            attack_range=Settings().CELL_SIZE * 3,
-            attack_cooldown=3,
-            attack_chance=0.5,
-            score=50,
+            health=25,
+            speed=0.4,
+            attack_range=Settings().CELL_SIZE * 4,
+            attack_cooldown=1,
+            attack_chance=0.7,
+            score=100,
         )
 
 
@@ -234,9 +234,9 @@ class LostSoul(Enemy):
                 duration=2,
                 repeat=False,
             ),
-            EnemyState.HIT: Animation(
-                frames=assets.get(EnemyState.HIT),
-                duration=0.5,
+            AnimationType.HIT: Animation(
+                frames=assets.get(AnimationType.HIT),
+                duration=0.3,
                 repeat=False,
             ),
             EnemyState.DEATH: Animation(
@@ -252,11 +252,11 @@ class LostSoul(Enemy):
             animations=animations,
             sounds=assets.get("sound"),
             damage=20,
-            health=50,
-            speed=0.3,
-            attack_range=Settings().CELL_SIZE * 3,
-            attack_cooldown=2,
-            attack_chance=0.7,
+            health=100,
+            speed=0.6,
+            attack_range=Settings().CELL_SIZE * 2,
+            attack_cooldown=0.5,
+            attack_chance=0.8,
             score=200,
         )
 
@@ -278,9 +278,9 @@ class CacoDemon(Enemy):
                 duration=2,
                 repeat=False,
             ),
-            EnemyState.HIT: Animation(
-                frames=assets.get(EnemyState.HIT),
-                duration=0.5,
+            AnimationType.HIT: Animation(
+                frames=assets.get(AnimationType.HIT),
+                duration=0.3,
                 repeat=False,
             ),
             EnemyState.DEATH: Animation(
@@ -294,14 +294,13 @@ class CacoDemon(Enemy):
             player=player,
             shaded=True,
             animations=animations,
-            sounds=assets.get("sound"),
-            damage=20,
-            health=10,
-            speed=0.1,
-            attack_range=Settings().CELL_SIZE * 3,
-            attack_cooldown=4,
+            damage=40,
+            health=120,
+            speed=0.3,
+            attack_range=Settings().CELL_SIZE * 1.5,
+            attack_cooldown=3,
             attack_chance=0.9,
-            score=100,
+            score=250,
         )
 
 
@@ -322,9 +321,9 @@ class CyberDemon(Enemy):
                 duration=1,
                 repeat=False,
             ),
-            EnemyState.HIT: Animation(
-                frames=assets.get(EnemyState.HIT),
-                duration=0.5,
+            AnimationType.HIT: Animation(
+                frames=assets.get(AnimationType.HIT),
+                duration=0.3,
                 repeat=False,
             ),
             EnemyState.DEATH: Animation(
@@ -338,12 +337,11 @@ class CyberDemon(Enemy):
             player=player,
             shaded=True,
             animations=animations,
-            sounds=assets.get("sound"),
-            damage=30,
-            health=500,
-            speed=0.4,
-            attack_range=Settings().CELL_SIZE * 3,
-            attack_cooldown=1,
-            attack_chance=3,
+            damage=20,
+            health=400,
+            speed=0.8,
+            attack_range=Settings().CELL_SIZE * 3.5,
+            attack_cooldown=0.6,
+            attack_chance=1,
             score=1000,
         )

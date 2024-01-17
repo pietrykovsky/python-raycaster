@@ -30,6 +30,8 @@ class Player(Updatable):
         self.shoot_handler += self._shoot
 
         self._health = PLAYER_INIT_HEALTH
+        self.last_heal_time = 0
+
         self._score = 0
 
     def apply_damage(self, damage: float):
@@ -121,7 +123,14 @@ class Player(Updatable):
         self._health = PLAYER_INIT_HEALTH
         self._score = 0
 
+    def heal_over_time(self):
+        current_time = pygame.time.get_ticks()
+        if self._health < 80 and current_time - self.last_heal_time > 3000:
+            self._health += 1
+            self.last_heal_time = current_time
+
     def update(self):
         self.delta_time = self.clock.get_time()
         self.handle_movement()
         self.handle_camera()
+        self.heal_over_time()
