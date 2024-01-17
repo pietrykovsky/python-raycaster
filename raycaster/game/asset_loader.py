@@ -2,7 +2,12 @@ import os
 import pygame
 
 from raycaster.core import Settings
-from raycaster.const import EnemyState, WeaponRepresentation, EFFECTS_VOLUME
+from raycaster.const import (
+    EnemyState,
+    WeaponRepresentation,
+    EFFECTS_VOLUME,
+    PlayerState,
+)
 
 
 class AssetLoader:
@@ -87,13 +92,17 @@ class AssetLoader:
         return pygame.font.Font(font_path, size)
 
     @classmethod
-    def load_player_hit_sound(cls) -> pygame.mixer.Sound:
+    def load_player_sounds(cls) -> dict[PlayerState, pygame.mixer.Sound]:
         """
         Loads the player hit sound from the assets/player directory.
         """
-        hit_sound = pygame.mixer.Sound(os.path.join(cls.PLAYER_PATH, "hit.mp3"))
-        hit_sound.set_volume(EFFECTS_VOLUME)
-        return hit_sound
+        player_sounds = {}
+        for player_state in PlayerState:
+            sound_path = os.path.join(cls.PLAYER_PATH, f"{player_state.value}.mp3")
+            sound = pygame.mixer.Sound(sound_path)
+            sound.set_volume(EFFECTS_VOLUME)
+            player_sounds[player_state] = sound
+        return player_sounds
 
     @classmethod
     def _load_walls_textures(cls) -> dict[int, pygame.Surface]:

@@ -15,7 +15,6 @@ if TYPE_CHECKING:
     from raycaster.objects.enemy import Enemy
     from raycaster.game.map import Map
     from raycaster.objects.weapons import Weapon
-    from raycaster.rendering.ray import Ray
 
 
 class ObjectManager:
@@ -189,15 +188,14 @@ class ObjectManager:
     @classmethod
     def _on_player_shot(cls):
         ray = cls.raycaster.cast_ray(cls.player.angle)
-        if cls.player.weapon:
-            for enemy in sorted(cls._enemies, key=lambda e: e.distance):
-                if (
-                    SpriteProjectionProcessor.intersects_screen_center(enemy)
-                    and not (ray.hit_wall and ray.length < enemy.distance)
-                    and cls.player.in_fov(enemy.angle)
-                ):
-                    enemy.apply_damage(cls.player.weapon.damage)
-                    return
+        for enemy in sorted(cls._enemies, key=lambda e: e.distance):
+            if (
+                SpriteProjectionProcessor.intersects_screen_center(enemy)
+                and not (ray.hit_wall and ray.length < enemy.distance)
+                and cls.player.in_fov(enemy.angle)
+            ):
+                enemy.apply_damage(cls.player.weapon.damage)
+                return
 
     @classmethod
     def reset(cls):

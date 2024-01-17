@@ -15,6 +15,13 @@ EFFECTS_VOLUME = Settings().EFFECTS_VOLUME * Settings().MASTER_VOLUME
 DELTA_ANGLE = math.radians(Settings().FOV / Settings().RAY_COUNT)
 PLAYER_INIT_HEALTH = 100
 
+
+class PlayerState(Enum):
+    DEATH = "death"
+    HIT = "hit"
+    VICTORY = "victory"
+
+
 # MAP RELATED
 SCREEN_DISTANCE = (Settings().SCREEN_WIDTH // 2) / math.tan(
     math.radians(Settings().FOV // 2)
