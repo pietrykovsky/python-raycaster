@@ -2,7 +2,7 @@ import os
 import pygame
 
 from raycaster.core import Settings
-from raycaster.const import AnimationType, WeaponRepresentation
+from raycaster.const import EnemyState, WeaponRepresentation, EFFECTS_VOLUME
 
 
 class AssetLoader:
@@ -32,7 +32,8 @@ class AssetLoader:
             cls.FONTS_PATH = os.path.join(cls.ASSETS_PATH, "fonts")
             cls.DOOM_FONT_PATH = os.path.join(cls.FONTS_PATH, "DooM.ttf")
             cls.CTA_DIR_PATH = os.path.join(cls.ASSETS_PATH, "call_to_action")
-            cls.SOUNDTRACK_PATH = os.path.join(cls.ASSETS_PATH, "soundtrack.mp3")
+            cls.THEME_PATH = os.path.join(cls.ASSETS_PATH, "theme")
+            cls.PLAYER_PATH = os.path.join(cls.ASSETS_PATH, "player")
 
             cls._walls = cls._load_walls_textures()
             cls._static_objects = cls._load_static_sprites()
@@ -41,7 +42,7 @@ class AssetLoader:
             cls._weapons = cls._load_weapons()
             cls._cta_screens = cls._load_cta_screens()
 
-            pygame.mixer.music.load(cls.SOUNDTRACK_PATH)
+            pygame.mixer.music.load(os.path.join(cls.THEME_PATH, "soundtrack.mp3"))
 
         return cls._instance
 
@@ -58,7 +59,7 @@ class AssetLoader:
         return self._animated_objects.copy()
 
     @property
-    def enemies(self) -> dict[str, dict[AnimationType, list[pygame.Surface]]]:
+    def enemies(self) -> dict[str, dict[EnemyState, list[pygame.Surface]]]:
         return self._enemies.copy()
 
     @property
@@ -84,6 +85,16 @@ class AssetLoader:
         """
         font_path = cls.DOOM_FONT_PATH
         return pygame.font.Font(font_path, size)
+    
+    @classmethod
+    def load_player_hit_sound(cls) -> pygame.mixer.Sound:
+        """
+        Loads the player hit sound from the assets/player directory.
+        """
+        hit_sound = cls._load_sound_file(cls.PLAYER_PATH)
+        hit_sound.set_volume(EFFECTS_VOLUME)
+        return hit_sound
+
 
     @classmethod
     def _load_walls_textures(cls) -> dict[int, pygame.Surface]:
@@ -126,7 +137,7 @@ class AssetLoader:
         return animated_objects
 
     @classmethod
-    def _load_enemies(cls) -> dict[str, dict[AnimationType, list[pygame.Surface]]]:
+    def _load_enemies(cls) -> dict[str, dict[EnemyState, list[pygame.Surface]]]:
         """
         Loads all enemies from the assets/objects/enemies directory.
         """
@@ -134,18 +145,22 @@ class AssetLoader:
         for dir in os.listdir(cls.ENEMIES_SPRITES_PATH):
             dir_path = os.path.join(cls.ENEMIES_SPRITES_PATH, dir)
             enemies[dir] = {}
-            for anim_type in AnimationType:
-                enemies[dir][anim_type] = []
-                anim_dir_path = os.path.join(dir_path, anim_type.value)
-                enemies[dir][anim_type] = cls._load_sprites_to_list(
-                    enemies[dir][anim_type], anim_dir_path
+            enemies[dir]["sound"] = {}
+            sound_dir_path = os.path.join(dir_path, "sound")
+            for state in EnemyState:
+                enemies[dir][state] = []
+                anim_dir_path = os.path.join(dir_path, state.value)
+                enemies[dir][state] = cls._load_sprites_to_list(
+                    enemies[dir][state], anim_dir_path
                 )
+                sound_path = os.path.join(sound_dir_path, f"{state.value}.mp3")
+                enemies[dir]["sound"][state] = pygame.mixer.Sound(sound_path)
         return enemies
 
     @classmethod
     def _load_weapons(
         cls,
-    ) -> dict[str, dict[str, list[pygame.Surface] | pygame.Surface]]:
+    ) -> dict[str, dict[str, list[pygame.Surface] | pygame.Surface | pygame.mixer.Sound]]:
         """
         Loads all weapons from the assets/objects/weapons directory.
         """
@@ -154,8 +169,10 @@ class AssetLoader:
             dir_path = os.path.join(cls.WEAPONS_PATH, dir)
             gui = WeaponRepresentation.GUI.value
             sprite = WeaponRepresentation.SPRITE.value
+            sound = WeaponRepresentation.SOUND.value
             gui_path = os.path.join(dir_path, gui)
             sprite_path = os.path.join(dir_path, sprite)
+            sound_path = os.path.join(dir_path, sound)
             weapons[dir] = {}
             weapons[dir][gui] = []
             weapons[dir][gui] = cls._load_sprites_to_list(
@@ -169,7 +186,17 @@ class AssetLoader:
             weapons[dir][sprite] = cls._load_sprites_to_list(
                 weapons[dir][sprite], sprite_path
             )[0]
+            weapons[dir][sound] = cls._load_sound_file(sound_path)
         return weapons
+    
+    @classmethod
+    def _load_sound_file(cls, dir_path: str) -> pygame.mixer.Sound:
+        """
+        Loads a sound file from the given path.
+        """
+        file = os.listdir(dir_path)[0]
+        file_path = os.path.join(dir_path, file)
+        return pygame.mixer.Sound(file_path)
 
     @classmethod
     def _load_sprites_to_list(

@@ -4,6 +4,7 @@ import pygame
 
 from raycaster.core import Updatable, Settings, Event
 from raycaster.const import PLAYER_INIT_HEALTH
+from raycaster.game.asset_loader import AssetLoader
 
 if TYPE_CHECKING:
     from raycaster.game.map import Map
@@ -21,6 +22,7 @@ class Player(Updatable):
         self.angle = 45
         self.delta_time = 1
         self.hitbox_radius = self.settings.PLAYER_HITBOX_RADIUS
+        self.hit_sound = AssetLoader().load_player_hit_sound()
 
         self.weapon = None
         self.update_position_handler = Event()
@@ -32,6 +34,7 @@ class Player(Updatable):
 
     def apply_damage(self, damage: float):
         self._health -= damage
+        self.hit_sound.play()
 
     def add_score(self, score: int):
         self._score += score

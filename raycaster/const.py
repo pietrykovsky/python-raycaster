@@ -21,7 +21,7 @@ SCREEN_DISTANCE = (Settings().SCREEN_WIDTH // 2) / math.tan(
 )
 
 # SPRITES RELATED
-class AnimationType(Enum):
+class EnemyState(Enum):
     IDLE = "idle"
     MOVE = "move"
     ATTACK = "attack"
@@ -32,3 +32,4 @@ class AnimationType(Enum):
 class WeaponRepresentation(Enum):
     SPRITE = "sprite"
     GUI = "gui"
+    SOUND = "sound"
