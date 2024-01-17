@@ -190,8 +190,8 @@ class Soldier(Enemy):
                 duration=2,
                 repeat=False,
             ),
-            AnimationType.HIT: Animation(
-                frames=assets.get(AnimationType.HIT),
+            EnemyState.HIT: Animation(
+                frames=assets.get(EnemyState.HIT),
                 duration=0.3,
                 repeat=False,
             ),
@@ -208,7 +208,7 @@ class Soldier(Enemy):
             animations=animations,
             sounds=assets.get("sound"),
             damage=5,
-            health=25,
+            health=15,
             speed=0.4,
             attack_range=Settings().CELL_SIZE * 4,
             attack_cooldown=1,
@@ -234,8 +234,8 @@ class LostSoul(Enemy):
                 duration=2,
                 repeat=False,
             ),
-            AnimationType.HIT: Animation(
-                frames=assets.get(AnimationType.HIT),
+            EnemyState.HIT: Animation(
+                frames=assets.get(EnemyState.HIT),
                 duration=0.3,
                 repeat=False,
             ),
@@ -252,7 +252,7 @@ class LostSoul(Enemy):
             animations=animations,
             sounds=assets.get("sound"),
             damage=20,
-            health=100,
+            health=90,
             speed=0.6,
             attack_range=Settings().CELL_SIZE * 2,
             attack_cooldown=0.5,
@@ -278,8 +278,8 @@ class CacoDemon(Enemy):
                 duration=2,
                 repeat=False,
             ),
-            AnimationType.HIT: Animation(
-                frames=assets.get(AnimationType.HIT),
+            EnemyState.HIT: Animation(
+                frames=assets.get(EnemyState.HIT),
                 duration=0.3,
                 repeat=False,
             ),
@@ -294,6 +294,7 @@ class CacoDemon(Enemy):
             player=player,
             shaded=True,
             animations=animations,
+            sounds=assets.get("sound"),
             damage=40,
             health=120,
             speed=0.3,
@@ -321,8 +322,8 @@ class CyberDemon(Enemy):
                 duration=1,
                 repeat=False,
             ),
-            AnimationType.HIT: Animation(
-                frames=assets.get(AnimationType.HIT),
+            EnemyState.HIT: Animation(
+                frames=assets.get(EnemyState.HIT),
                 duration=0.3,
                 repeat=False,
             ),
@@ -337,6 +338,7 @@ class CyberDemon(Enemy):
             player=player,
             shaded=True,
             animations=animations,
+            sounds=assets.get("sound"),
             damage=20,
             health=400,
             speed=0.8,
