@@ -42,7 +42,7 @@ class Game:
             cls._play_soundtrack()
 
         return cls._instance
-    
+
     @staticmethod
     def _play_soundtrack():
         pygame.mixer.music.set_volume(const.MUSIC_VOLUME)

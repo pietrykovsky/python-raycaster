@@ -85,7 +85,7 @@ class AssetLoader:
         """
         font_path = cls.DOOM_FONT_PATH
         return pygame.font.Font(font_path, size)
-    
+
     @classmethod
     def load_player_hit_sound(cls) -> pygame.mixer.Sound:
         """
@@ -159,7 +159,9 @@ class AssetLoader:
     @classmethod
     def _load_weapons(
         cls,
-    ) -> dict[str, dict[str, list[pygame.Surface] | pygame.Surface | pygame.mixer.Sound]]:
+    ) -> dict[
+        str, dict[str, list[pygame.Surface] | pygame.Surface | pygame.mixer.Sound]
+    ]:
         """
         Loads all weapons from the assets/objects/weapons directory.
         """
@@ -186,8 +188,12 @@ class AssetLoader:
                 weapons[dir][sprite], sprite_path
             )[0]
             weapons[dir][sound] = {}
-            weapons[dir][sound]["shot"] = pygame.mixer.Sound(os.path.join(sound_path, "shot.mp3"))
-            weapons[dir][sound]["equip"] = pygame.mixer.Sound(os.path.join(sound_path, "equip.mp3"))
+            weapons[dir][sound]["shot"] = pygame.mixer.Sound(
+                os.path.join(sound_path, "shot.mp3")
+            )
+            weapons[dir][sound]["equip"] = pygame.mixer.Sound(
+                os.path.join(sound_path, "equip.mp3")
+            )
         return weapons
 
     @classmethod

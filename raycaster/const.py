@@ -20,6 +20,7 @@ SCREEN_DISTANCE = (Settings().SCREEN_WIDTH // 2) / math.tan(
     math.radians(Settings().FOV // 2)
 )
 
+
 # SPRITES RELATED
 class EnemyState(Enum):
     IDLE = "idle"
