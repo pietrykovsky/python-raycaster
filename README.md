@@ -66,3 +66,7 @@ If you suffer low FPS, try to change the `RAY_COUNT` variable and decrease the r
 ```python
 RAY_COUNT = 200
 ```
+
+## Resources:
+- sound - https://www.doomworld.com/idgames/
+- sprites - https://www.spriters-resource.com/pc_computer/doomdoomii/
